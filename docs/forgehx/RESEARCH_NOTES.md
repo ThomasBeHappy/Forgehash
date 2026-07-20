@@ -8,6 +8,9 @@
 > proof, certification, or recommendation to store production passwords.
 > It is **not** compatible with ForgeHash-B3. Prefer Argon2id, scrypt, bcrypt,
 > or platform password APIs for real password storage.
+>
+> AI tools assisted some drafting; most of this document was written by hand.
+> See [`../../AI.md`](../../AI.md).
 
 Normative text: [`SPECIFICATION_X.md`](SPECIFICATION_X.md).  
 Full research paper (PDF): [`paper/ForgeHash_X_Research_Paper.pdf`](paper/ForgeHash_X_Research_Paper.pdf).  

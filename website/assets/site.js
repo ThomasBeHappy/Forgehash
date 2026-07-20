@@ -250,7 +250,8 @@
         '<a href="researchers.html">Researchers</a> · ' +
         '<a data-repo="SPECIFICATION.md" href="../SPECIFICATION.md">B3 Spec</a> · ' +
         '<a data-repo="docs/forgehx/SPECIFICATION_X.md" href="../docs/forgehx/SPECIFICATION_X.md">X Spec</a> · ' +
-        '<a data-repo="SECURITY.md" href="../SECURITY.md">Security</a>' +
+        '<a data-repo="SECURITY.md" href="../SECURITY.md">Security</a> · ' +
+        '<a data-repo="AI.md" href="../AI.md">AI</a>' +
         "</span>";
     }
 

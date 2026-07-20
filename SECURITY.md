@@ -27,3 +27,7 @@ Open a private advisory or contact the repository maintainer. Do not include rea
 ## Supported versions
 
 Only the latest published source on the default branch is considered current for experimental review.
+
+## AI assistance
+
+AI tools assisted some development and drafting. Design, specs, and most research writing are human-authored. See [`AI.md`](AI.md).

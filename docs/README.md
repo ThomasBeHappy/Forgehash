@@ -13,5 +13,6 @@ Also:
 
 - Canonical algorithm: [`../SPECIFICATION.md`](../SPECIFICATION.md)
 - Disclosure: [`../SECURITY.md`](../SECURITY.md)
+- AI assistance: [`../AI.md`](../AI.md)
 - Vector pack: [`../implementers/v1/`](../implementers/v1/)
 - Languages: [`../langs/README.md`](../langs/README.md)

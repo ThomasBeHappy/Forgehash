@@ -2,6 +2,9 @@
 
 **Experimental cryptography. Not a security proof. Not for production passwords.**
 
+AI tools assisted some drafting and tooling around this paper; most of the
+manuscript was written by hand. See [`../../../AI.md`](../../../AI.md).
+
 | Artifact | Path |
 |----------|------|
 | PDF | [`ForgeHash_X_Research_Paper.pdf`](ForgeHash_X_Research_Paper.pdf) |

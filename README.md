@@ -161,7 +161,8 @@ dotnet run --project src/ForgeHash.Cli -- hash --memory 8192 --iterations 1 --pa
 dotnet run --project src/ForgeHash.Cli -- verify "$forgeh$..."
 ```
 
-## Security / license
+## Security / license / AI
 
 - [`SECURITY.md`](SECURITY.md)
 - [`LICENSE`](LICENSE)
+- [`AI.md`](AI.md) — AI assisted some development and research drafting; most design and writing is human-authored

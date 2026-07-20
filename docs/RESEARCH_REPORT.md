@@ -8,6 +8,9 @@
 > is a security proof, certification, or recommendation to store production
 > passwords. Prefer Argon2id, scrypt, bcrypt, or platform password APIs until
 > the construction has received substantial independent review.
+>
+> AI tools assisted some drafting; most of this document was written by hand.
+> See [`../AI.md`](../AI.md).
 
 ForgeHash-X (`forgehx` / `v=0`) is a separate experimental sandbox. Its campaign
 log lives in [`forgehx/RESEARCH_NOTES.md`](forgehx/RESEARCH_NOTES.md) — do not
