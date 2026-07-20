@@ -39,6 +39,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ForgeHash.X.Tests", "tests\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ForgeHash.X.Sample", "samples\ForgeHash.X.Sample\ForgeHash.X.Sample.csproj", "{4EDFC26F-928A-495C-A164-B1C084508B29}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ForgeHash.ResearchBench", "tools\ForgeHash.ResearchBench\ForgeHash.ResearchBench.csproj", "{109FBF57-9249-42B0-9D99-8E2FBD197E41}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -217,6 +219,18 @@ Global
 		{4EDFC26F-928A-495C-A164-B1C084508B29}.Release|x64.Build.0 = Release|Any CPU
 		{4EDFC26F-928A-495C-A164-B1C084508B29}.Release|x86.ActiveCfg = Release|Any CPU
 		{4EDFC26F-928A-495C-A164-B1C084508B29}.Release|x86.Build.0 = Release|Any CPU
+		{109FBF57-9249-42B0-9D99-8E2FBD197E41}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{109FBF57-9249-42B0-9D99-8E2FBD197E41}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{109FBF57-9249-42B0-9D99-8E2FBD197E41}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{109FBF57-9249-42B0-9D99-8E2FBD197E41}.Debug|x64.Build.0 = Debug|Any CPU
+		{109FBF57-9249-42B0-9D99-8E2FBD197E41}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{109FBF57-9249-42B0-9D99-8E2FBD197E41}.Debug|x86.Build.0 = Debug|Any CPU
+		{109FBF57-9249-42B0-9D99-8E2FBD197E41}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{109FBF57-9249-42B0-9D99-8E2FBD197E41}.Release|Any CPU.Build.0 = Release|Any CPU
+		{109FBF57-9249-42B0-9D99-8E2FBD197E41}.Release|x64.ActiveCfg = Release|Any CPU
+		{109FBF57-9249-42B0-9D99-8E2FBD197E41}.Release|x64.Build.0 = Release|Any CPU
+		{109FBF57-9249-42B0-9D99-8E2FBD197E41}.Release|x86.ActiveCfg = Release|Any CPU
+		{109FBF57-9249-42B0-9D99-8E2FBD197E41}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -236,5 +250,6 @@ Global
 		{522E0CB6-41D7-4E9E-8A62-ADAAC030E393} = {07C2787E-EAC7-C090-1BA3-A61EC2A24D84}
 		{7891DC3E-DB34-4AF1-A486-88ED6A62A925} = {0AB3BF05-4346-4AA6-1389-037BE0695223}
 		{4EDFC26F-928A-495C-A164-B1C084508B29} = {5D20AA90-6969-D8BD-9DCD-8634F4692FDA}
+		{109FBF57-9249-42B0-9D99-8E2FBD197E41} = {07C2787E-EAC7-C090-1BA3-A61EC2A24D84}
 	EndGlobalSection
 EndGlobal

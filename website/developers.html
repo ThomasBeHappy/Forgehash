@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="forgeh-page" content="developers">
+  <meta name="description" content="ForgeHash for developers — install, language ports, vectors, and implementer checklists.">
+  <title>ForgeHash — Developers</title>
+  <link rel="icon" href="assets/mark.png" type="image/png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,650&family=IBM+Plex+Mono:wght@400;500&family=Literata:opsz,wght@7..72,400;7..72,600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+  <div class="site-wrap">
+    <header class="site-header" id="site-header"></header>
+    <div class="layout">
+      <aside class="side-nav" id="side-nav" aria-label="Secondary"></aside>
+      <main id="main">
+        <p class="audience-kicker">Audience</p>
+        <h1>Developers</h1>
+        <p class="page-lede">Port, integrate, and verify bit-exact digests. Prefer Argon2id or platform APIs for real password storage — ForgeHash is experimental.</p>
+
+        <div class="callout" role="note">
+          <p><strong>Start with B3</strong> (<code>$forgeh$v=1$</code>) unless you are intentionally working on the ForgeHash-X sandbox.</p>
+        </div>
+
+        <h2 class="section-label">Suggested path</h2>
+        <ol class="path-steps">
+          <li>
+            <span class="path-n">1</span>
+            <div>
+              <a href="usage.html"><strong>.NET usage</strong></a>
+              <p>Install the package, hash / verify / NeedsRehash, Development vs Interactive profiles.</p>
+            </div>
+          </li>
+          <li>
+            <span class="path-n">2</span>
+            <div>
+              <a href="languages.html"><strong>Language ports</strong></a>
+              <p>Rust, Node.js, Python, C++, PHP under <code>langs/</code> — same vectors, same encoding rules.</p>
+            </div>
+          </li>
+          <li>
+            <span class="path-n">3</span>
+            <div>
+              <a href="vectors.html"><strong>Official vectors</strong></a>
+              <p>Freeze digests for B3 v1. Claim compatibility only after all vectors match.</p>
+            </div>
+          </li>
+          <li>
+            <span class="path-n">4</span>
+            <div>
+              <a href="implementing.html"><strong>Implementing</strong></a>
+              <p>Checklist, pitfalls, parallel-lane rules, and the <code>implementers/v1/</code> pack.</p>
+            </div>
+          </li>
+        </ol>
+
+        <h2>Quick commands</h2>
+<pre><code># .NET sample
+dotnet run --project samples/ForgeHash.Sample -c Release
+
+# CLI hash / verify (B3)
+dotnet run --project src/ForgeHash.Cli -c Release -- hash --algo b3 --password-stdin
+dotnet run --project src/ForgeHash.Cli -c Release -- verify "$forgeh$v=1$..." --password-stdin
+
+# Language smoke tests
+cd langs/python/forgeh &amp;&amp; python -m pytest -q
+cd langs/nodejs/forgeh &amp;&amp; npm test
+cargo test --manifest-path langs/rust/forgeh/Cargo.toml --release</code></pre>
+
+        <h2>Sandbox (optional)</h2>
+        <p>ForgeHash-X is a separate experimental track. Digests and encoding are not interchangeable with B3.</p>
+        <div class="doc-links">
+          <a href="vectors-x.html">X vectors</a>
+          <a data-repo="docs/forgehx/SPECIFICATION_X.md" href="../docs/forgehx/SPECIFICATION_X.md">SPECIFICATION_X.md</a>
+          <a data-repo="implementers/x0/" href="../implementers/x0/">implementers/x0</a>
+          <a data-repo="langs/python/forgehx/" href="../langs/python/forgehx/">langs/*/forgehx</a>
+        </div>
+
+        <h2>Reference</h2>
+        <ul class="link-list">
+          <li><a href="spec.html">Specification (readable TOC)</a> — full text on GitHub</li>
+          <li><a href="security.html">Security</a> — disclosure and experimental warning</li>
+          <li><a href="researchers.html">Researchers / auditors</a> — campaigns, benches, paper</li>
+        </ul>
+      </main>
+    </div>
+    <footer class="footer" id="site-footer"></footer>
+  </div>
+  <script src="assets/site.js"></script>
+</body>
+</html>

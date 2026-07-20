@@ -23,18 +23,45 @@
             <img class="home-mark" src="assets/mark.png" width="72" height="72" alt="">
             <h1 id="home-brand">ForgeHash</h1>
           </div>
-          <p class="home-lede">Memory-hard experimental hashing for research, benchmarking, and language ports.</p>
-          <nav class="hero-cta" aria-label="Primary destinations">
-            <a class="cta" href="spec.html">Spec</a>
-            <a class="cta" href="vectors.html">Vectors</a>
-            <a class="cta" href="languages.html">Languages</a>
-            <a class="cta cta-quiet" href="research.html">Research</a>
+          <p class="home-lede">Experimental memory-hard hashing for ports, benchmarks, and cryptanalysis — not for production passwords.</p>
+          <nav class="hero-cta" aria-label="Choose your path">
+            <a class="cta" href="developers.html">Developers</a>
+            <a class="cta" href="researchers.html">Researchers</a>
+            <a class="cta cta-quiet" href="spec.html">Spec</a>
           </nav>
-          <p class="hero-edge" role="note">Experimental — not for production password storage.</p>
+          <p class="hero-edge" role="note">Prefer Argon2id, scrypt, bcrypt, or platform APIs for real storage.</p>
+        </section>
+
+        <section class="audience-split" aria-labelledby="who-heading">
+          <h2 id="who-heading" class="section-label">Who is this for</h2>
+          <div class="audience-grid">
+            <article class="audience-panel">
+              <p class="track-kicker">Build &amp; port</p>
+              <h3 class="track-title"><a href="developers.html">Developers</a></h3>
+              <p class="track-lede">Install, call the API, run language ports, and match official vectors bit-exactly.</p>
+              <p class="track-links">
+                <a href="usage.html">.NET usage</a>
+                <a href="languages.html">Languages</a>
+                <a href="vectors.html">Vectors</a>
+                <a href="implementing.html">Implementing</a>
+              </p>
+            </article>
+            <article class="audience-panel audience-panel-alt">
+              <p class="track-kicker">Study &amp; audit</p>
+              <h3 class="track-title"><a href="researchers.html">Researchers</a></h3>
+              <p class="track-lede">Specs, uniqueness campaigns, peer KDF benches, Collision Lab, and the X sandbox paper.</p>
+              <p class="track-links">
+                <a href="research.html">Tooling</a>
+                <a href="research-report.html">B3 report</a>
+                <a data-repo="docs/forgehx/RESEARCH_NOTES.md" href="../docs/forgehx/RESEARCH_NOTES.md">X notes</a>
+                <a href="security.html">Security</a>
+              </p>
+            </article>
+          </div>
         </section>
 
         <section class="tracks" aria-labelledby="tracks-heading">
-          <h2 id="tracks-heading" class="section-label">Two tracks</h2>
+          <h2 id="tracks-heading" class="section-label">Two algorithm tracks</h2>
           <div class="track-split">
             <article class="track">
               <p class="track-kicker">Conformance</p>
@@ -87,29 +114,11 @@
           <p class="note">Development must never be silently selected in production-shaped builds.</p>
         </section>
 
-        <section class="explore" aria-labelledby="explore-heading">
-          <h2 id="explore-heading">Explore</h2>
-          <ul class="home-nav-grid">
-            <li class="hn-sec" aria-hidden="true"><span class="sec">Conformance (B3)</span></li>
-            <li><a href="usage.html"><span class="hn-label">.NET usage</span><span class="hn-desc">Package install, HashPassword / VerifyPassword / NeedsRehash</span></a></li>
-            <li><a href="languages.html"><span class="hn-label">Languages</span><span class="hn-desc">Rust, Node.js, Python, C++, PHP packages under langs/</span></a></li>
-            <li><a href="implementing.html"><span class="hn-label">Implementing</span><span class="hn-desc">Porting guide, checklist, implementer pack</span></a></li>
-            <li><a href="vectors.html"><span class="hn-label">Vectors</span><span class="hn-desc">Official B3 digests and machine-readable pack</span></a></li>
-            <li><a href="spec.html"><span class="hn-label">Specification</span><span class="hn-desc">Readable TOC and excerpts; full text on GitHub</span></a></li>
-            <li><a href="security.html"><span class="hn-label">Security</span><span class="hn-desc">Disclosure policy and experimental warning</span></a></li>
-
-            <li class="hn-sec" aria-hidden="true"><span class="sec">Research &amp; sandbox</span></li>
-            <li><a href="research.html"><span class="hn-label">Research</span><span class="hn-desc">Tooling index — Collision Lab, Visualizer</span></a></li>
-            <li><a href="research-report.html"><span class="hn-label">Report</span><span class="hn-desc">Empirical notes, uniqueness campaign, TMTO snapshot</span></a></li>
-            <li><a href="vectors-x.html"><span class="hn-label">X Vectors</span><span class="hn-desc">ForgeHash-X toy digests, KATs, implementers/x0</span></a></li>
-          </ul>
-
-          <div class="doc-links">
-            <a data-repo="SPECIFICATION.md" href="../SPECIFICATION.md">Full SPECIFICATION.md</a>
-            <a data-repo="implementers/v1/" href="../implementers/v1/">implementers/v1/</a>
-            <a data-repo="LICENSE" href="../LICENSE">License</a>
-          </div>
-        </section>
+        <div class="doc-links">
+          <a data-repo="SPECIFICATION.md" href="../SPECIFICATION.md">Full SPECIFICATION.md</a>
+          <a data-repo="implementers/v1/" href="../implementers/v1/">implementers/v1/</a>
+          <a data-repo="LICENSE" href="../LICENSE">License</a>
+        </div>
       </main>
     </div>
     <footer class="footer" id="site-footer"></footer>

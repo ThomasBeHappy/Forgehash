@@ -23,7 +23,6 @@
       if (!window.FORGEH || !window.FORGEH.repo) {
         cfg.repo = "https://github.com/" + m[1] + "/" + repoName;
       }
-      // Project pages live under /RepoName/
       if (parts.length > 0) {
         cfg.pagesBase = "/" + parts[0];
       }
@@ -34,37 +33,47 @@
 
   window.FORGEH = cfg;
 
-  /* Full site map — used by side nav and id resolution */
   var NAV = [
     { href: "index.html", label: "Overview", id: "index" },
+    { href: "developers.html", label: "Developers", id: "developers" },
+    { href: "researchers.html", label: "Researchers", id: "researchers" },
     { href: "usage.html", label: ".NET usage", id: "usage" },
     { href: "languages.html", label: "Languages", id: "languages" },
     { href: "implementing.html", label: "Implementing", id: "implementing" },
     { href: "vectors.html", label: "Vectors", id: "vectors" },
     { href: "vectors-x.html", label: "X Vectors", id: "vectors-x" },
-    { href: "research.html", label: "Research", id: "research" },
-    { href: "research-report.html", label: "Report", id: "research-report" },
+    { href: "research.html", label: "Tooling", id: "research" },
+    { href: "research-report.html", label: "B3 Report", id: "research-report" },
     { href: "security.html", label: "Security", id: "security" },
     { href: "spec.html", label: "Specification", id: "spec" }
   ];
 
-  /* Compact top nav — Vectors nests X; Research covers report in side nav */
+  /* Compact top nav — audience hubs first */
   var TOP_NAV = [
     { href: "index.html", label: "Overview", id: "index" },
-    { href: "usage.html", label: "Usage", id: "usage" },
-    { href: "languages.html", label: "Languages", id: "languages" },
-    { href: "implementing.html", label: "Implementing", id: "implementing" },
     {
-      id: "vectors-group",
-      label: "Vectors",
+      id: "dev-group",
+      label: "Developers",
       children: [
-        { href: "vectors.html", label: "B3", id: "vectors" },
+        { href: "developers.html", label: "Hub", id: "developers" },
+        { href: "usage.html", label: "Usage", id: "usage" },
+        { href: "languages.html", label: "Langs", id: "languages" },
+        { href: "implementing.html", label: "Port", id: "implementing" },
+        { href: "vectors.html", label: "Vectors", id: "vectors" }
+      ]
+    },
+    {
+      id: "research-group",
+      label: "Researchers",
+      children: [
+        { href: "researchers.html", label: "Hub", id: "researchers" },
+        { href: "research.html", label: "Tooling", id: "research" },
+        { href: "research-report.html", label: "Report", id: "research-report" },
         { href: "vectors-x.html", label: "X", id: "vectors-x" }
       ]
     },
-    { href: "research.html", label: "Research", id: "research", also: ["research-report"] },
-    { href: "security.html", label: "Security", id: "security" },
-    { href: "spec.html", label: "Spec", id: "spec" }
+    { href: "spec.html", label: "Spec", id: "spec" },
+    { href: "security.html", label: "Security", id: "security" }
   ];
 
   function pageId() {
@@ -105,19 +114,15 @@
     var groups = [
       {
         label: "Start",
-        ids: ["index", "usage", "languages", "implementing"]
+        ids: ["index", "developers", "researchers"]
       },
       {
-        label: "Vectors",
-        ids: ["vectors", "vectors-x"]
+        label: "Build",
+        ids: ["usage", "languages", "implementing", "vectors"]
       },
       {
-        label: "Research",
-        ids: ["research", "research-report"]
-      },
-      {
-        label: "Reference",
-        ids: ["security", "spec"]
+        label: "Study",
+        ids: ["research", "research-report", "vectors-x", "spec", "security"]
       }
     ];
     var byId = {};
@@ -241,9 +246,10 @@
       footer.innerHTML =
         "<span>ForgeHash · experimental cryptography</span>" +
         "<span>" +
+        '<a href="developers.html">Developers</a> · ' +
+        '<a href="researchers.html">Researchers</a> · ' +
         '<a data-repo="SPECIFICATION.md" href="../SPECIFICATION.md">B3 Spec</a> · ' +
         '<a data-repo="docs/forgehx/SPECIFICATION_X.md" href="../docs/forgehx/SPECIFICATION_X.md">X Spec</a> · ' +
-        '<a data-repo="LICENSE" href="../LICENSE">License</a> · ' +
         '<a data-repo="SECURITY.md" href="../SECURITY.md">Security</a>' +
         "</span>";
     }

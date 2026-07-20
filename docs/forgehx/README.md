@@ -64,7 +64,22 @@ bool ok = ForgeHashXApi.VerifyPassword(password, encoded);
 
 Namespace is `ForgeHashX` (class `ForgeHashX`) so it does not collide with the B3 `ForgeHash` package.
 
+## Research throughput
+
+```bash
+# B3 vs X at the same (m,t,p)
+dotnet run --project tools/ForgeHash.ResearchBench -c Release -- --suite matched --markdown
+
+# vs bcrypt / Argon2id / scrypt / PBKDF2 (OWASP-adjacent presets — not equal work)
+dotnet run --project tools/ForgeHash.ResearchBench -c Release -- --suite peers --markdown --out artifacts/research/peer_kdf_bench.md
+```
+
+Results: [`RESEARCH_NOTES.md`](RESEARCH_NOTES.md) §3 (matched) and §3b (peers).
+
+Optional BenchmarkDotNet short-run: `dotnet run --project src/ForgeHash.Benchmarks -c Release -- --filter *MatchedCost*`
+
 ## Collision Lab
 
 `src/ForgeHash.CollisionLab` can hunt B3 or X. Choose **ForgeHash-X** in the Algorithm combo and the **Toy** preset for sandbox mass runs. Campaigns use the shared `CollisionCampaign` engine with `XCollisionHasher`.
+
 

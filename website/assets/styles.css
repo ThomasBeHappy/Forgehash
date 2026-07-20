@@ -851,6 +851,113 @@ pre code {
   margin-top: 2.25rem;
 }
 
+/* —— Audience hubs —— */
+
+.audience-kicker {
+  margin: 0 0 0.35rem;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--slag);
+}
+
+.audience-split {
+  margin: 0.25rem 0 0.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--rule);
+}
+
+.audience-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0;
+}
+
+.audience-panel {
+  padding: 0 0 1.35rem;
+}
+
+.audience-panel-alt {
+  padding-top: 1.25rem;
+  border-top: 1px dashed var(--rule);
+}
+
+.audience-panel .track-title a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.audience-panel .track-title a:hover {
+  color: var(--slag-deep);
+}
+
+.path-steps {
+  list-style: none;
+  margin: 0 0 1.75rem;
+  padding: 0;
+  border-top: 1px solid var(--rule);
+}
+
+.path-steps > li {
+  display: grid;
+  grid-template-columns: 2rem 1fr;
+  gap: 0.85rem;
+  margin: 0;
+  padding: 0.95rem 0;
+  border-bottom: 1px solid var(--rule-soft);
+}
+
+.path-steps .path-n {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  color: var(--slag);
+  padding-top: 0.15rem;
+}
+
+.path-steps p {
+  margin: 0.25rem 0 0;
+  font-size: 0.95rem;
+  color: var(--ink-muted);
+}
+
+.path-steps a {
+  text-decoration: none;
+  color: var(--ink);
+  border-bottom: 1px solid transparent;
+}
+
+.path-steps a:hover {
+  color: var(--slag-deep);
+  border-bottom-color: var(--slag);
+}
+
+.link-list {
+  margin: 0 0 1.5rem;
+  padding-left: 1.15rem;
+}
+
+.link-list li {
+  margin-bottom: 0.45rem;
+}
+
+@media (min-width: 720px) {
+  .audience-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 0 2rem;
+  }
+
+  .audience-panel-alt {
+    padding-top: 0;
+    border-top: 0;
+    border-left: 1px dashed var(--rule);
+    padding-left: 2rem;
+  }
+}
+
+
+
 /* —— Home explore list —— */
 
 .home-nav-grid {
@@ -1107,7 +1214,12 @@ pre code {
     border-top: 0;
     border-left: 1px solid var(--rule);
   }
+
+  .audience-grid {
+    align-items: start;
+  }
 }
+
 
 @media (min-width: 900px) {
   .layout {

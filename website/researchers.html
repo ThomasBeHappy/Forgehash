@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="forgeh-page" content="researchers">
+  <meta name="description" content="ForgeHash for researchers and auditors — specs, empirical notes, collision campaigns, and peer KDF benches.">
+  <title>ForgeHash — Researchers</title>
+  <link rel="icon" href="assets/mark.png" type="image/png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,650&family=IBM+Plex+Mono:wght@400;500&family=Literata:opsz,wght@7..72,400;7..72,600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+  <div class="site-wrap">
+    <header class="site-header" id="site-header"></header>
+    <div class="layout">
+      <aside class="side-nav" id="side-nav" aria-label="Secondary"></aside>
+      <main id="main">
+        <p class="audience-kicker">Audience</p>
+        <h1>Researchers &amp; auditors</h1>
+        <p class="page-lede">Specs, empirical campaigns, throughput benches, and the ForgeHash-X sandbox. Green tests are consistency data — not a security proof.</p>
+
+        <div class="callout" role="note">
+          <p><strong>Not production cryptography.</strong> Prefer Argon2id, scrypt, bcrypt, or platform password APIs. Matching vectors ≠ reviewed hardness.</p>
+        </div>
+
+        <h2 class="section-label">Audit path</h2>
+        <ol class="path-steps">
+          <li>
+            <span class="path-n">1</span>
+            <div>
+              <a href="spec.html"><strong>Read the B3 specification</strong></a>
+              <p>Normative <code>SPECIFICATION.md</code> — domains, ForgeMix, memory fill, encoding, parser rejects.</p>
+            </div>
+          </li>
+          <li>
+            <span class="path-n">2</span>
+            <div>
+              <a href="vectors.html"><strong>Pin official vectors</strong></a>
+              <p>Four frozen B3 digests. Any algorithm break that changes them needs <code>v=2</code>.</p>
+            </div>
+          </li>
+          <li>
+            <span class="path-n">3</span>
+            <div>
+              <a href="research-report.html"><strong>B3 research report</strong></a>
+              <p>100 000-sample uniqueness campaign, TMTO snapshot, open questions.</p>
+            </div>
+          </li>
+          <li>
+            <span class="path-n">4</span>
+            <div>
+              <a href="research.html"><strong>Tooling</strong></a>
+              <p>Collision Lab, Visualizer, ResearchBench (matched B3/X + peer KDFs).</p>
+            </div>
+          </li>
+          <li>
+            <span class="path-n">5</span>
+            <div>
+              <a href="security.html"><strong>Security policy</strong></a>
+              <p>How to report issues; what “experimental” means for disclosure expectations.</p>
+            </div>
+          </li>
+        </ol>
+
+        <h2>ForgeHash-X sandbox</h2>
+        <p>Clean-sheet track with a custom ForgeX sponge (<code>$forgehx$v=0$</code>). Not B3-compatible.</p>
+        <ul class="link-list">
+          <li><a data-repo="docs/forgehx/SPECIFICATION_X.md" href="../docs/forgehx/SPECIFICATION_X.md">SPECIFICATION_X.md</a></li>
+          <li><a data-repo="docs/forgehx/RESEARCH_NOTES.md" href="../docs/forgehx/RESEARCH_NOTES.md">RESEARCH_NOTES.md</a> — campaigns + matched/peer benches</li>
+          <li><a data-repo="docs/forgehx/paper/ForgeHash_X_Research_Paper.pdf" href="../docs/forgehx/paper/ForgeHash_X_Research_Paper.pdf">Research paper (PDF)</a></li>
+          <li><a href="vectors-x.html">X toy vectors &amp; ForgeX KATs</a></li>
+        </ul>
+
+        <h2>Reproduce benches</h2>
+<pre><code># Matched-cost B3 vs X (m ≥ 8192 KiB)
+dotnet run --project tools/ForgeHash.ResearchBench -c Release -- --suite matched --markdown
+
+# Peer KDFs: bcrypt, Argon2id, scrypt, PBKDF2 (presets ≠ equal work)
+dotnet run --project tools/ForgeHash.ResearchBench -c Release -- --suite peers --markdown
+
+# Collision Lab (GUI)
+dotnet run --project src/ForgeHash.CollisionLab -c Release</code></pre>
+
+        <h2>What “passing” means here</h2>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>Signal</th><th>Shows</th><th>Does not show</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Official vectors</td>
+                <td>Bit-exact conformance to the published algo</td>
+                <td>Production safety</td>
+              </tr>
+              <tr>
+                <td>Large-N uniqueness hunts</td>
+                <td>No accidental collisions in that sample set</td>
+                <td>Birthday / adversarial bounds</td>
+              </tr>
+              <tr>
+                <td>Throughput tables</td>
+                <td>Wall-clock cost on one machine</td>
+                <td>ASIC / GPU hardness</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="doc-links">
+          <a href="developers.html">Developers hub</a>
+          <a data-repo="docs/RESEARCH_REPORT.md" href="../docs/RESEARCH_REPORT.md">docs/RESEARCH_REPORT.md</a>
+          <a data-repo="docs/forgehx/RESEARCH_NOTES.md" href="../docs/forgehx/RESEARCH_NOTES.md">docs/forgehx/RESEARCH_NOTES.md</a>
+        </div>
+      </main>
+    </div>
+    <footer class="footer" id="site-footer"></footer>
+  </div>
+  <script src="assets/site.js"></script>
+</body>
+</html>

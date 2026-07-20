@@ -2,7 +2,9 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ForgeHash.Core\ForgeHash.Core.csproj" />
+    <ProjectReference Include="..\ForgeHash.X.Core\ForgeHash.X.Core.csproj" />
   </ItemGroup>
+
 
   <ItemGroup>
     <PackageReference Include="BenchmarkDotNet" Version="0.15.8" />

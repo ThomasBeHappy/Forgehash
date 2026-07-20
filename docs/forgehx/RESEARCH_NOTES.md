@@ -26,9 +26,8 @@ Toy exists so vectors and mass campaigns stay regenerable on a laptop. It is
 **far below** any interactive/sensitive claim. Do not treat Toy throughput or
 uniqueness results as evidence about production-cost security.
 
-For comparison: B3’s Development profile uses **8192 KiB** (~8× more memory
-than X Toy; ~2× the 4 MiB X smoke). Throughput comparisons across unmatched
-presets are not apples-to-apples.
+B3’s Development profile uses **8192 KiB** (algorithm minimum). Matched-cost
+throughput comparisons therefore start at 8 MiB — see §3.
 
 ---
 
@@ -59,17 +58,108 @@ was observed. That is useful consistency data for the sandbox. It does **not**
 bound adversarial collision probability, birthday-bound risk at larger N,
 second-preimage resistance, or behavior at Interactive/Sensitive-scale costs.
 
-### Throughput (informal)
+---
 
-On the same machine/session, Toy mass runs reported on the order of
-**~2000 hashes/s**. That is expected to look much faster than B3 Development
-(~8 MiB matrices) primarily because Toy uses **1 MiB** matrices. Re-benchmark
-at matched memory (e.g. both at 8192 KiB, once X allows that cost) before
-drawing performance conclusions about ForgeX vs BLAKE3.
+## 3. Research throughput bench (matched cost)
+
+**Collected:** 2026-07-20 09:49 UTC  
+**Machine:** Windows 10.0.26200 · 28 logical CPUs · .NET 9.0.17  
+**Tool:** [`tools/ForgeHash.ResearchBench`](../../tools/ForgeHash.ResearchBench/)  
+**Method:** warmup=2, samples=7, fixed password/salt, median wall-clock `DeriveHash`.  
+
+**Caveats**
+
+- Single-process laptop timings — not a security or ASIC claim.
+- Equal KiB is **not** equal mix work: B3 uses **1024-byte** blocks; X uses **512-byte** blocks. At the same `m`, X performs roughly **2×** as many block mixes.
+- Collision Lab multi-worker “~2000 H/s” at Toy was an informal GUI rate and is **not** comparable to this single-threaded median (Toy ≈ **120 H/s** here).
+
+### 3.1 X-only sandbox costs
+
+| Profile | m (KiB) | t | p | median ms | H/s (median) |
+|---------|--------:|--:|--:|----------:|-------------:|
+| X_Toy | 1024 | 1 | 1 | 8.36 | 119.64 |
+| X_4MiB | 4096 | 1 | 1 | 12.15 | 82.33 |
+
+### 3.2 Matched-cost B3 vs X (m ≥ 8192 KiB)
+
+| Cost | B3 median ms | B3 H/s | X median ms | X H/s | B3/X (median time) |
+|------|-------------:|-------:|------------:|------:|-------------------:|
+| `m=8192,t=1,p=1` | 54.46 | 18.36 | 23.66 | 42.27 | **2.30×** |
+| `m=8192,t=1,p=2` | 54.37 | 18.39 | 23.39 | 42.76 | **2.32×** |
+| `m=16384,t=1,p=1` | 198.51 | 5.04 | 50.52 | 19.79 | **3.93×** |
+| `m=16384,t=2,p=1` | 249.36 | 4.01 | 98.40 | 10.16 | **2.53×** |
+
+Ratio **B3/X > 1** means X finished faster (lower median latency) at that nominal cost.
+
+**Reading:** on this machine, X is ~2.3–3.9× faster wall-clock than B3 at the same
+`(m,t,p)`, even though X does more block fills per KiB. That is a **cost-model**
+observation about the current .NET references (ForgeMix+BLAKE3 vs ForgePerm/ForgeX),
+not evidence that X is “harder” or “safer.” Tuning passes/`m` for equal defender
+latency is a separate exercise.
+
+### 3.3 Reproduce matched suite
+
+```bash
+dotnet run --project tools/ForgeHash.ResearchBench -c Release -- --suite matched --warmup 2 --samples 7 --markdown --out artifacts/research/matched_cost_bench.md
+```
+
+Optional BenchmarkDotNet short-run (matched job):
+
+```bash
+dotnet run --project src/ForgeHash.Benchmarks -c Release -- --filter *MatchedCost*
+```
+
+CLI one-shot:
+
+```bash
+dotnet run --project src/ForgeHash.Cli -c Release -- benchmark --algo x --memory 8192 --iterations 1 --parallelism 1 --samples 7
+dotnet run --project src/ForgeHash.Cli -c Release -- benchmark --algo b3 --memory 8192 --iterations 1 --parallelism 1 --samples 7
+```
 
 ---
 
-## 3. Reproduce
+## 3b. Peer KDF throughput (bcrypt / Argon2id / scrypt / PBKDF2)
+
+**Collected:** 2026-07-20 09:55 UTC  
+**Machine:** same as §3 (Windows · 28 logical CPUs · .NET 9)  
+**Tool:** `tools/ForgeHash.ResearchBench --suite peers`  
+**Method:** warmup=2, samples=5  
+
+**Libraries:** BCrypt.Net-Next 4.0.3 · Konscious Argon2 1.3.1 · Scrypt.NET 1.3.0 · .NET `Rfc2898DeriveBytes`  
+
+**Hard caveat:** these are **documented / OWASP-adjacent presets**, not equal CPU work, equal memory-hardness, or equal attacker cost. Faster ≠ weaker. ForgeHash remains experimental and is **not** recommended over Argon2id/bcrypt for production.
+
+| Family | Profile | Parameters | median ms | H/s |
+|--------|---------|------------|----------:|----:|
+| ForgeHash-B3 | Development | m=8192, t=1, p=1 | 69.25 | 14.44 |
+| ForgeHash-B3 | Interactive | m=65536, t=3, p=1 | 1445.98 | 0.69 |
+| ForgeHash-X | Toy (sandbox) | m=1024, t=1, p=1 | 9.65 | 103.60 |
+| ForgeHash-X | Match-8MiB | m=8192, t=1, p=1 | 27.42 | 36.46 |
+| ForgeHash-X | Match-64MiB_t3 | m=65536, t=3, p=1 | 669.18 | 1.49 |
+| Argon2id | OWASP-min-ish | m=19456 KiB, t=2, p=1 | 40.27 | 24.83 |
+| Argon2id | 64MiB_t3_p1 | m=65536 KiB, t=3, p=1 | 187.10 | 5.34 |
+| bcrypt | cost-10 | work factor 10 | 52.64 | 19.00 |
+| bcrypt | cost-12 | work factor 12 | 201.24 | 4.97 |
+| scrypt | N=2^14 | N=16384, r=8, p=1 | 25.56 | 39.12 |
+| scrypt | N=2^17 | N=131072, r=8, p=1 | 191.74 | 5.22 |
+| PBKDF2-SHA256 | OWASP-600k | 600 000 iters | 54.30 | 18.42 |
+| PBKDF2-SHA256 | iter-310k | 310 000 iters | 28.18 | 35.49 |
+
+**Rough latency clustering on this box**
+
+- ~25–70 ms: X Match-8MiB, scrypt N=2^14, PBKDF2-310k, Argon2id 19 MiB, bcrypt cost-10, B3 Development, PBKDF2-600k  
+- ~185–210 ms: Argon2id 64 MiB t=3, scrypt N=2^17, bcrypt cost-12  
+- ~0.67–1.45 s: X Match-64MiB_t3, B3 Interactive  
+
+Reproduce:
+
+```bash
+dotnet run --project tools/ForgeHash.ResearchBench -c Release -- --suite peers --warmup 2 --samples 5 --markdown --out artifacts/research/peer_kdf_bench.md
+```
+
+---
+
+## 4. Reproduce uniqueness campaigns
 
 ```bash
 dotnet run --project src/ForgeHash.CollisionLab -c Release
@@ -77,7 +167,7 @@ dotnet run --project src/ForgeHash.CollisionLab -c Release
 
 1. Algorithm: **ForgeHash-X (forgehx)**
 2. Preset: **Toy**
-3. Campaign: one of the kinds above
+3. Campaign: one of the kinds in §2
 4. Samples: `100000`
 5. Workers: ≈ CPU count
 6. Start → export JSON/CSV if desired
@@ -100,18 +190,17 @@ var result = CollisionCampaign.Run(
 
 ---
 
-## 4. What is still open for X
+## 5. What is still open for X
 
-- Matched-cost benchmarks vs B3 (same `m,t,p`)
-- ForgePerm / sponge known-answer tests beyond construction vectors
-- Broader higher-cost uniqueness smoke (e.g. more kinds at 4–8 MiB; matched B3 Dev)
-- Language ports against `implementers/x0`
-- Independent cryptanalysis (none yet)
+- Equal-latency parameter search vs Argon2id 64 MiB / bcrypt cost-12 (defender UX targets)
+- Broader higher-cost uniqueness smoke at matched 8 MiB
+- Independent cryptanalysis of ForgePerm / ForgeX (none yet)
+- Cross-machine replication of §3 / §3b; alternate Argon2/scrypt library backends
 
 ---
 
-## 5. Final warning
+## 6. Final warning
 
-Passing toy vectors and large-N uniqueness hunts show the .NET reference is
-stable and digests separate under these sample sets. They do not show that
-ForgeHash-X is secure.
+Passing toy vectors, large-N uniqueness hunts, and throughput tables show the
+.NET references behave consistently under these sample sets. They do not show
+that ForgeHash-X is secure.
