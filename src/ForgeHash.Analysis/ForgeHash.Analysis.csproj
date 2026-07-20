@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <RootNamespace>ForgeHash.Analysis</RootNamespace>
+    <Description>Research analysis helpers for ForgeHash-B3. Not for production use.</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ForgeHash.Core\ForgeHash.Core.csproj" />
+  </ItemGroup>
+
+</Project>

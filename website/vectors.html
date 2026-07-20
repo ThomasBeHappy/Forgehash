@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="forgeh-page" content="vectors">
+  <meta name="description" content="Official ForgeHash-B3 v1 test vector digests and implementer pack.">
+  <title>ForgeHash — Vectors</title>
+  <link rel="icon" href="assets/mark.png" type="image/png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,650&family=IBM+Plex+Mono:wght@400;500&family=Literata:opsz,wght@7..72,400;7..72,600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+  <div class="site-wrap">
+    <header class="site-header" id="site-header">  <a class="skip-link" href="#main">Skip to content</a>
+  <div class="brand-row">
+    <img class="brand-mark" src="assets/mark.png" width="32" height="32" alt="">
+    <div>
+      <a class="brand" href="index.html">ForgeHash</a>
+      <p class="brand-meta">ForgeHash-B3 · docs · experimental</p>
+    </div>
+  </div>
+  <nav class="site-nav" aria-label="Documentation">
+    <ul>
+      <li><a href="index.html">Overview</a></li>
+      <li><a href="usage.html">.NET usage</a></li>
+      <li><a href="languages.html">Languages</a></li>
+      <li><a href="implementing.html">Implementing</a></li>
+      <li><a href="vectors.html">Vectors</a></li>
+      <li><a href="research.html">Research</a></li>
+      <li><a href="security.html">Security</a></li>
+      <li><a href="spec.html">Specification</a></li>
+    </ul>
+  </nav></header>
+    <div class="layout">
+      <aside class="side-nav" id="side-nav" aria-label="Secondary">  <h2>On this site</h2>
+  <ul>
+    <li><a href="index.html">Overview</a></li>
+    <li><a href="usage.html">.NET usage</a></li>
+    <li><a href="languages.html">Languages</a></li>
+    <li><a href="implementing.html">Implementing</a></li>
+    <li><a href="vectors.html">Vectors</a></li>
+    <li><a href="research.html">Research</a></li>
+    <li><a href="security.html">Security</a></li>
+    <li><a href="spec.html">Specification</a></li>
+  </ul></aside>
+      <main id="main">
+        <h1>Official vectors</h1>
+        <p class="page-lede">These digests freeze ForgeHash-B3 v1. Incompatible changes require <code>v=2</code>. Claim compatibility only after all official vectors match bit-exactly.</p>
+
+        <div class="callout" role="note">
+          <p><strong>Experimental cryptography.</strong> Not for production password storage.</p>
+        </div>
+
+        <h2>Final hash digests (hex)</h2>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>ID</th><th>Final hash (hex)</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>vector1</td>
+                <td class="digest">50aa2141813479be95d66a46efa0e076191addb64d1cf0a3cc832c6c9b54be4e</td>
+              </tr>
+              <tr>
+                <td>vector2</td>
+                <td class="digest">02acdfa7faa0f149fe700b2f46b792fda8eaecd5f14844142c67709c561a6a98</td>
+              </tr>
+              <tr>
+                <td>vector3</td>
+                <td class="digest">fc2f2e6bbcda6f7ca4a927d8a827b7224b30fcce829c8418005d7dacf6f061ba</td>
+              </tr>
+              <tr>
+                <td>vector4</td>
+                <td class="digest">158230bd7d23be110989b6e9c26a408a0109c2f8ab95d5294e7558a7c9b40b3d</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h2>Machine-readable pack</h2>
+        <p>Porting kit: <a data-repo="implementers/v1/" href="../implementers/v1/"><code>implementers/v1/</code></a></p>
+<pre><code>implementers/v1/manifest.json
+implementers/v1/vectors/*.json
+implementers/v1/CHECKLIST.md
+implementers/v1/verify-vectors.md</code></pre>
+        <p>Human-readable narrative with intermediates: <a data-repo="tests/vectors/FORGEHASH_B3_V1_VECTORS.md" href="../tests/vectors/FORGEHASH_B3_V1_VECTORS.md"><code>tests/vectors/FORGEHASH_B3_V1_VECTORS.md</code></a>.</p>
+
+        <h2>Quick context</h2>
+        <ul>
+          <li><strong>vector1</strong> — empty password, zero salt, Development-scale single lane</li>
+          <li><strong>vector2</strong> — ASCII password, incrementing salt, single lane</li>
+          <li><strong>vector3</strong> — UTF-8 password, two lanes</li>
+          <li><strong>vector4</strong> — multi-pass / multi-lane coverage (see pack for full fields)</li>
+        </ul>
+
+        <div class="doc-links">
+          <a href="implementing.html">Porting guide</a>
+          <a data-repo="implementers/v1/" href="../implementers/v1/">implementers/v1/</a>
+          <a data-repo="tests/vectors/" href="../tests/vectors/">tests/vectors/</a>
+        </div>
+      </main>
+    </div>
+    <footer class="footer" id="site-footer">  <span>ForgeHash-B3 · experimental cryptography</span>
+  <span>
+    <a data-repo="SPECIFICATION.md" href="../SPECIFICATION.md">Specification</a> ·
+    <a data-repo="LICENSE" href="../LICENSE">License</a> ·
+    <a data-repo="SECURITY.md" href="../SECURITY.md">Security</a>
+  </span></footer>
+  </div>
+  <script src="assets/site.js"></script>
+</body>
+</html>

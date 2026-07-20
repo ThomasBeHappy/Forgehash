@@ -1,0 +1,26 @@
+# Ignore build outputs and local tooling
+bin/
+obj/
+.vs/
+.vscode/
+.idea/
+*.user
+*.suo
+*.obj
+*.pdb
+*.exe
+TestResults/
+BenchmarkDotNet.Artifacts/
+artifacts/
+*.log
+refs.json
+*.DotSettings.user
+__pycache__/
+.pytest_cache/
+*.egg-info/
+langs/**/target/
+langs/**/node_modules/
+langs/**/build/
+langs/rust/forgeh/Cargo.lock
+langs/python/forgeh/.venv/
+website/.DS_Store

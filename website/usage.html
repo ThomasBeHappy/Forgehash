@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="forgeh-page" content="usage">
+  <meta name="description" content="Using the ForgeHash .NET library — install, hash, verify, rehash.">
+  <title>ForgeHash — .NET usage</title>
+  <link rel="icon" href="assets/mark.png" type="image/png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,650&family=IBM+Plex+Mono:wght@400;500&family=Literata:opsz,wght@7..72,400;7..72,600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+  <div class="site-wrap">
+    <header class="site-header" id="site-header">  <a class="skip-link" href="#main">Skip to content</a>
+  <div class="brand-row">
+    <img class="brand-mark" src="assets/mark.png" width="32" height="32" alt="">
+    <div>
+      <a class="brand" href="index.html">ForgeHash</a>
+      <p class="brand-meta">ForgeHash-B3 · docs · experimental</p>
+    </div>
+  </div>
+  <nav class="site-nav" aria-label="Documentation">
+    <ul>
+      <li><a href="index.html">Overview</a></li>
+      <li><a href="usage.html">.NET usage</a></li>
+      <li><a href="languages.html">Languages</a></li>
+      <li><a href="implementing.html">Implementing</a></li>
+      <li><a href="vectors.html">Vectors</a></li>
+      <li><a href="research.html">Research</a></li>
+      <li><a href="security.html">Security</a></li>
+      <li><a href="spec.html">Specification</a></li>
+    </ul>
+  </nav></header>
+    <div class="layout">
+      <aside class="side-nav" id="side-nav" aria-label="Secondary">  <h2>On this site</h2>
+  <ul>
+    <li><a href="index.html">Overview</a></li>
+    <li><a href="usage.html">.NET usage</a></li>
+    <li><a href="languages.html">Languages</a></li>
+    <li><a href="implementing.html">Implementing</a></li>
+    <li><a href="vectors.html">Vectors</a></li>
+    <li><a href="research.html">Research</a></li>
+    <li><a href="security.html">Security</a></li>
+    <li><a href="spec.html">Specification</a></li>
+  </ul></aside>
+      <main id="main">
+        <h1>.NET usage</h1>
+        <p class="page-lede">Package <code>ForgeHash</code> <code>1.0.0-experimental</code>. The class shares the namespace name — alias it in call sites.</p>
+
+        <div class="callout" role="note">
+          <p><strong>Experimental software.</strong> Do not store production passwords with ForgeHash.</p>
+        </div>
+
+        <h2>Install</h2>
+        <p>From a local pack:</p>
+<pre><code>dotnet pack src/ForgeHash.Core/ForgeHash.Core.csproj -c Release -o artifacts/nuget
+dotnet add package ForgeHash --source ./artifacts/nuget --prerelease</code></pre>
+        <p>Or reference the project while developing:</p>
+<pre><code>dotnet add reference ../path/to/ForgeHash/src/ForgeHash.Core/ForgeHash.Core.csproj</code></pre>
+
+        <h2>Minimal login flow</h2>
+<pre><code>using ForgeHash;
+using ForgeHashApi = ForgeHash.ForgeHash; // class shares the namespace name
+
+string encoded = ForgeHashApi.HashPassword(passwordBytes, ForgeHashParameters.Interactive);
+bool ok = ForgeHashApi.VerifyPassword(passwordBytes, encoded);
+
+if (ok &amp;&amp; ForgeHashApi.NeedsRehash(encoded, ForgeHashParameters.Interactive))
+{
+    string upgraded = ForgeHashApi.HashPassword(passwordBytes, ForgeHashParameters.Interactive);
+    // Persist upgraded hash
+}</code></pre>
+
+        <h2>Profiles</h2>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>Profile</th><th>When to use</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><code>ForgeHashParameters.Development</code></td><td>Local tests / CI only</td></tr>
+              <tr><td><code>ForgeHashParameters.Interactive</code></td><td>Default research interactive cost</td></tr>
+              <tr><td><code>ForgeHashParameters.Sensitive</code></td><td>Higher-cost experiments</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="note">Never silently default to Development in production-shaped builds.</p>
+
+        <h2>Pepper (optional)</h2>
+<pre><code>byte[] pepper = /* 32 bytes from a secrets manager */;
+string encoded = ForgeHashApi.HashPassword(passwordBytes, pepper, parameters);
+bool ok = ForgeHashApi.VerifyPassword(passwordBytes, pepper, encoded);</code></pre>
+        <p>The pepper never appears in the encoded string.</p>
+
+        <h2>Exact bytes vs strings</h2>
+        <ul>
+          <li><code>ReadOnlySpan&lt;byte&gt;</code> APIs are exact.</li>
+          <li><code>string</code> APIs encode UTF-8 and do not Unicode-normalize.</li>
+          <li>Immutable strings cannot be wiped; prefer byte buffers for secrets when practical.</li>
+        </ul>
+
+        <h2>Parsing</h2>
+<pre><code>if (!ForgeHashParser.TryParse(encoded, out ParsedForgeHash? parsed) || parsed is null)
+{
+    // malformed stored hash
+}
+else
+{
+    // parsed.MemoryKiB / Iterations / Parallelism / Salt / Hash
+}</code></pre>
+        <p><code>VerifyPassword</code> already returns <code>false</code> for malformed input.</p>
+
+        <h2>Low-level research API</h2>
+<pre><code>byte[] digest = ForgeHashApi.DeriveHash(password, salt, parameters);</code></pre>
+        <p>This does not generate a salt. You must supply one.</p>
+
+        <h2>Sample project</h2>
+<pre><code>dotnet run --project samples/ForgeHash.Sample -- "demo-password"</code></pre>
+
+        <div class="doc-links">
+          <a href="implementing.html">Porting guide</a>
+          <a href="spec.html">Specification overview</a>
+          <a data-repo="docs/USAGE.md" href="../docs/USAGE.md">docs/USAGE.md</a>
+        </div>
+      </main>
+    </div>
+    <footer class="footer" id="site-footer">  <span>ForgeHash-B3 · experimental cryptography</span>
+  <span>
+    <a data-repo="SPECIFICATION.md" href="../SPECIFICATION.md">Specification</a> ·
+    <a data-repo="LICENSE" href="../LICENSE">License</a> ·
+    <a data-repo="SECURITY.md" href="../SECURITY.md">Security</a>
+  </span></footer>
+  </div>
+  <script src="assets/site.js"></script>
+</body>
+</html>

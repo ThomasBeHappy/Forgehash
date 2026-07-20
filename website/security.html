@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="forgeh-page" content="security">
+  <meta name="description" content="ForgeHash security policy — experimental warning and disclosure.">
+  <title>ForgeHash — Security</title>
+  <link rel="icon" href="assets/mark.png" type="image/png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,650&family=IBM+Plex+Mono:wght@400;500&family=Literata:opsz,wght@7..72,400;7..72,600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+  <div class="site-wrap">
+    <header class="site-header" id="site-header">  <a class="skip-link" href="#main">Skip to content</a>
+  <div class="brand-row">
+    <img class="brand-mark" src="assets/mark.png" width="32" height="32" alt="">
+    <div>
+      <a class="brand" href="index.html">ForgeHash</a>
+      <p class="brand-meta">ForgeHash-B3 · docs · experimental</p>
+    </div>
+  </div>
+  <nav class="site-nav" aria-label="Documentation">
+    <ul>
+      <li><a href="index.html">Overview</a></li>
+      <li><a href="usage.html">.NET usage</a></li>
+      <li><a href="languages.html">Languages</a></li>
+      <li><a href="implementing.html">Implementing</a></li>
+      <li><a href="vectors.html">Vectors</a></li>
+      <li><a href="research.html">Research</a></li>
+      <li><a href="security.html">Security</a></li>
+      <li><a href="spec.html">Specification</a></li>
+    </ul>
+  </nav></header>
+    <div class="layout">
+      <aside class="side-nav" id="side-nav" aria-label="Secondary">  <h2>On this site</h2>
+  <ul>
+    <li><a href="index.html">Overview</a></li>
+    <li><a href="usage.html">.NET usage</a></li>
+    <li><a href="languages.html">Languages</a></li>
+    <li><a href="implementing.html">Implementing</a></li>
+    <li><a href="vectors.html">Vectors</a></li>
+    <li><a href="research.html">Research</a></li>
+    <li><a href="security.html">Security</a></li>
+    <li><a href="spec.html">Specification</a></li>
+  </ul></aside>
+      <main id="main">
+        <h1>Security</h1>
+        <p class="page-lede">Policy for reporting findings and the standing experimental warning.</p>
+
+        <div class="callout" role="note">
+          <p><strong>Experimental cryptographic software.</strong> ForgeHash is not suitable for production password storage. Prefer Argon2id, scrypt, bcrypt, or platform password APIs.</p>
+        </div>
+
+        <h2>Reporting</h2>
+        <p>Report security-relevant findings privately when possible, including:</p>
+        <ul>
+          <li>algorithmic weaknesses</li>
+          <li>memory-hardness bypasses or cheap time-memory trade-offs</li>
+          <li>collisions or preimage shortcuts</li>
+          <li>implementation vulnerabilities</li>
+          <li>side-channel problems</li>
+          <li>parser denial-of-service issues</li>
+          <li>secret-memory exposure</li>
+        </ul>
+        <p>Open a private advisory or contact the repository maintainer. Do not include real production passwords or private keys in reports.</p>
+
+        <h2>Scope notes</h2>
+        <ul>
+          <li>There is no bug bounty or financial reward unless a separate program is announced.</li>
+          <li>This project does not claim cryptographic certification or production readiness.</li>
+          <li>Issues that only affect research tooling (CLI prompts, visualizer output) should still be reported if they leak secrets.</li>
+        </ul>
+
+        <h2>Supported versions</h2>
+        <p>Only the latest published source on the default branch is considered current for experimental review.</p>
+
+        <div class="doc-links">
+          <a data-repo="SECURITY.md" href="../SECURITY.md">SECURITY.md</a>
+          <a href="research.html">Research notes</a>
+        </div>
+      </main>
+    </div>
+    <footer class="footer" id="site-footer">  <span>ForgeHash-B3 · experimental cryptography</span>
+  <span>
+    <a data-repo="SPECIFICATION.md" href="../SPECIFICATION.md">Specification</a> ·
+    <a data-repo="LICENSE" href="../LICENSE">License</a> ·
+    <a data-repo="SECURITY.md" href="../SECURITY.md">Security</a>
+  </span></footer>
+  </div>
+  <script src="assets/site.js"></script>
+</body>
+</html>

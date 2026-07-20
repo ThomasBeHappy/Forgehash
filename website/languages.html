@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="forgeh-page" content="languages">
+  <meta name="description" content="ForgeHash multi-language packages — Rust, Node.js, Python, C++, PHP.">
+  <title>ForgeHash — Languages</title>
+  <link rel="icon" href="assets/mark.png" type="image/png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,650&family=IBM+Plex+Mono:wght@400;500&family=Literata:opsz,wght@7..72,400;7..72,600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+  <div class="site-wrap">
+    <header class="site-header" id="site-header">  <a class="skip-link" href="#main">Skip to content</a>
+  <div class="brand-row">
+    <img class="brand-mark" src="assets/mark.png" width="32" height="32" alt="">
+    <div>
+      <a class="brand" href="index.html">ForgeHash</a>
+      <p class="brand-meta">ForgeHash-B3 · docs · experimental</p>
+    </div>
+  </div>
+  <nav class="site-nav" aria-label="Documentation">
+    <ul>
+      <li><a href="index.html">Overview</a></li>
+      <li><a href="usage.html">.NET usage</a></li>
+      <li><a href="languages.html">Languages</a></li>
+      <li><a href="implementing.html">Implementing</a></li>
+      <li><a href="vectors.html">Vectors</a></li>
+      <li><a href="research.html">Research</a></li>
+      <li><a href="security.html">Security</a></li>
+      <li><a href="spec.html">Specification</a></li>
+    </ul>
+  </nav></header>
+    <div class="layout">
+      <aside class="side-nav" id="side-nav" aria-label="Secondary">  <h2>On this site</h2>
+  <ul>
+    <li><a href="index.html">Overview</a></li>
+    <li><a href="usage.html">.NET usage</a></li>
+    <li><a href="languages.html">Languages</a></li>
+    <li><a href="implementing.html">Implementing</a></li>
+    <li><a href="vectors.html">Vectors</a></li>
+    <li><a href="research.html">Research</a></li>
+    <li><a href="security.html">Security</a></li>
+    <li><a href="spec.html">Specification</a></li>
+  </ul></aside>
+      <main id="main">
+        <h1>Languages</h1>
+        <p class="page-lede">Language packages sit under <code>langs/</code>. Claim ForgeHash-B3 v1 compatible only when all official vectors match bit-exactly.</p>
+
+        <div class="callout" role="note">
+          <p><strong>Experimental.</strong> Not for production password storage.</p>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>Language</th><th>Path</th><th>Notes</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Rust</td>
+                <td><a data-repo="langs/rust/forgeh" href="../langs/rust/forgeh"><code>langs/rust/forgeh</code></a></td>
+                <td>Full native + C ABI; all 4 vectors pass</td>
+              </tr>
+              <tr>
+                <td>Node.js</td>
+                <td><a data-repo="langs/nodejs/forgeh" href="../langs/nodejs/forgeh"><code>langs/nodejs/forgeh</code></a></td>
+                <td>Full native; all 4 vectors pass</td>
+              </tr>
+              <tr>
+                <td>Python</td>
+                <td><a data-repo="langs/python/forgeh" href="../langs/python/forgeh"><code>langs/python/forgeh</code></a></td>
+                <td>Full native; all 4 vectors pass</td>
+              </tr>
+              <tr>
+                <td>C++</td>
+                <td><a data-repo="langs/cpp/forgeh" href="../langs/cpp/forgeh"><code>langs/cpp/forgeh</code></a></td>
+                <td>C++20 / C ABI over Rust</td>
+              </tr>
+              <tr>
+                <td>PHP</td>
+                <td><a data-repo="langs/php/forgeh" href="../langs/php/forgeh"><code>langs/php/forgeh</code></a></td>
+                <td>PHP 8.1 FFI over Rust</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h2>Commands</h2>
+<pre><code># Rust
+cargo test --manifest-path langs/rust/forgeh/Cargo.toml --release
+
+# Node.js
+cd langs/nodejs/forgeh &amp;&amp; npm install &amp;&amp; npm test
+
+# Python
+cd langs/python/forgeh &amp;&amp; python -m pip install -e ".[dev]" &amp;&amp; pytest -q
+
+# C++ (build Rust core first)
+cargo build --release --manifest-path langs/rust/forgeh/Cargo.toml
+cmake -S langs/cpp/forgeh -B langs/cpp/forgeh/build
+cmake --build langs/cpp/forgeh/build --config Release
+
+# PHP
+php langs/php/forgeh/tests/vectors.php</code></pre>
+
+        <div class="doc-links">
+          <a href="implementing.html">Porting guide</a>
+          <a href="vectors.html">Official vectors</a>
+          <a data-repo="langs/README.md" href="../langs/README.md">langs/README.md</a>
+        </div>
+      </main>
+    </div>
+    <footer class="footer" id="site-footer">  <span>ForgeHash-B3 · experimental cryptography</span>
+  <span>
+    <a data-repo="SPECIFICATION.md" href="../SPECIFICATION.md">Specification</a> ·
+    <a data-repo="LICENSE" href="../LICENSE">License</a> ·
+    <a data-repo="SECURITY.md" href="../SECURITY.md">Security</a>
+  </span></footer>
+  </div>
+  <script src="assets/site.js"></script>
+</body>
+</html>

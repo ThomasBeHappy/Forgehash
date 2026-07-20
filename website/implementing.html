@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="forgeh-page" content="implementing">
+  <meta name="description" content="Implementing ForgeHash-B3 in another language — porting checklist and pack.">
+  <title>ForgeHash — Implementing</title>
+  <link rel="icon" href="assets/mark.png" type="image/png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,650&family=IBM+Plex+Mono:wght@400;500&family=Literata:opsz,wght@7..72,400;7..72,600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+  <div class="site-wrap">
+    <header class="site-header" id="site-header">  <a class="skip-link" href="#main">Skip to content</a>
+  <div class="brand-row">
+    <img class="brand-mark" src="assets/mark.png" width="32" height="32" alt="">
+    <div>
+      <a class="brand" href="index.html">ForgeHash</a>
+      <p class="brand-meta">ForgeHash-B3 · docs · experimental</p>
+    </div>
+  </div>
+  <nav class="site-nav" aria-label="Documentation">
+    <ul>
+      <li><a href="index.html">Overview</a></li>
+      <li><a href="usage.html">.NET usage</a></li>
+      <li><a href="languages.html">Languages</a></li>
+      <li><a href="implementing.html">Implementing</a></li>
+      <li><a href="vectors.html">Vectors</a></li>
+      <li><a href="research.html">Research</a></li>
+      <li><a href="security.html">Security</a></li>
+      <li><a href="spec.html">Specification</a></li>
+    </ul>
+  </nav></header>
+    <div class="layout">
+      <aside class="side-nav" id="side-nav" aria-label="Secondary">  <h2>On this site</h2>
+  <ul>
+    <li><a href="index.html">Overview</a></li>
+    <li><a href="usage.html">.NET usage</a></li>
+    <li><a href="languages.html">Languages</a></li>
+    <li><a href="implementing.html">Implementing</a></li>
+    <li><a href="vectors.html">Vectors</a></li>
+    <li><a href="research.html">Research</a></li>
+    <li><a href="security.html">Security</a></li>
+    <li><a href="spec.html">Specification</a></li>
+  </ul></aside>
+      <main id="main">
+        <h1>Implementing</h1>
+        <p class="page-lede">Guide for writing a compatible ForgeHash-B3 v1 implementation. Matching test vectors is not production safety.</p>
+
+        <div class="callout" role="note">
+          <p><strong>Experimental cryptography.</strong> Matching test vectors ≠ production-safe.</p>
+        </div>
+
+        <h2>Goal</h2>
+        <p>Produce bit-identical outputs for the official v1 vectors in <a data-repo="implementers/v1/" href="../implementers/v1/"><code>implementers/v1/</code></a>. If your digests match all four vectors (and parallel/sequential agree when you add lanes), your implementation is v1-compatible.</p>
+
+        <h2>What you must implement</h2>
+        <p>Follow <a data-repo="SPECIFICATION.md" href="../SPECIFICATION.md">SPECIFICATION.md</a> exactly. Do not substitute SHA-256, Argon2, or unkeyed BLAKE3 where derive-key / XOF / keyed-hash is required.</p>
+        <p>Use the checklist in <a data-repo="implementers/v1/CHECKLIST.md" href="../implementers/v1/CHECKLIST.md"><code>implementers/v1/CHECKLIST.md</code></a>.</p>
+        <p>Minimum building blocks:</p>
+        <ol>
+          <li>Little-endian helpers (<code>LE32</code>, <code>LE64</code>)</li>
+          <li>BLAKE3: derive-key (<code>ForgeHash/v1/seed</code>), XOF expand, plain hash, keyed hash (pepper), XOF output</li>
+          <li><code>FastRange</code> = high 64 bits of 128-bit <code>x * n</code></li>
+          <li>ForgeMix (8 rounds, row/column/diagonal, perm <code>73x+19 mod 128</code>, feed-forward)</li>
+          <li>Memory fill with 4 slices/pass, pass-0 init blocks 0–1, later-pass XOR overwrite</li>
+          <li>Reference selection + completed-slice cross-lane rules</li>
+          <li>Finalization: lane samples + 64-block groups + group-root + root + output XOF</li>
+          <li>Canonical encoding <code>$forgeh$v=1$m=...,t=...,p=...$salt$hash</code></li>
+        </ol>
+
+        <h2>Suggested port order</h2>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>Step</th><th>Deliverable</th><th>Validate with</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>A</td><td>BLAKE3 domain strings + seed</td><td>Vector seed hex</td></tr>
+              <tr><td>B</td><td>Expand + init blocks</td><td>Initialized block prefixes</td></tr>
+              <tr><td>C</td><td>ForgeMix only</td><td>Mix sample prefixes</td></tr>
+              <tr><td>D</td><td>Single-lane fill + finalize</td><td>Vectors 1 &amp; 2 final hash</td></tr>
+              <tr><td>E</td><td>Multi-lane + slices</td><td>Vectors 3 &amp; 4</td></tr>
+              <tr><td>F</td><td>Encoder/parser</td><td>Encoded string exact match</td></tr>
+              <tr><td>G</td><td>Parallel lanes (optional)</td><td>Same digests as sequential</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h2>Implementer pack</h2>
+        <p>Machine-readable pack:</p>
+<pre><code>implementers/v1/manifest.json
+implementers/v1/vectors/*.json</code></pre>
+        <p>Each vector JSON includes password/salt hex, parameters, seed, group root, hash, encoded string, and sampled intermediates. Load <code>manifest.json</code>, then assert every listed field.</p>
+
+        <h2>Common pitfalls</h2>
+        <ul>
+          <li>Ordinary BLAKE3 hash instead of <strong>derive-key</strong> for the seed</li>
+          <li>Forgetting domain prefixes (<code>ForgeHash/v1/...</code>)</li>
+          <li>Big-endian word IO</li>
+          <li>Accepting padded Base64 or reordered <code>m,t,p</code></li>
+          <li>Cross-lane reads from the current incomplete slice</li>
+          <li>Finalizing from lane-last-blocks only (must include group digests)</li>
+          <li>Unicode-normalizing passwords in the core</li>
+          <li>Silently truncating long passwords</li>
+        </ul>
+
+        <h2>Parallelism</h2>
+        <p><code>p</code> is lane count, not “use p OS threads”. A multithreaded port must barrier after every slice and match the sequential digests exactly.</p>
+
+        <h2>Compatibility claim</h2>
+        <p>An implementation may claim <strong>ForgeHash-B3 v1 compatible</strong> only if:</p>
+        <ol>
+          <li>All official vectors pass bit-exactly</li>
+          <li>Parser rejects the non-canonical examples in the specification</li>
+          <li>Verification uses constant-time comparison</li>
+          <li>Docs state the algorithm is experimental / not production-ready</li>
+        </ol>
+
+        <div class="doc-links">
+          <a href="vectors.html">Vector digests</a>
+          <a href="languages.html">Existing packages</a>
+          <a data-repo="docs/IMPLEMENTING.md" href="../docs/IMPLEMENTING.md">docs/IMPLEMENTING.md</a>
+          <a data-repo="implementers/v1/" href="../implementers/v1/">implementers/v1/</a>
+        </div>
+      </main>
+    </div>
+    <footer class="footer" id="site-footer">  <span>ForgeHash-B3 · experimental cryptography</span>
+  <span>
+    <a data-repo="SPECIFICATION.md" href="../SPECIFICATION.md">Specification</a> ·
+    <a data-repo="LICENSE" href="../LICENSE">License</a> ·
+    <a data-repo="SECURITY.md" href="../SECURITY.md">Security</a>
+  </span></footer>
+  </div>
+  <script src="assets/site.js"></script>
+</body>
+</html>

@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net9.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWPF>true</UseWPF>
+    <LangVersion>13</LangVersion>
+    <RootNamespace>Forgeh.CollisionLab</RootNamespace>
+    <AssemblyName>ForgeHash.CollisionLab</AssemblyName>
+    <ApplicationIcon />
+    <Description>ForgeHash-B3 collision lab (experimental research tooling).</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ForgeHash.Core\ForgeHash.Core.csproj" />
+    <ProjectReference Include="..\ForgeHash.Analysis\ForgeHash.Analysis.csproj" />
+  </ItemGroup>
+
+</Project>

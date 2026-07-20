@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="forgeh-page" content="research">
+  <meta name="description" content="ForgeHash research and analysis notes — tooling, scope, open questions.">
+  <title>ForgeHash — Research</title>
+  <link rel="icon" href="assets/mark.png" type="image/png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,650&family=IBM+Plex+Mono:wght@400;500&family=Literata:opsz,wght@7..72,400;7..72,600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+  <div class="site-wrap">
+    <header class="site-header" id="site-header">  <a class="skip-link" href="#main">Skip to content</a>
+  <div class="brand-row">
+    <img class="brand-mark" src="assets/mark.png" width="32" height="32" alt="">
+    <div>
+      <a class="brand" href="index.html">ForgeHash</a>
+      <p class="brand-meta">ForgeHash-B3 · docs · experimental</p>
+    </div>
+  </div>
+  <nav class="site-nav" aria-label="Documentation">
+    <ul>
+      <li><a href="index.html">Overview</a></li>
+      <li><a href="usage.html">.NET usage</a></li>
+      <li><a href="languages.html">Languages</a></li>
+      <li><a href="implementing.html">Implementing</a></li>
+      <li><a href="vectors.html">Vectors</a></li>
+      <li><a href="research.html">Research</a></li>
+      <li><a href="security.html">Security</a></li>
+      <li><a href="spec.html">Specification</a></li>
+    </ul>
+  </nav></header>
+    <div class="layout">
+      <aside class="side-nav" id="side-nav" aria-label="Secondary">  <h2>On this site</h2>
+  <ul>
+    <li><a href="index.html">Overview</a></li>
+    <li><a href="usage.html">.NET usage</a></li>
+    <li><a href="languages.html">Languages</a></li>
+    <li><a href="implementing.html">Implementing</a></li>
+    <li><a href="vectors.html">Vectors</a></li>
+    <li><a href="research.html">Research</a></li>
+    <li><a href="security.html">Security</a></li>
+    <li><a href="spec.html">Specification</a></li>
+  </ul></aside>
+      <main id="main">
+        <h1>Research</h1>
+        <p class="page-lede">Notes from analysis tooling in <code>ForgeHash.Analysis</code> / <code>ForgeHash.Visualizer</code> and automated suites under <code>tests/ForgeHash.Tests</code>. This is not a security proof.</p>
+
+        <div class="callout" role="note">
+          <p><strong>Experimental cryptography only.</strong> A green test suite shows internal consistency with the v1 specification. It does not show that ForgeHash is safe for production passwords.</p>
+        </div>
+
+        <h2>Scope</h2>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>Topic</th><th>Status</th><th>Where</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Official v1 vectors</td><td>Frozen</td><td><code>tests/vectors/</code></td></tr>
+              <tr><td>Collision campaigns</td><td>Automated</td><td><code>CollisionTests.cs</code></td></tr>
+              <tr><td>Avalanche (~50% bit flips)</td><td>Automated</td><td><code>AvalancheTests.cs</code></td></tr>
+              <tr><td>Memory influence / sparse finalization</td><td>Automated</td><td><code>MemoryMutationTests.cs</code>, <code>SecurityAnalysisTests.cs</code></td></tr>
+              <tr><td>Reference distribution</td><td>Automated</td><td><code>ReferenceDistributionTests.cs</code></td></tr>
+              <tr><td>Cross-lane / lane independence</td><td>Automated</td><td><code>SecurityAnalysisTests.cs</code></td></tr>
+              <tr><td>TMTO retention ladder</td><td>Heuristic model</td><td><code>ReferenceAnalysis.EstimateStandardTmtoLadder</code></td></tr>
+              <tr><td>Parser abuse / allocation limits</td><td>Automated</td><td><code>ParserAttackTests.cs</code></td></tr>
+              <tr><td>Dependency graph / heat map / CSV</td><td>Tooling</td><td><code>ForgeHash.Visualizer</code></td></tr>
+              <tr><td>GPU / ASIC evaluation</td><td>Open</td><td>Not instrumented yet</td></tr>
+              <tr><td>Side-channel lab measurement</td><td>Open</td><td>Documented risk only</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h2>Regenerate artifacts</h2>
+<pre><code>dotnet run --project src/ForgeHash.Visualizer -c Release -- all --out artifacts/analysis --memory 8192 --iterations 1 --parallelism 2</code></pre>
+        <p>Outputs include <code>report.json</code>, <code>references.csv</code>, <code>heatmap.json</code>, <code>lanes.json</code>, <code>graph.dot</code>, <code>tmto.json</code>, and <code>RESEARCH_NOTES.md</code>.</p>
+
+        <h2>Collision campaign</h2>
+        <p>The suite hunts for accidental equality across distinct passwords/salts, single-bit neighbors, distinct parameter sets, short research outputs, and random pairs. Any collision fails the build. These are empirical smoke tests, not birthday-bound proofs.</p>
+
+        <h2>TMTO model caveat</h2>
+        <p>The TMTO ladder counts how often a retained-block policy would miss a referenced block, then applies a simple extra ForgeMix factor. This is a diagnostic heuristic, not an adversarial lower bound.</p>
+
+        <h2>Known intentional risks</h2>
+        <ul>
+          <li>Password-dependent addressing improves some cracking-hardware friction and increases local side-channel exposure.</li>
+          <li>Do not deploy ForgeHash where fine-grained memory/timing observation is in scope unless that risk is accepted.</li>
+        </ul>
+
+        <h2>Open questions</h2>
+        <ol>
+          <li>Can a smarter TMTO store irregular checkpoints cheaper than the stride model suggests?</li>
+          <li>Does ForgeMix map to GPU shared-memory/register pressure efficiently?</li>
+          <li>Are there short cycles in reference graphs under adversarial salts?</li>
+          <li>How large is timing leakage from password-dependent indices on shared cloud hosts?</li>
+        </ol>
+
+        <div class="doc-links">
+          <a data-repo="docs/RESEARCH.md" href="../docs/RESEARCH.md">docs/RESEARCH.md</a>
+          <a data-repo="artifacts/analysis/RESEARCH_NOTES.md" href="../artifacts/analysis/RESEARCH_NOTES.md">artifacts/analysis/RESEARCH_NOTES.md</a>
+        </div>
+      </main>
+    </div>
+    <footer class="footer" id="site-footer">  <span>ForgeHash-B3 · experimental cryptography</span>
+  <span>
+    <a data-repo="SPECIFICATION.md" href="../SPECIFICATION.md">Specification</a> ·
+    <a data-repo="LICENSE" href="../LICENSE">License</a> ·
+    <a data-repo="SECURITY.md" href="../SECURITY.md">Security</a>
+  </span></footer>
+  </div>
+  <script src="assets/site.js"></script>
+</body>
+</html>

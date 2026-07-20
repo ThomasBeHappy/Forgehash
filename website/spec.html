@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="forgeh-page" content="spec">
+  <meta name="description" content="ForgeHash-B3 specification overview — table of contents and key excerpts.">
+  <title>ForgeHash — Specification</title>
+  <link rel="icon" href="assets/mark.png" type="image/png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,650&family=IBM+Plex+Mono:wght@400;500&family=Literata:opsz,wght@7..72,400;7..72,600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+  <div class="site-wrap">
+    <header class="site-header" id="site-header">  <a class="skip-link" href="#main">Skip to content</a>
+  <div class="brand-row">
+    <img class="brand-mark" src="assets/mark.png" width="32" height="32" alt="">
+    <div>
+      <a class="brand" href="index.html">ForgeHash</a>
+      <p class="brand-meta">ForgeHash-B3 · docs · experimental</p>
+    </div>
+  </div>
+  <nav class="site-nav" aria-label="Documentation">
+    <ul>
+      <li><a href="index.html">Overview</a></li>
+      <li><a href="usage.html">.NET usage</a></li>
+      <li><a href="languages.html">Languages</a></li>
+      <li><a href="implementing.html">Implementing</a></li>
+      <li><a href="vectors.html">Vectors</a></li>
+      <li><a href="research.html">Research</a></li>
+      <li><a href="security.html">Security</a></li>
+      <li><a href="spec.html">Specification</a></li>
+    </ul>
+  </nav></header>
+    <div class="layout">
+      <aside class="side-nav" id="side-nav" aria-label="Secondary">  <h2>On this site</h2>
+  <ul>
+    <li><a href="index.html">Overview</a></li>
+    <li><a href="usage.html">.NET usage</a></li>
+    <li><a href="languages.html">Languages</a></li>
+    <li><a href="implementing.html">Implementing</a></li>
+    <li><a href="vectors.html">Vectors</a></li>
+    <li><a href="research.html">Research</a></li>
+    <li><a href="security.html">Security</a></li>
+    <li><a href="spec.html">Specification</a></li>
+  </ul></aside>
+      <main id="main">
+        <h1>Specification</h1>
+        <p class="page-lede">Readable map of ForgeHash-B3. The normative text is <a data-repo="SPECIFICATION.md" href="../SPECIFICATION.md"><code>SPECIFICATION.md</code></a> in the repository — this page does not paste the full document.</p>
+
+        <div class="callout" role="note">
+          <p><strong>Final warning (spec §39).</strong> ForgeHash is educational and research software. It must not be used to protect production passwords without extensive independent review.</p>
+        </div>
+
+        <div class="doc-links">
+          <a data-repo="SPECIFICATION.md" href="../SPECIFICATION.md">Open full SPECIFICATION.md</a>
+          <a href="vectors.html">Official vectors</a>
+          <a href="implementing.html">Implementing</a>
+        </div>
+
+        <h2>Identity</h2>
+        <ul class="meta-list">
+          <li><span class="k">Algorithm</span><span>ForgeHash-B3</span></li>
+          <li><span class="k">Encoded id</span><span><code>forgeh</code></span></li>
+          <li><span class="k">Version</span><span><code>v=1</code></span></li>
+          <li><span class="k">Encoded form</span><span><code>$forgeh$v=1$m=&lt;memoryKiB&gt;,t=&lt;iterations&gt;,p=&lt;parallelism&gt;$&lt;salt-b64&gt;$&lt;hash-b64&gt;</code></span></li>
+        </ul>
+        <p class="note">Base64 is RFC 4648 without padding. Parameter order is always <code>m,t,p</code>. See spec §5–§6.</p>
+
+        <h2>What the construction does</h2>
+        <p>ForgeHash-B3 is a configurable, memory-hard password hashing construction. Design goals (§2) include unique salting, independently configurable memory / iterations / lanes, salt-dependent addressing, complete-state finalization, versioned encoding, defensive parsing, and constant-time verification.</p>
+        <p>Non-goals (§3) include formal security claims, Argon2 compatibility, automatic Unicode normalization, and replacing BLAKE3 itself. A future custom primitive (ForgeHash-X) is out of scope for v1.</p>
+
+        <h2>Algorithm spine (high level)</h2>
+        <ol>
+          <li><strong>Seed</strong> — BLAKE3 derive-key with domain <code>ForgeHash/v1/seed</code> (§10)</li>
+          <li><strong>Expand / init</strong> — fill initial blocks via XOF expand (§12–§13)</li>
+          <li><strong>Fill</strong> — per-lane memory fill with ForgeMix compression and reference selection (§14–§16)</li>
+          <li><strong>Finalize</strong> — lane samples, 64-block groups, group root, root, output XOF (§17)</li>
+          <li><strong>Encode</strong> — canonical <code>$forgeh$</code> string (§6)</li>
+        </ol>
+
+        <h2>Default profiles (§33)</h2>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>Profile</th><th>Memory</th><th>Iterations</th><th>Parallelism</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Development</td><td>8192 KiB</td><td>1</td><td>1</td></tr>
+              <tr><td>Interactive</td><td>65536 KiB</td><td>3</td><td>1</td></tr>
+              <tr><td>Sensitive</td><td>262144 KiB</td><td>4</td><td>2</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h2>Table of contents</h2>
+        <p class="note">Section numbers match <code>SPECIFICATION.md</code>. Use the full file for normative detail.</p>
+        <ul class="toc">
+          <li><span class="sec">Foundations</span></li>
+          <li><a data-repo="SPECIFICATION.md" href="../SPECIFICATION.md">§1 Project overview</a></li>
+          <li><a data-repo="SPECIFICATION.md" href="../SPECIFICATION.md">§2 Design goals</a></li>
+          <li><a data-repo="SPECIFICATION.md" href="../SPECIFICATION.md">§3 Non-goals</a></li>
+          <li><a data-repo="SPECIFICATION.md" href="../SPECIFICATION.md">§4 Terminology</a></li>
+          <li><span class="sec">Encoding &amp; parameters</span></li>
+          <li><a data-repo="SPECIFICATION.md" href="../SPECIFICATION.md">§5 Algorithm identifier</a></li>
+          <li><a data-repo="SPECIFICATION.md" href="../SPECIFICATION.md">§6 Encoded hash format</a></li>
+          <li><a data-repo="SPECIFICATION.md" href="../SPECIFICATION.md">§7 Parameter requirements</a></li>
+          <li><a data-repo="SPECIFICATION.md" href="../SPECIFICATION.md">§8 Input handling</a></li>
+          <li><a data-repo="SPECIFICATION.md" href="../SPECIFICATION.md">§9 Binary input encoding</a></li>
+          <li><span class="sec">Core algorithm</span></li>
+          <li><a data-repo="SPECIFICATION.md" href="../SPECIFICATION.md">§10 Initial seed generation</a></li>
+          <li><a data-repo="SPECIFICATION.md" href="../SPECIFICATION.md">§11 Memory layout</a></li>
+          <li><a data-repo="SPECIFICATION.md" href="../SPECIFICATION.md">§12 Expand function</a></li>
+          <li><a data-repo="SPECIFICATION.md" href="../SPECIFICATION.md">§13 Memory initialization</a></li>
+          <li><a data-repo="SPECIFICATION.md" href="../SPECIFICATION.md">§14 ForgeMix compression function</a></li>
+          <li><a data-repo="SPECIFICATION.md" href="../SPECIFICATION.md">§15 Reference block selection</a></li>
+          <li><a data-repo="SPECIFICATION.md" href="../SPECIFICATION.md">§16 Memory filling</a></li>
+          <li><a data-repo="SPECIFICATION.md" href="../SPECIFICATION.md">§17 Finalization</a></li>
+          <li><a data-repo="SPECIFICATION.md" href="../SPECIFICATION.md">§18 Optional pepper support</a></li>
+          <li><span class="sec">API &amp; safety</span></li>
+          <li><a data-repo="SPECIFICATION.md" href="../SPECIFICATION.md">§19 Public API</a></li>
+          <li><a data-repo="SPECIFICATION.md" href="../SPECIFICATION.md">§20 Verification procedure</a></li>
+          <li><a data-repo="SPECIFICATION.md" href="../SPECIFICATION.md">§21 NeedsRehash behavior</a></li>
+          <li><a data-repo="SPECIFICATION.md" href="../SPECIFICATION.md">§22 Parser safety</a></li>
+          <li><a data-repo="SPECIFICATION.md" href="../SPECIFICATION.md">§23 Memory handling</a></li>
+          <li><a data-repo="SPECIFICATION.md" href="../SPECIFICATION.md">§24 Threading model</a></li>
+          <li><a data-repo="SPECIFICATION.md" href="../SPECIFICATION.md">§25 Error handling</a></li>
+          <li><span class="sec">Project &amp; tooling</span></li>
+          <li><a data-repo="SPECIFICATION.md" href="../SPECIFICATION.md">§26 Project structure</a></li>
+          <li><a data-repo="SPECIFICATION.md" href="../SPECIFICATION.md">§27 CLI application</a></li>
+          <li><a data-repo="SPECIFICATION.md" href="../SPECIFICATION.md">§28 Test vectors</a></li>
+          <li><a data-repo="SPECIFICATION.md" href="../SPECIFICATION.md">§29 Required tests</a></li>
+          <li><a data-repo="SPECIFICATION.md" href="../SPECIFICATION.md">§30 Benchmarking</a></li>
+          <li><a data-repo="SPECIFICATION.md" href="../SPECIFICATION.md">§31 Visualizer</a></li>
+          <li><a data-repo="SPECIFICATION.md" href="../SPECIFICATION.md">§32 Security analysis plan</a></li>
+          <li><span class="sec">Process</span></li>
+          <li><a data-repo="SPECIFICATION.md" href="../SPECIFICATION.md">§33 Recommended default profiles</a></li>
+          <li><a data-repo="SPECIFICATION.md" href="../SPECIFICATION.md">§34 Versioning rules</a></li>
+          <li><a data-repo="SPECIFICATION.md" href="../SPECIFICATION.md">§35 Documentation requirements</a></li>
+          <li><a data-repo="SPECIFICATION.md" href="../SPECIFICATION.md">§36 Security disclosure policy</a></li>
+          <li><a data-repo="SPECIFICATION.md" href="../SPECIFICATION.md">§37 Implementation milestones</a></li>
+          <li><a data-repo="SPECIFICATION.md" href="../SPECIFICATION.md">§38 Acceptance criteria</a></li>
+          <li><a data-repo="SPECIFICATION.md" href="../SPECIFICATION.md">§39 Final warning</a></li>
+        </ul>
+      </main>
+    </div>
+    <footer class="footer" id="site-footer">  <span>ForgeHash-B3 · experimental cryptography</span>
+  <span>
+    <a data-repo="SPECIFICATION.md" href="../SPECIFICATION.md">Specification</a> ·
+    <a data-repo="LICENSE" href="../LICENSE">License</a> ·
+    <a data-repo="SECURITY.md" href="../SECURITY.md">Security</a>
+  </span></footer>
+  </div>
+  <script src="assets/site.js"></script>
+</body>
+</html>

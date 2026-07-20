@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="forgeh-page" content="index">
+  <meta name="forgeh-repo" content="https://github.com/OWNER/ForgeHash">
+  <meta name="description" content="ForgeHash-B3 documentation — experimental memory-hard password hashing for research and language ports.">
+  <title>ForgeHash — Overview</title>
+  <link rel="icon" href="assets/mark.png" type="image/png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,650&family=IBM+Plex+Mono:wght@400;500&family=Literata:opsz,wght@7..72,400;7..72,600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+  <div class="site-wrap">
+    <header class="site-header" id="site-header">  <a class="skip-link" href="#main">Skip to content</a>
+  <div class="brand-row">
+    <img class="brand-mark" src="assets/mark.png" width="32" height="32" alt="">
+    <div>
+      <a class="brand" href="index.html">ForgeHash</a>
+      <p class="brand-meta">ForgeHash-B3 · docs · experimental</p>
+    </div>
+  </div>
+  <nav class="site-nav" aria-label="Documentation">
+    <ul>
+      <li><a href="index.html">Overview</a></li>
+      <li><a href="usage.html">.NET usage</a></li>
+      <li><a href="languages.html">Languages</a></li>
+      <li><a href="implementing.html">Implementing</a></li>
+      <li><a href="vectors.html">Vectors</a></li>
+      <li><a href="research.html">Research</a></li>
+      <li><a href="security.html">Security</a></li>
+      <li><a href="spec.html">Specification</a></li>
+    </ul>
+  </nav></header>
+    <div class="layout">
+      <aside class="side-nav" id="side-nav" aria-label="Secondary">  <h2>On this site</h2>
+  <ul>
+    <li><a href="index.html">Overview</a></li>
+    <li><a href="usage.html">.NET usage</a></li>
+    <li><a href="languages.html">Languages</a></li>
+    <li><a href="implementing.html">Implementing</a></li>
+    <li><a href="vectors.html">Vectors</a></li>
+    <li><a href="research.html">Research</a></li>
+    <li><a href="security.html">Security</a></li>
+    <li><a href="spec.html">Specification</a></li>
+  </ul></aside>
+      <main id="main" class="home-hero">
+        <h1>ForgeHash</h1>
+        <p class="page-lede">Configurable, memory-hard password hashing for benchmarking and cryptographic experimentation. First variant: ForgeHash-B3 (BLAKE3).</p>
+
+        <div class="callout" role="note">
+          <p><strong>Experimental.</strong> ForgeHash is experimental cryptographic software. Not for production password storage. Prefer Argon2id, scrypt, bcrypt, or platform password APIs.</p>
+        </div>
+
+        <ul class="meta-list" aria-label="Identity">
+          <li><span class="k">Algorithm</span><span>ForgeHash-B3</span></li>
+          <li><span class="k">Encoded id</span><span><code>forgeh</code></span></li>
+          <li><span class="k">Version</span><span><code>v=1</code></span></li>
+          <li><span class="k">Encoded form</span><span><code>$forgeh$v=1$m=&lt;memoryKiB&gt;,t=&lt;iterations&gt;,p=&lt;parallelism&gt;$&lt;salt-b64&gt;$&lt;hash-b64&gt;</code></span></li>
+        </ul>
+        <p class="note">Base64 is RFC 4648 without padding. Parameter order is always <code>m,t,p</code>.</p>
+
+        <h2>Profiles</h2>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>Profile</th><th>Memory</th><th>Iterations</th><th>Parallelism</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Development</td><td>8192 KiB</td><td>1</td><td>1</td></tr>
+              <tr><td>Interactive</td><td>65536 KiB</td><td>3</td><td>1</td></tr>
+              <tr><td>Sensitive</td><td>262144 KiB</td><td>4</td><td>2</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="note">Development must never be silently selected in production-shaped builds.</p>
+
+        <h2>Documentation</h2>
+        <ul class="home-nav-grid">
+          <li><a href="usage.html"><span class="hn-label">.NET usage</span><span class="hn-desc">Package install, HashPassword / VerifyPassword / NeedsRehash</span></a></li>
+          <li><a href="languages.html"><span class="hn-label">Languages</span><span class="hn-desc">Rust, Node.js, Python, C++, PHP packages under langs/</span></a></li>
+          <li><a href="implementing.html"><span class="hn-label">Implementing</span><span class="hn-desc">Porting guide, checklist, implementer pack</span></a></li>
+          <li><a href="vectors.html"><span class="hn-label">Vectors</span><span class="hn-desc">Official digests and machine-readable pack</span></a></li>
+          <li><a href="research.html"><span class="hn-label">Research</span><span class="hn-desc">Analysis tooling notes and open questions</span></a></li>
+          <li><a href="security.html"><span class="hn-label">Security</span><span class="hn-desc">Disclosure policy and experimental warning</span></a></li>
+          <li><a href="spec.html"><span class="hn-label">Specification</span><span class="hn-desc">Readable TOC and excerpts; full text on GitHub</span></a></li>
+        </ul>
+
+        <div class="doc-links">
+          <a data-repo="SPECIFICATION.md" href="../SPECIFICATION.md">Full SPECIFICATION.md</a>
+          <a data-repo="implementers/v1/" href="../implementers/v1/">implementers/v1/</a>
+          <a data-repo="LICENSE" href="../LICENSE">License</a>
+        </div>
+      </main>
+    </div>
+    <footer class="footer" id="site-footer">  <span>ForgeHash-B3 · experimental cryptography</span>
+  <span>
+    <a data-repo="SPECIFICATION.md" href="../SPECIFICATION.md">Specification</a> ·
+    <a data-repo="LICENSE" href="../LICENSE">License</a> ·
+    <a data-repo="SECURITY.md" href="../SECURITY.md">Security</a>
+  </span></footer>
+  </div>
+  <script src="assets/site.js"></script>
+</body>
+</html>

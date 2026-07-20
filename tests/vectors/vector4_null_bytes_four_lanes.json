@@ -1,0 +1,583 @@
+{
+  "Name": "vector4_null_bytes_four_lanes",
+  "passwordHex": "000100ff00",
+  "saltHex": "42424242424242424242424242424242",
+  "memoryKiB": 32768,
+  "iterations": 3,
+  "parallelism": 4,
+  "outputLength": 32,
+  "seedHex": "f24b61e55a61587b704c5e5d98f3e0f9b17e0891708a8bee48c348643d71c40d",
+  "initializedBlocks": [
+    {
+      "Pass": -1,
+      "Lane": 0,
+      "BlockIndex": 0,
+      "prefixHex": "16ea3cd93db64195760ac6d3912e86521473d4b7c236193be4ce198340febbb9"
+    },
+    {
+      "Pass": -1,
+      "Lane": 0,
+      "BlockIndex": 1,
+      "prefixHex": "b4a351be22474870908c1f0a08ea42c9af0b18e0c7bc53299e6ebac4f600ba09"
+    },
+    {
+      "Pass": -1,
+      "Lane": 1,
+      "BlockIndex": 0,
+      "prefixHex": "e8bbc5419b91d00072d9fa800ec5c6a4e923bec8dfb9bb06766a7bb57aa62ca6"
+    },
+    {
+      "Pass": -1,
+      "Lane": 1,
+      "BlockIndex": 1,
+      "prefixHex": "3012aa37c3f80535789264448e551c91eb1c8c2795d6d03d1acd4ed9e3355fee"
+    },
+    {
+      "Pass": -1,
+      "Lane": 2,
+      "BlockIndex": 0,
+      "prefixHex": "c154d688a9873d353385be1dc6e493ac7b593725477f481af8849ee9a120bb46"
+    },
+    {
+      "Pass": -1,
+      "Lane": 2,
+      "BlockIndex": 1,
+      "prefixHex": "1be852975e4dfd5c9e620952014ada19507612771a14d8f976d851f4f974bbc2"
+    },
+    {
+      "Pass": -1,
+      "Lane": 3,
+      "BlockIndex": 0,
+      "prefixHex": "09bc3c913066b76bac6d22587d621c2f155e4e792ec37a9fac69c4c145403300"
+    },
+    {
+      "Pass": -1,
+      "Lane": 3,
+      "BlockIndex": 1,
+      "prefixHex": "cc9bae3a30a7a42c17ae1cf6f98b381ee86c4aec7ce6951cccc2c8a6b9dec900"
+    }
+  ],
+  "sampleReferences": [
+    {
+      "Pass": 0,
+      "Slice": 0,
+      "Lane": 0,
+      "BlockIndex": 2,
+      "PreviousIndex": 1,
+      "ReferenceLane": 0,
+      "ReferenceIndex": 0,
+      "CrossLane": false
+    },
+    {
+      "Pass": 0,
+      "Slice": 0,
+      "Lane": 0,
+      "BlockIndex": 32,
+      "PreviousIndex": 31,
+      "ReferenceLane": 0,
+      "ReferenceIndex": 9,
+      "CrossLane": false
+    },
+    {
+      "Pass": 0,
+      "Slice": 2,
+      "Lane": 0,
+      "BlockIndex": 4096,
+      "PreviousIndex": 4095,
+      "ReferenceLane": 1,
+      "ReferenceIndex": 1143,
+      "CrossLane": true
+    },
+    {
+      "Pass": 0,
+      "Slice": 3,
+      "Lane": 0,
+      "BlockIndex": 8191,
+      "PreviousIndex": 8190,
+      "ReferenceLane": 0,
+      "ReferenceIndex": 6312,
+      "CrossLane": false
+    },
+    {
+      "Pass": 0,
+      "Slice": 0,
+      "Lane": 1,
+      "BlockIndex": 2,
+      "PreviousIndex": 1,
+      "ReferenceLane": 1,
+      "ReferenceIndex": 0,
+      "CrossLane": false
+    },
+    {
+      "Pass": 0,
+      "Slice": 0,
+      "Lane": 1,
+      "BlockIndex": 32,
+      "PreviousIndex": 31,
+      "ReferenceLane": 1,
+      "ReferenceIndex": 6,
+      "CrossLane": false
+    },
+    {
+      "Pass": 0,
+      "Slice": 2,
+      "Lane": 1,
+      "BlockIndex": 4096,
+      "PreviousIndex": 4095,
+      "ReferenceLane": 2,
+      "ReferenceIndex": 3276,
+      "CrossLane": true
+    },
+    {
+      "Pass": 0,
+      "Slice": 3,
+      "Lane": 1,
+      "BlockIndex": 8191,
+      "PreviousIndex": 8190,
+      "ReferenceLane": 1,
+      "ReferenceIndex": 3071,
+      "CrossLane": false
+    },
+    {
+      "Pass": 0,
+      "Slice": 0,
+      "Lane": 2,
+      "BlockIndex": 2,
+      "PreviousIndex": 1,
+      "ReferenceLane": 2,
+      "ReferenceIndex": 0,
+      "CrossLane": false
+    },
+    {
+      "Pass": 0,
+      "Slice": 0,
+      "Lane": 2,
+      "BlockIndex": 32,
+      "PreviousIndex": 31,
+      "ReferenceLane": 2,
+      "ReferenceIndex": 20,
+      "CrossLane": false
+    },
+    {
+      "Pass": 0,
+      "Slice": 2,
+      "Lane": 2,
+      "BlockIndex": 4096,
+      "PreviousIndex": 4095,
+      "ReferenceLane": 2,
+      "ReferenceIndex": 1362,
+      "CrossLane": false
+    },
+    {
+      "Pass": 0,
+      "Slice": 3,
+      "Lane": 2,
+      "BlockIndex": 8191,
+      "PreviousIndex": 8190,
+      "ReferenceLane": 2,
+      "ReferenceIndex": 5475,
+      "CrossLane": false
+    },
+    {
+      "Pass": 0,
+      "Slice": 0,
+      "Lane": 3,
+      "BlockIndex": 2,
+      "PreviousIndex": 1,
+      "ReferenceLane": 3,
+      "ReferenceIndex": 0,
+      "CrossLane": false
+    },
+    {
+      "Pass": 0,
+      "Slice": 0,
+      "Lane": 3,
+      "BlockIndex": 32,
+      "PreviousIndex": 31,
+      "ReferenceLane": 3,
+      "ReferenceIndex": 28,
+      "CrossLane": false
+    },
+    {
+      "Pass": 0,
+      "Slice": 2,
+      "Lane": 3,
+      "BlockIndex": 4096,
+      "PreviousIndex": 4095,
+      "ReferenceLane": 2,
+      "ReferenceIndex": 2800,
+      "CrossLane": true
+    },
+    {
+      "Pass": 0,
+      "Slice": 3,
+      "Lane": 3,
+      "BlockIndex": 8191,
+      "PreviousIndex": 8190,
+      "ReferenceLane": 3,
+      "ReferenceIndex": 2558,
+      "CrossLane": false
+    },
+    {
+      "Pass": 1,
+      "Slice": 0,
+      "Lane": 0,
+      "BlockIndex": 0,
+      "PreviousIndex": 8191,
+      "ReferenceLane": 0,
+      "ReferenceIndex": 2569,
+      "CrossLane": false
+    },
+    {
+      "Pass": 1,
+      "Slice": 0,
+      "Lane": 0,
+      "BlockIndex": 32,
+      "PreviousIndex": 31,
+      "ReferenceLane": 0,
+      "ReferenceIndex": 6965,
+      "CrossLane": false
+    },
+    {
+      "Pass": 1,
+      "Slice": 2,
+      "Lane": 0,
+      "BlockIndex": 4096,
+      "PreviousIndex": 4095,
+      "ReferenceLane": 2,
+      "ReferenceIndex": 3927,
+      "CrossLane": true
+    },
+    {
+      "Pass": 1,
+      "Slice": 3,
+      "Lane": 0,
+      "BlockIndex": 8191,
+      "PreviousIndex": 8190,
+      "ReferenceLane": 0,
+      "ReferenceIndex": 3149,
+      "CrossLane": false
+    },
+    {
+      "Pass": 1,
+      "Slice": 0,
+      "Lane": 1,
+      "BlockIndex": 0,
+      "PreviousIndex": 8191,
+      "ReferenceLane": 1,
+      "ReferenceIndex": 3596,
+      "CrossLane": false
+    },
+    {
+      "Pass": 1,
+      "Slice": 0,
+      "Lane": 1,
+      "BlockIndex": 32,
+      "PreviousIndex": 31,
+      "ReferenceLane": 1,
+      "ReferenceIndex": 7164,
+      "CrossLane": false
+    },
+    {
+      "Pass": 1,
+      "Slice": 2,
+      "Lane": 1,
+      "BlockIndex": 4096,
+      "PreviousIndex": 4095,
+      "ReferenceLane": 0,
+      "ReferenceIndex": 1088,
+      "CrossLane": true
+    },
+    {
+      "Pass": 1,
+      "Slice": 3,
+      "Lane": 1,
+      "BlockIndex": 8191,
+      "PreviousIndex": 8190,
+      "ReferenceLane": 1,
+      "ReferenceIndex": 4884,
+      "CrossLane": false
+    },
+    {
+      "Pass": 1,
+      "Slice": 0,
+      "Lane": 2,
+      "BlockIndex": 0,
+      "PreviousIndex": 8191,
+      "ReferenceLane": 2,
+      "ReferenceIndex": 2101,
+      "CrossLane": false
+    },
+    {
+      "Pass": 1,
+      "Slice": 0,
+      "Lane": 2,
+      "BlockIndex": 32,
+      "PreviousIndex": 31,
+      "ReferenceLane": 2,
+      "ReferenceIndex": 4742,
+      "CrossLane": false
+    },
+    {
+      "Pass": 1,
+      "Slice": 2,
+      "Lane": 2,
+      "BlockIndex": 4096,
+      "PreviousIndex": 4095,
+      "ReferenceLane": 3,
+      "ReferenceIndex": 787,
+      "CrossLane": true
+    },
+    {
+      "Pass": 1,
+      "Slice": 3,
+      "Lane": 2,
+      "BlockIndex": 8191,
+      "PreviousIndex": 8190,
+      "ReferenceLane": 2,
+      "ReferenceIndex": 6171,
+      "CrossLane": false
+    },
+    {
+      "Pass": 1,
+      "Slice": 0,
+      "Lane": 3,
+      "BlockIndex": 0,
+      "PreviousIndex": 8191,
+      "ReferenceLane": 3,
+      "ReferenceIndex": 1225,
+      "CrossLane": false
+    },
+    {
+      "Pass": 1,
+      "Slice": 0,
+      "Lane": 3,
+      "BlockIndex": 32,
+      "PreviousIndex": 31,
+      "ReferenceLane": 3,
+      "ReferenceIndex": 4357,
+      "CrossLane": false
+    },
+    {
+      "Pass": 1,
+      "Slice": 2,
+      "Lane": 3,
+      "BlockIndex": 4096,
+      "PreviousIndex": 4095,
+      "ReferenceLane": 0,
+      "ReferenceIndex": 2767,
+      "CrossLane": true
+    },
+    {
+      "Pass": 1,
+      "Slice": 3,
+      "Lane": 3,
+      "BlockIndex": 8191,
+      "PreviousIndex": 8190,
+      "ReferenceLane": 3,
+      "ReferenceIndex": 1595,
+      "CrossLane": false
+    },
+    {
+      "Pass": 2,
+      "Slice": 0,
+      "Lane": 0,
+      "BlockIndex": 0,
+      "PreviousIndex": 8191,
+      "ReferenceLane": 0,
+      "ReferenceIndex": 515,
+      "CrossLane": false
+    },
+    {
+      "Pass": 2,
+      "Slice": 0,
+      "Lane": 0,
+      "BlockIndex": 32,
+      "PreviousIndex": 31,
+      "ReferenceLane": 0,
+      "ReferenceIndex": 1780,
+      "CrossLane": false
+    },
+    {
+      "Pass": 2,
+      "Slice": 2,
+      "Lane": 0,
+      "BlockIndex": 4096,
+      "PreviousIndex": 4095,
+      "ReferenceLane": 3,
+      "ReferenceIndex": 1760,
+      "CrossLane": true
+    },
+    {
+      "Pass": 2,
+      "Slice": 3,
+      "Lane": 0,
+      "BlockIndex": 8191,
+      "PreviousIndex": 8190,
+      "ReferenceLane": 0,
+      "ReferenceIndex": 5785,
+      "CrossLane": false
+    },
+    {
+      "Pass": 2,
+      "Slice": 0,
+      "Lane": 1,
+      "BlockIndex": 0,
+      "PreviousIndex": 8191,
+      "ReferenceLane": 1,
+      "ReferenceIndex": 263,
+      "CrossLane": false
+    },
+    {
+      "Pass": 2,
+      "Slice": 0,
+      "Lane": 1,
+      "BlockIndex": 32,
+      "PreviousIndex": 31,
+      "ReferenceLane": 1,
+      "ReferenceIndex": 3770,
+      "CrossLane": false
+    },
+    {
+      "Pass": 2,
+      "Slice": 2,
+      "Lane": 1,
+      "BlockIndex": 4096,
+      "PreviousIndex": 4095,
+      "ReferenceLane": 0,
+      "ReferenceIndex": 2555,
+      "CrossLane": true
+    },
+    {
+      "Pass": 2,
+      "Slice": 3,
+      "Lane": 1,
+      "BlockIndex": 8191,
+      "PreviousIndex": 8190,
+      "ReferenceLane": 1,
+      "ReferenceIndex": 5692,
+      "CrossLane": false
+    },
+    {
+      "Pass": 2,
+      "Slice": 0,
+      "Lane": 2,
+      "BlockIndex": 0,
+      "PreviousIndex": 8191,
+      "ReferenceLane": 2,
+      "ReferenceIndex": 291,
+      "CrossLane": false
+    },
+    {
+      "Pass": 2,
+      "Slice": 0,
+      "Lane": 2,
+      "BlockIndex": 32,
+      "PreviousIndex": 31,
+      "ReferenceLane": 2,
+      "ReferenceIndex": 3876,
+      "CrossLane": false
+    },
+    {
+      "Pass": 2,
+      "Slice": 2,
+      "Lane": 2,
+      "BlockIndex": 4096,
+      "PreviousIndex": 4095,
+      "ReferenceLane": 3,
+      "ReferenceIndex": 243,
+      "CrossLane": true
+    },
+    {
+      "Pass": 2,
+      "Slice": 3,
+      "Lane": 2,
+      "BlockIndex": 8191,
+      "PreviousIndex": 8190,
+      "ReferenceLane": 2,
+      "ReferenceIndex": 5183,
+      "CrossLane": false
+    },
+    {
+      "Pass": 2,
+      "Slice": 0,
+      "Lane": 3,
+      "BlockIndex": 0,
+      "PreviousIndex": 8191,
+      "ReferenceLane": 3,
+      "ReferenceIndex": 6472,
+      "CrossLane": false
+    },
+    {
+      "Pass": 2,
+      "Slice": 0,
+      "Lane": 3,
+      "BlockIndex": 32,
+      "PreviousIndex": 31,
+      "ReferenceLane": 3,
+      "ReferenceIndex": 1630,
+      "CrossLane": false
+    },
+    {
+      "Pass": 2,
+      "Slice": 2,
+      "Lane": 3,
+      "BlockIndex": 4096,
+      "PreviousIndex": 4095,
+      "ReferenceLane": 0,
+      "ReferenceIndex": 1367,
+      "CrossLane": true
+    },
+    {
+      "Pass": 2,
+      "Slice": 3,
+      "Lane": 3,
+      "BlockIndex": 8191,
+      "PreviousIndex": 8190,
+      "ReferenceLane": 3,
+      "ReferenceIndex": 2949,
+      "CrossLane": false
+    }
+  ],
+  "forgeMixSamples": [
+    {
+      "Pass": 0,
+      "Lane": 0,
+      "BlockIndex": 2,
+      "prefixHex": "705febda46676e9f37de96788d5eddf435edc7e671abf55afff8ac07e54450a7"
+    },
+    {
+      "Pass": 0,
+      "Lane": 0,
+      "BlockIndex": 2048,
+      "prefixHex": "05d850c6fc58e88b39ddbaafb2395fd0d44eff9fac048c3f4f4eb1ade95ed6bd"
+    },
+    {
+      "Pass": 0,
+      "Lane": 1,
+      "BlockIndex": 2,
+      "prefixHex": "f2490cadcb90bb96db4d0e1cc19c29e874d754041a0c2205f9e3882134c0093d"
+    },
+    {
+      "Pass": 0,
+      "Lane": 1,
+      "BlockIndex": 2048,
+      "prefixHex": "fe731128ee3df205264dc92266f53cf2ce7b7d9a8282d526377545331106e352"
+    },
+    {
+      "Pass": 2,
+      "Lane": 0,
+      "BlockIndex": 8191,
+      "prefixHex": "24753e8bb5bf11b2d3d830ffb7a83e85642bdd85bc4fd76a89af0388046c345f"
+    },
+    {
+      "Pass": 2,
+      "Lane": 1,
+      "BlockIndex": 8191,
+      "prefixHex": "cec02c53d72bf151bb12f18a54bc1cf75ea3d06140e478efc21ab7b59c24451d"
+    }
+  ],
+  "groupRootHex": "f5c6c5eed903a7086337fa3b6f19272c99b7feb8805b5b892678193e58287d6d",
+  "hashHex": "158230bd7d23be110989b6e9c26a408a0109c2f8ab95d5294e7558a7c9b40b3d",
+  "encoded": "$forgeh$v=1$m=32768,t=3,p=4$QkJCQkJCQkJCQkJCQkJCQg$FYIwvX0jvhEJibbpwmpAigEJwvirldUpTnVYp8m0Cz0"
+}

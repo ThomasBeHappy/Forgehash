@@ -1,0 +1,16 @@
+{
+  "name": "forgeh/forgeh",
+  "description": "Experimental ForgeHash-B3 password hashing via Rust FFI. NOT for production.",
+  "version": "1.0.0-experimental",
+  "type": "library",
+  "license": "MIT",
+  "require": {
+    "php": ">=8.1",
+    "ext-ffi": "*"
+  },
+  "autoload": {
+    "psr-4": {
+      "ForgeH\\": "src/"
+    }
+  }
+}

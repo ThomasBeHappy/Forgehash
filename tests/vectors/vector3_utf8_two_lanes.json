@@ -1,0 +1,239 @@
+{
+  "Name": "vector3_utf8_two_lanes",
+  "passwordHex": "70c3a1737377c3b872642df09f9490",
+  "saltHex": "5a912c7e11d48803f64b19aec0573d8f",
+  "memoryKiB": 16384,
+  "iterations": 2,
+  "parallelism": 2,
+  "outputLength": 32,
+  "seedHex": "640b1c084530c5c75cd1b023906021b3c7043255100346e7dd68b1d38bbd7075",
+  "initializedBlocks": [
+    {
+      "Pass": -1,
+      "Lane": 0,
+      "BlockIndex": 0,
+      "prefixHex": "0bcb726da0149873adf26791f768809f1ace968f32edbaef055c73b379a13853"
+    },
+    {
+      "Pass": -1,
+      "Lane": 0,
+      "BlockIndex": 1,
+      "prefixHex": "259709591fee8e08928a83f1b4ceecc23640ee8180bc7cff3673727e96e3ad65"
+    },
+    {
+      "Pass": -1,
+      "Lane": 1,
+      "BlockIndex": 0,
+      "prefixHex": "a38e8d52d8210c60281f7b4128d12272d79059a82693539e29d5ddcfe7ee7bad"
+    },
+    {
+      "Pass": -1,
+      "Lane": 1,
+      "BlockIndex": 1,
+      "prefixHex": "7759df6832792693f4cdcc4fe330c4fafc95db5baee85bb127f7d58936d4a0f7"
+    }
+  ],
+  "sampleReferences": [
+    {
+      "Pass": 0,
+      "Slice": 0,
+      "Lane": 0,
+      "BlockIndex": 2,
+      "PreviousIndex": 1,
+      "ReferenceLane": 0,
+      "ReferenceIndex": 0,
+      "CrossLane": false
+    },
+    {
+      "Pass": 0,
+      "Slice": 0,
+      "Lane": 0,
+      "BlockIndex": 32,
+      "PreviousIndex": 31,
+      "ReferenceLane": 0,
+      "ReferenceIndex": 3,
+      "CrossLane": false
+    },
+    {
+      "Pass": 0,
+      "Slice": 2,
+      "Lane": 0,
+      "BlockIndex": 4096,
+      "PreviousIndex": 4095,
+      "ReferenceLane": 0,
+      "ReferenceIndex": 1945,
+      "CrossLane": false
+    },
+    {
+      "Pass": 0,
+      "Slice": 3,
+      "Lane": 0,
+      "BlockIndex": 8191,
+      "PreviousIndex": 8190,
+      "ReferenceLane": 0,
+      "ReferenceIndex": 3812,
+      "CrossLane": false
+    },
+    {
+      "Pass": 0,
+      "Slice": 0,
+      "Lane": 1,
+      "BlockIndex": 2,
+      "PreviousIndex": 1,
+      "ReferenceLane": 1,
+      "ReferenceIndex": 1,
+      "CrossLane": false
+    },
+    {
+      "Pass": 0,
+      "Slice": 0,
+      "Lane": 1,
+      "BlockIndex": 32,
+      "PreviousIndex": 31,
+      "ReferenceLane": 1,
+      "ReferenceIndex": 8,
+      "CrossLane": false
+    },
+    {
+      "Pass": 0,
+      "Slice": 2,
+      "Lane": 1,
+      "BlockIndex": 4096,
+      "PreviousIndex": 4095,
+      "ReferenceLane": 0,
+      "ReferenceIndex": 770,
+      "CrossLane": true
+    },
+    {
+      "Pass": 0,
+      "Slice": 3,
+      "Lane": 1,
+      "BlockIndex": 8191,
+      "PreviousIndex": 8190,
+      "ReferenceLane": 1,
+      "ReferenceIndex": 7580,
+      "CrossLane": false
+    },
+    {
+      "Pass": 1,
+      "Slice": 0,
+      "Lane": 0,
+      "BlockIndex": 0,
+      "PreviousIndex": 8191,
+      "ReferenceLane": 0,
+      "ReferenceIndex": 6528,
+      "CrossLane": false
+    },
+    {
+      "Pass": 1,
+      "Slice": 0,
+      "Lane": 0,
+      "BlockIndex": 32,
+      "PreviousIndex": 31,
+      "ReferenceLane": 0,
+      "ReferenceIndex": 4049,
+      "CrossLane": false
+    },
+    {
+      "Pass": 1,
+      "Slice": 2,
+      "Lane": 0,
+      "BlockIndex": 4096,
+      "PreviousIndex": 4095,
+      "ReferenceLane": 1,
+      "ReferenceIndex": 3745,
+      "CrossLane": true
+    },
+    {
+      "Pass": 1,
+      "Slice": 3,
+      "Lane": 0,
+      "BlockIndex": 8191,
+      "PreviousIndex": 8190,
+      "ReferenceLane": 0,
+      "ReferenceIndex": 727,
+      "CrossLane": false
+    },
+    {
+      "Pass": 1,
+      "Slice": 0,
+      "Lane": 1,
+      "BlockIndex": 0,
+      "PreviousIndex": 8191,
+      "ReferenceLane": 1,
+      "ReferenceIndex": 8013,
+      "CrossLane": false
+    },
+    {
+      "Pass": 1,
+      "Slice": 0,
+      "Lane": 1,
+      "BlockIndex": 32,
+      "PreviousIndex": 31,
+      "ReferenceLane": 1,
+      "ReferenceIndex": 4207,
+      "CrossLane": false
+    },
+    {
+      "Pass": 1,
+      "Slice": 2,
+      "Lane": 1,
+      "BlockIndex": 4096,
+      "PreviousIndex": 4095,
+      "ReferenceLane": 0,
+      "ReferenceIndex": 2619,
+      "CrossLane": true
+    },
+    {
+      "Pass": 1,
+      "Slice": 3,
+      "Lane": 1,
+      "BlockIndex": 8191,
+      "PreviousIndex": 8190,
+      "ReferenceLane": 1,
+      "ReferenceIndex": 519,
+      "CrossLane": false
+    }
+  ],
+  "forgeMixSamples": [
+    {
+      "Pass": 0,
+      "Lane": 0,
+      "BlockIndex": 2,
+      "prefixHex": "bed0af054768e25ece94c1ac987b35bac7244c6290c8ce416cc175300001b8e0"
+    },
+    {
+      "Pass": 0,
+      "Lane": 0,
+      "BlockIndex": 2048,
+      "prefixHex": "1522e7c86a6460a9b3bcd2a4a6f367d50762f743169c3b449aeaf5bdeeb06673"
+    },
+    {
+      "Pass": 0,
+      "Lane": 1,
+      "BlockIndex": 2,
+      "prefixHex": "e029e624817460e07bb4db7d842fffaf11bd67d30177d7ad3aae65b4e1b57c4a"
+    },
+    {
+      "Pass": 0,
+      "Lane": 1,
+      "BlockIndex": 2048,
+      "prefixHex": "7e96498fe377598f29055fda07e77977d0bfe52bb819c7672de9014d29b72e76"
+    },
+    {
+      "Pass": 1,
+      "Lane": 0,
+      "BlockIndex": 8191,
+      "prefixHex": "1da78361440a944c875f126c18303e659ca03e3e08ac462d68dfbeb91fc943e7"
+    },
+    {
+      "Pass": 1,
+      "Lane": 1,
+      "BlockIndex": 8191,
+      "prefixHex": "5e81f6ff471f160c9ebb7ee19b3e434ac4db6fc4bd24e2fc6cae798296d97f1a"
+    }
+  ],
+  "groupRootHex": "3428cb7dee307d3820e762aab5dd89cb07394e7b26ddcc1ec7927709779cd1a3",
+  "hashHex": "fc2f2e6bbcda6f7ca4a927d8a827b7224b30fcce829c8418005d7dacf6f061ba",
+  "encoded": "$forgeh$v=1$m=16384,t=2,p=2$WpEsfhHUiAP2SxmuwFc9jw$/C8ua7zab3ykqSfYqCe3Iksw/M6CnIQYAF19rPbwYbo"
+}

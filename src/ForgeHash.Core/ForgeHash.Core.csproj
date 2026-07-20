@@ -1,0 +1,46 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <LangVersion>13</LangVersion>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <RootNamespace>ForgeHash</RootNamespace>
+    <AssemblyName>ForgeHash</AssemblyName>
+
+    <!-- NuGet -->
+    <PackageId>ForgeHash</PackageId>
+    <Version>1.0.0-experimental</Version>
+    <Authors>ForgeHash contributors</Authors>
+    <Company>ForgeHash</Company>
+    <Product>ForgeHash-B3</Product>
+    <Description>
+      Experimental ForgeHash-B3 memory-hard password hashing for research and education.
+      NOT for production password storage. Prefer Argon2id, scrypt, bcrypt, or platform APIs.
+    </Description>
+    <PackageTags>password;hashing;blake3;memory-hard;forgeh;experimental;cryptography</PackageTags>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageProjectUrl>https://github.com/forgeh/ForgeHash</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/forgeh/ForgeHash</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <IsPackable>true</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Blake3" Version="3.0.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\README.md" Pack="true" PackagePath="\" />
+    <None Include="..\..\LICENSE" Pack="true" PackagePath="\" />
+  </ItemGroup>
+
+</Project>

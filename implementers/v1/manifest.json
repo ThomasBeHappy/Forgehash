@@ -1,0 +1,49 @@
+﻿{
+    "algorithm":  "ForgeHash-B3",
+    "version":  1,
+    "warning":  "Experimental cryptography. Not for production password storage. Bit-exact vector match does not imply security.",
+    "encoding":  "$forgeh$v=1$m=\u003cmemoryKiB\u003e,t=\u003citerations\u003e,p=\u003cparallelism\u003e$\u003csalt-b64\u003e$\u003chash-b64\u003e",
+    "documentation":  [
+                          "SPECIFICATION.md",
+                          "docs/IMPLEMENTING.md",
+                          "docs/USAGE.md"
+                      ],
+    "vectors":  [
+                    {
+                        "id":  "vector1_empty_password_zero_salt",
+                        "file":  "vectors/vector1_empty_password_zero_salt.json",
+                        "memoryKiB":  8192,
+                        "iterations":  1,
+                        "parallelism":  1,
+                        "hashHex":  "50aa2141813479be95d66a46efa0e076191addb64d1cf0a3cc832c6c9b54be4e",
+                        "encoded":  "$forgeh$v=1$m=8192,t=1,p=1$AAAAAAAAAAAAAAAAAAAAAA$UKohQYE0eb6V1mpG76Dgdhka3bZNHPCjzIMsbJtUvk4"
+                    },
+                    {
+                        "id":  "vector2_password_incrementing_salt",
+                        "file":  "vectors/vector2_password_incrementing_salt.json",
+                        "memoryKiB":  8192,
+                        "iterations":  1,
+                        "parallelism":  1,
+                        "hashHex":  "02acdfa7faa0f149fe700b2f46b792fda8eaecd5f14844142c67709c561a6a98",
+                        "encoded":  "$forgeh$v=1$m=8192,t=1,p=1$AAECAwQFBgcICQoLDA0ODw$Aqzfp/qg8Un+cAsvRreS/ajq7NXxSEQULGdwnFYaapg"
+                    },
+                    {
+                        "id":  "vector3_utf8_two_lanes",
+                        "file":  "vectors/vector3_utf8_two_lanes.json",
+                        "memoryKiB":  16384,
+                        "iterations":  2,
+                        "parallelism":  2,
+                        "hashHex":  "fc2f2e6bbcda6f7ca4a927d8a827b7224b30fcce829c8418005d7dacf6f061ba",
+                        "encoded":  "$forgeh$v=1$m=16384,t=2,p=2$WpEsfhHUiAP2SxmuwFc9jw$/C8ua7zab3ykqSfYqCe3Iksw/M6CnIQYAF19rPbwYbo"
+                    },
+                    {
+                        "id":  "vector4_null_bytes_four_lanes",
+                        "file":  "vectors/vector4_null_bytes_four_lanes.json",
+                        "memoryKiB":  32768,
+                        "iterations":  3,
+                        "parallelism":  4,
+                        "hashHex":  "158230bd7d23be110989b6e9c26a408a0109c2f8ab95d5294e7558a7c9b40b3d",
+                        "encoded":  "$forgeh$v=1$m=32768,t=3,p=4$QkJCQkJCQkJCQkJCQkJCQg$FYIwvX0jvhEJibbpwmpAigEJwvirldUpTnVYp8m0Cz0"
+                    }
+                ]
+}
