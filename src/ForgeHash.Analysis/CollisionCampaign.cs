@@ -50,7 +50,11 @@ public sealed record CollisionHit(
 public sealed class CollisionCampaignResult
 {
     public required CollisionCampaignKind Kind { get; init; }
-    public required ForgeHashParameters Parameters { get; init; }
+    public required CollisionCostSnapshot Cost { get; init; }
+
+    /// <summary>B3-shaped view of <see cref="Cost"/> for older callers.</summary>
+    public ForgeHashParameters Parameters => Cost.ToB3();
+
     public required int RequestedSamples { get; init; }
     public required int CompletedSamples { get; init; }
     public required int UniqueDigests { get; init; }
@@ -67,13 +71,14 @@ public sealed class CollisionCampaignResult
         var payload = new
         {
             kind = Kind.ToString(),
+            algorithm = Cost.Algorithm,
             parameters = new
             {
-                memoryKiB = Parameters.MemoryKiB,
-                iterations = Parameters.Iterations,
-                parallelism = Parameters.Parallelism,
-                outputLength = Parameters.OutputLength,
-                saltLength = Parameters.SaltLength,
+                memoryKiB = Cost.MemoryKiB,
+                iterations = Cost.Iterations,
+                parallelism = Cost.Parallelism,
+                outputLength = Cost.OutputLength,
+                saltLength = Cost.SaltLength,
             },
             requestedSamples = RequestedSamples,
             completedSamples = CompletedSamples,
@@ -126,24 +131,31 @@ public sealed class CollisionCampaignResult
 }
 
 /// <summary>
-/// Mass collision / uniqueness hunts for ForgeHash-B3 (empirical; not a security proof).
+/// Mass collision / uniqueness hunts (empirical; not a security proof).
 /// Samples are hashed concurrently across worker threads.
+/// Supports ForgeHash-B3 and ForgeHash-X via <see cref="ICollisionHasher"/>.
 /// </summary>
 public static class CollisionCampaign
 {
     /// <summary>
     /// Suggests a worker count from CPU cores, capped so concurrent memory matrices stay reasonable.
     /// </summary>
-    public static int SuggestDegreeOfParallelism(ForgeHashParameters parameters)
+    public static int SuggestDegreeOfParallelism(int memoryKiB)
     {
         int cpu = Math.Max(1, Environment.ProcessorCount);
-        // Each in-flight DeriveHash holds ~MemoryKiB KiB. Aim for ≤ ~1.5 GiB of matrices.
         long budgetBytes = 1536L * 1024 * 1024;
-        long perHash = Math.Max(1, (long)parameters.MemoryKiB * 1024);
+        long perHash = Math.Max(1, (long)memoryKiB * 1024);
         int byMemory = (int)Math.Max(1, budgetBytes / perHash);
         return Math.Clamp(Math.Min(cpu, byMemory), 1, 64);
     }
 
+    public static int SuggestDegreeOfParallelism(ForgeHashParameters parameters)
+        => SuggestDegreeOfParallelism(parameters.MemoryKiB);
+
+    public static int SuggestDegreeOfParallelism(CollisionCostSnapshot cost)
+        => SuggestDegreeOfParallelism(cost.MemoryKiB);
+
+    /// <summary>Run a B3 campaign (default hasher).</summary>
     public static CollisionCampaignResult Run(
         CollisionCampaignKind kind,
         int sampleCount,
@@ -153,38 +165,62 @@ public static class CollisionCampaign
         int? maxDegreeOfParallelism = null,
         IProgress<CollisionProgress>? progress = null,
         CancellationToken cancellationToken = default)
+        => Run(
+            kind,
+            sampleCount,
+            CollisionCostSnapshot.FromB3(parameters),
+            B3CollisionHasher.Instance,
+            stopOnFirstCollision,
+            rngSeed,
+            maxDegreeOfParallelism,
+            progress,
+            cancellationToken);
+
+    /// <summary>Run a campaign with an explicit hasher (B3 or X).</summary>
+    public static CollisionCampaignResult Run(
+        CollisionCampaignKind kind,
+        int sampleCount,
+        CollisionCostSnapshot cost,
+        ICollisionHasher hasher,
+        bool stopOnFirstCollision = false,
+        int? rngSeed = null,
+        int? maxDegreeOfParallelism = null,
+        IProgress<CollisionProgress>? progress = null,
+        CancellationToken cancellationToken = default)
     {
+        ArgumentNullException.ThrowIfNull(hasher);
         ArgumentOutOfRangeException.ThrowIfLessThan(sampleCount, 1);
-        int dop = maxDegreeOfParallelism ?? SuggestDegreeOfParallelism(parameters);
+        int dop = maxDegreeOfParallelism ?? SuggestDegreeOfParallelism(cost);
         ArgumentOutOfRangeException.ThrowIfLessThan(dop, 1);
 
         return kind switch
         {
             CollisionCampaignKind.DistinctPasswords => RunDistinctPasswords(
-                sampleCount, parameters, stopOnFirstCollision, dop, progress, cancellationToken),
+                sampleCount, cost, hasher, stopOnFirstCollision, dop, progress, cancellationToken),
             CollisionCampaignKind.DistinctSalts => RunDistinctSalts(
-                sampleCount, parameters, stopOnFirstCollision, rngSeed, dop, progress, cancellationToken),
+                sampleCount, cost, hasher, stopOnFirstCollision, rngSeed, dop, progress, cancellationToken),
             CollisionCampaignKind.RandomPairs => RunRandomPairs(
-                sampleCount, parameters, stopOnFirstCollision, rngSeed, dop, progress, cancellationToken),
+                sampleCount, cost, hasher, stopOnFirstCollision, rngSeed, dop, progress, cancellationToken),
             CollisionCampaignKind.NearbyPasswordBitFlips => RunNearbyBitFlips(
-                sampleCount, parameters, stopOnFirstCollision, dop, progress, cancellationToken),
+                sampleCount, cost, hasher, stopOnFirstCollision, dop, progress, cancellationToken),
             CollisionCampaignKind.DistinctParameterSets => RunDistinctParameterSets(
-                stopOnFirstCollision, dop, progress, cancellationToken),
+                hasher, stopOnFirstCollision, dop, progress, cancellationToken),
             CollisionCampaignKind.TruncatedOutputs => RunTruncatedOutputs(
-                sampleCount, parameters, stopOnFirstCollision, dop, progress, cancellationToken),
+                sampleCount, cost, hasher, stopOnFirstCollision, dop, progress, cancellationToken),
             _ => throw new ArgumentOutOfRangeException(nameof(kind), kind, null),
         };
     }
 
     private static CollisionCampaignResult RunDistinctPasswords(
         int sampleCount,
-        ForgeHashParameters parameters,
+        CollisionCostSnapshot cost,
+        ICollisionHasher hasher,
         bool stopOnFirst,
         int dop,
         IProgress<CollisionProgress>? progress,
         CancellationToken ct)
     {
-        int saltLen = Math.Clamp(parameters.SaltLength, 16, 64);
+        int saltLen = Math.Clamp(cost.SaltLength, 16, 64);
         byte[] salt = new byte[saltLen];
         for (int i = 0; i < saltLen; i++)
         {
@@ -194,15 +230,16 @@ public static class CollisionCampaign
         SampleJob[] jobs = new SampleJob[sampleCount];
         for (int i = 0; i < sampleCount; i++)
         {
-            jobs[i] = new SampleJob(i, BitConverter.GetBytes(i), salt, parameters, TrackSeed: true);
+            jobs[i] = new SampleJob(i, BitConverter.GetBytes(i), salt, cost, TrackSeed: true);
         }
 
-        return RunJobs(CollisionCampaignKind.DistinctPasswords, jobs, parameters, null, stopOnFirst, dop, progress, ct);
+        return RunJobs(CollisionCampaignKind.DistinctPasswords, jobs, cost, hasher, null, stopOnFirst, dop, progress, ct);
     }
 
     private static CollisionCampaignResult RunDistinctSalts(
         int sampleCount,
-        ForgeHashParameters parameters,
+        CollisionCostSnapshot cost,
+        ICollisionHasher hasher,
         bool stopOnFirst,
         int? rngSeed,
         int dop,
@@ -210,7 +247,7 @@ public static class CollisionCampaign
         CancellationToken ct)
     {
         byte[] password = "collision-salt"u8.ToArray();
-        int saltLen = Math.Clamp(parameters.SaltLength, 16, 64);
+        int saltLen = Math.Clamp(cost.SaltLength, 16, 64);
         Random rng = CreateRng(rngSeed);
         SampleJob[] jobs = new SampleJob[sampleCount];
         for (int i = 0; i < sampleCount; i++)
@@ -218,22 +255,23 @@ public static class CollisionCampaign
             byte[] salt = new byte[saltLen];
             BinaryPrimitives.WriteInt32LittleEndian(salt, i);
             rng.NextBytes(salt.AsSpan(4));
-            jobs[i] = new SampleJob(i, password, salt, parameters, TrackSeed: true);
+            jobs[i] = new SampleJob(i, password, salt, cost, TrackSeed: true);
         }
 
-        return RunJobs(CollisionCampaignKind.DistinctSalts, jobs, parameters, rngSeed, stopOnFirst, dop, progress, ct);
+        return RunJobs(CollisionCampaignKind.DistinctSalts, jobs, cost, hasher, rngSeed, stopOnFirst, dop, progress, ct);
     }
 
     private static CollisionCampaignResult RunRandomPairs(
         int sampleCount,
-        ForgeHashParameters parameters,
+        CollisionCostSnapshot cost,
+        ICollisionHasher hasher,
         bool stopOnFirst,
         int? rngSeed,
         int dop,
         IProgress<CollisionProgress>? progress,
         CancellationToken ct)
     {
-        int saltLen = Math.Clamp(parameters.SaltLength, 16, 64);
+        int saltLen = Math.Clamp(cost.SaltLength, 16, 64);
         Random rng = CreateRng(rngSeed);
         SampleJob[] jobs = new SampleJob[sampleCount];
         for (int i = 0; i < sampleCount; i++)
@@ -244,15 +282,16 @@ public static class CollisionCampaign
             BinaryPrimitives.WriteInt32LittleEndian(salt, i ^ 0x5a5a5a5a);
             rng.NextBytes(password.AsSpan(4));
             rng.NextBytes(salt.AsSpan(4));
-            jobs[i] = new SampleJob(i, password, salt, parameters, TrackSeed: false);
+            jobs[i] = new SampleJob(i, password, salt, cost, TrackSeed: false);
         }
 
-        return RunJobs(CollisionCampaignKind.RandomPairs, jobs, parameters, rngSeed, stopOnFirst, dop, progress, ct);
+        return RunJobs(CollisionCampaignKind.RandomPairs, jobs, cost, hasher, rngSeed, stopOnFirst, dop, progress, ct);
     }
 
     private static CollisionCampaignResult RunNearbyBitFlips(
         int sampleCount,
-        ForgeHashParameters parameters,
+        CollisionCostSnapshot cost,
+        ICollisionHasher hasher,
         bool stopOnFirst,
         int dop,
         IProgress<CollisionProgress>? progress,
@@ -266,11 +305,11 @@ public static class CollisionCampaign
             basePassword[i] = (byte)(0x21 + (i % 40));
         }
 
-        byte[] salt = new byte[Math.Clamp(parameters.SaltLength, 16, 64)];
+        byte[] salt = new byte[Math.Clamp(cost.SaltLength, 16, 64)];
         salt.AsSpan().Fill(0x11);
 
-        var state = new HuntState(CollisionCampaignKind.NearbyPasswordBitFlips, bitCount, parameters, null, dop);
-        byte[] baseline = Derive(basePassword, salt, parameters, sampleDop: dop);
+        var state = new HuntState(CollisionCampaignKind.NearbyPasswordBitFlips, bitCount, cost, null, dop);
+        byte[] baseline = Derive(hasher, basePassword, salt, cost, sampleDop: dop);
         state.Observe(-1, baseline, "hash", basePassword, salt, null, null);
         state.Report(progress, "baseline");
 
@@ -279,13 +318,14 @@ public static class CollisionCampaign
         {
             byte[] flipped = (byte[])basePassword.Clone();
             flipped[bitIndex / 8] ^= (byte)(1 << (bitIndex % 8));
-            jobs[bitIndex] = new SampleJob(bitIndex, flipped, salt, parameters, TrackSeed: false);
+            jobs[bitIndex] = new SampleJob(bitIndex, flipped, salt, cost, TrackSeed: false);
         }
 
-        return RunJobs(state, jobs, stopOnFirst, progress, ct);
+        return RunJobs(state, jobs, hasher, stopOnFirst, progress, ct);
     }
 
     private static CollisionCampaignResult RunDistinctParameterSets(
+        ICollisionHasher hasher,
         bool stopOnFirst,
         int dop,
         IProgress<CollisionProgress>? progress,
@@ -293,36 +333,29 @@ public static class CollisionCampaign
     {
         byte[] password = "params"u8.ToArray();
         byte[] salt = new byte[16];
-        ForgeHashParameters[] sets =
-        [
-            new() { MemoryKiB = 8192, Iterations = 1, Parallelism = 1, OutputLength = 32 },
-            new() { MemoryKiB = 16384, Iterations = 1, Parallelism = 1, OutputLength = 32 },
-            new() { MemoryKiB = 8192, Iterations = 2, Parallelism = 1, OutputLength = 32 },
-            new() { MemoryKiB = 8192, Iterations = 1, Parallelism = 2, OutputLength = 32 },
-            new() { MemoryKiB = 8192, Iterations = 1, Parallelism = 1, OutputLength = 16 },
-            new() { MemoryKiB = 8192, Iterations = 1, Parallelism = 1, OutputLength = 48 },
-        ];
+        CollisionCostSnapshot[] sets = hasher.DistinctParameterSets();
 
         SampleJob[] jobs = new SampleJob[sets.Length];
         for (int i = 0; i < sets.Length; i++)
         {
-            ForgeHashParameters p = sets[i];
+            CollisionCostSnapshot p = sets[i];
             string summary = $"m={p.MemoryKiB},t={p.Iterations},p={p.Parallelism},out={p.OutputLength}";
             jobs[i] = new SampleJob(i, password, salt, p, TrackSeed: false, Channel: "hash-prefix16", ComparePrefix: 16, ParametersSummary: summary);
         }
 
-        return RunJobs(CollisionCampaignKind.DistinctParameterSets, jobs, sets[0], null, stopOnFirst, dop, progress, ct);
+        return RunJobs(CollisionCampaignKind.DistinctParameterSets, jobs, sets[0], hasher, null, stopOnFirst, dop, progress, ct);
     }
 
     private static CollisionCampaignResult RunTruncatedOutputs(
         int sampleCount,
-        ForgeHashParameters parameters,
+        CollisionCostSnapshot cost,
+        ICollisionHasher hasher,
         bool stopOnFirst,
         int dop,
         IProgress<CollisionProgress>? progress,
         CancellationToken ct)
     {
-        var truncated = parameters with { OutputLength = 16 };
+        CollisionCostSnapshot truncated = hasher.WithOutputLength(cost, 16);
         byte[] salt = new byte[Math.Clamp(truncated.SaltLength, 16, 64)];
         SampleJob[] jobs = new SampleJob[sampleCount];
         for (int i = 0; i < sampleCount; i++)
@@ -331,26 +364,28 @@ public static class CollisionCampaign
             jobs[i] = new SampleJob(i, password, salt, truncated, TrackSeed: false);
         }
 
-        return RunJobs(CollisionCampaignKind.TruncatedOutputs, jobs, truncated, null, stopOnFirst, dop, progress, ct);
+        return RunJobs(CollisionCampaignKind.TruncatedOutputs, jobs, truncated, hasher, null, stopOnFirst, dop, progress, ct);
     }
 
     private static CollisionCampaignResult RunJobs(
         CollisionCampaignKind kind,
         SampleJob[] jobs,
-        ForgeHashParameters parameters,
+        CollisionCostSnapshot cost,
+        ICollisionHasher hasher,
         int? rngSeed,
         bool stopOnFirst,
         int dop,
         IProgress<CollisionProgress>? progress,
         CancellationToken ct)
     {
-        var state = new HuntState(kind, jobs.Length, parameters, rngSeed, dop);
-        return RunJobs(state, jobs, stopOnFirst, progress, ct);
+        var state = new HuntState(kind, jobs.Length, cost, rngSeed, dop);
+        return RunJobs(state, jobs, hasher, stopOnFirst, progress, ct);
     }
 
     private static CollisionCampaignResult RunJobs(
         HuntState state,
         SampleJob[] jobs,
+        ICollisionHasher hasher,
         bool stopOnFirst,
         IProgress<CollisionProgress>? progress,
         CancellationToken ct)
@@ -372,14 +407,12 @@ public static class CollisionCampaign
                     return;
                 }
 
-                // When many samples run in parallel, keep each hash single-threaded on lanes
-                // to avoid oversubscription. Lane-parallel is used only for DOP == 1.
-                byte[] hash = Derive(job.Password, job.Salt, job.Parameters, state.DegreeOfParallelism);
+                byte[] hash = Derive(hasher, job.Password, job.Salt, job.Cost, state.DegreeOfParallelism);
                 state.Observe(job.SampleIndex, hash, job.Channel, job.Password, job.Salt, job.ParametersSummary, job.ComparePrefix);
 
                 if (job.TrackSeed)
                 {
-                    byte[] seed = ForgeHash.ComputeSeed(job.Password, job.Salt, job.Parameters);
+                    byte[] seed = hasher.ComputeSeed(job.Password, job.Salt, job.Cost);
                     state.Observe(job.SampleIndex, seed, "seed", job.Password, job.Salt, null, null);
                 }
 
@@ -424,15 +457,16 @@ public static class CollisionCampaign
         return state.Build(reason);
     }
 
-    private static byte[] Derive(byte[] password, byte[] salt, ForgeHashParameters parameters, int sampleDop)
+    private static byte[] Derive(
+        ICollisionHasher hasher,
+        byte[] password,
+        byte[] salt,
+        CollisionCostSnapshot cost,
+        int sampleDop)
     {
         // Only use in-hash lane parallelism when we are not already spreading samples across cores.
-        if (sampleDop <= 1 && parameters.Parallelism > 1)
-        {
-            return ForgeHash.DeriveHashParallel(password, salt, parameters);
-        }
-
-        return ForgeHash.DeriveHash(password, salt, parameters);
+        bool preferLaneParallel = sampleDop <= 1 && cost.Parallelism > 1;
+        return hasher.Derive(password, salt, cost, preferLaneParallel);
     }
 
     private static Random CreateRng(int? seed)
@@ -442,7 +476,7 @@ public static class CollisionCampaign
         int SampleIndex,
         byte[] Password,
         byte[] Salt,
-        ForgeHashParameters Parameters,
+        CollisionCostSnapshot Cost,
         bool TrackSeed,
         string Channel = "hash",
         int? ComparePrefix = null,
@@ -462,13 +496,13 @@ public static class CollisionCampaign
         public HuntState(
             CollisionCampaignKind kind,
             int total,
-            ForgeHashParameters parameters,
+            CollisionCostSnapshot cost,
             int? rngSeed,
             int degreeOfParallelism)
         {
             _kind = kind;
             Total = total;
-            Parameters = parameters;
+            Cost = cost;
             RngSeed = rngSeed;
             DegreeOfParallelism = degreeOfParallelism;
         }
@@ -476,7 +510,7 @@ public static class CollisionCampaign
         public int Total { get; }
         public int Completed => Volatile.Read(ref _completed);
         public int CollisionCount => _hits.Count;
-        public ForgeHashParameters Parameters { get; }
+        public CollisionCostSnapshot Cost { get; }
         public int? RngSeed { get; }
         public int DegreeOfParallelism { get; }
 
@@ -521,7 +555,6 @@ public static class CollisionCampaign
 
             long now = _watch.ElapsedTicks;
             long last = Interlocked.Read(ref _lastReportTicks);
-            // ~10 UI updates/sec
             if (message is null && now - last < Stopwatch.Frequency / 10 && Completed < Total)
             {
                 return;
@@ -565,7 +598,7 @@ public static class CollisionCampaign
             return new CollisionCampaignResult
             {
                 Kind = _kind,
-                Parameters = Parameters,
+                Cost = Cost,
                 RequestedSamples = Total,
                 CompletedSamples = done,
                 UniqueDigests = _firstSeen.Count,

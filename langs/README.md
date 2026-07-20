@@ -2,9 +2,9 @@
 
 Experimental cryptography. Not for production password storage.
 
-These packages exist so researchers and porters can verify ForgeHash-B3 v1
-bit-exactly against the official vectors without starting from the .NET
-reference alone.
+## ForgeHash-B3 (`forgeh` / `v=1`)
+
+Bit-exact ports against [implementers/v1](../implementers/v1).
 
 | Language | Path | Style | Vectors |
 |----------|------|-------|---------|
@@ -14,42 +14,38 @@ reference alone.
 | C++ | [cpp/forgeh](cpp/forgeh) | C++20 API over Rust C ABI | smoke / CMake |
 | PHP | [php/forgeh](php/forgeh) | PHP 8.1 FFI over Rust | needs `ext-ffi` + built lib |
 
-Official vectors: [implementers/v1](../implementers/v1).  
-Porting guide: [docs/IMPLEMENTING.md](../docs/IMPLEMENTING.md).  
-Research notes: [docs/RESEARCH_REPORT.md](../docs/RESEARCH_REPORT.md).
+## ForgeHash-X (`forgehx` / `v=0` sandbox)
+
+Custom ForgeX sponge — **no BLAKE3**. Not compatible with B3. Toy vectors: [implementers/x0](../implementers/x0). Spec: [docs/forgehx](../docs/forgehx).
+
+| Language | Path | Style | Vectors |
+|----------|------|-------|---------|
+| Rust | [rust/forgehx](rust/forgehx) | Full native + C ABI | all 3 pass |
+| Node.js | [nodejs/forgehx](nodejs/forgehx) | Full native JS | all 3 pass |
+| Python | [python/forgehx](python/forgehx) | Full native Python | all 3 pass |
+| C++ | [cpp/forgehx](cpp/forgehx) | C++20 API over Rust C ABI | after Rust release build |
+| PHP | [php/forgehx](php/forgehx) | PHP 8.1 FFI over Rust | needs `ext-ffi` + built lib |
 
 ## Commands
 
 ```bash
-# Rust (also builds the C ABI used by C++/PHP)
+# B3
 cargo test --manifest-path langs/rust/forgeh/Cargo.toml --release
-cargo build --release --manifest-path langs/rust/forgeh/Cargo.toml
-
-# Node.js
 cd langs/nodejs/forgeh && npm install && npm test
+cd langs/python/forgeh && python -m pip install -e ".[dev]" && python -m pytest -q
 
-# Python
-cd langs/python/forgeh && python -m pip install -e ".[dev]" && pytest -q
+# X
+cargo test --manifest-path langs/rust/forgehx/Cargo.toml --release
+cd langs/nodejs/forgehx && npm install && npm test
+cd langs/python/forgehx && python -m pip install -e ".[dev]" && python -m pytest -q
 
-# C++ (after Rust release build)
-cmake -S langs/cpp/forgeh -B langs/cpp/forgeh/build
-cmake --build langs/cpp/forgeh/build --config Release
-
-# PHP
-php langs/php/forgeh/tests/vectors.php
+# CLI (.NET) — B3 or X
+dotnet run --project src/ForgeHash.Cli -- hash --algo x --memory 1024 --iterations 1 --parallelism 1 --password-stdin
+dotnet run --project src/ForgeHash.Cli -- verify "$forgehx$..." --password-stdin
 ```
 
 ## Compatibility
 
-An implementation may claim ForgeHash-B3 v1 compatible only when all official
-vectors match bit-exactly. Matching vectors does not make the algorithm
-production-safe.
-
-## Choosing a starting point
-
-| Goal | Suggested base |
-|------|----------------|
-| Fastest native re-read of the algorithm | Rust or .NET core |
-| Scripting / notebooks | Python |
-| Web / tooling in JS | Node.js |
-| Embed in C/C++/PHP without re-porting ForgeMix | Rust `cdylib` / `staticlib` + C ABI |
+- **B3 v1 compatible** only when all official `implementers/v1` vectors match.
+- **X v0** toy-vector match shows the port follows the sandbox spec — not production safety.
+- Matching vectors does not make either algorithm production-safe.

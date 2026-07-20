@@ -4,6 +4,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using ForgeHash.Analysis;
+using ForgeHashX;
 using Microsoft.Win32;
 using ForgeHashParameters = global::ForgeHash.ForgeHashParameters;
 
@@ -15,6 +16,13 @@ public partial class MainWindow : Window
     private CancellationTokenSource? _cts;
     private CollisionCampaignResult? _lastResult;
     private bool _suppressPresetEvent;
+    private bool _suppressAlgorithmEvent;
+
+    private enum LabAlgorithm
+    {
+        B3,
+        X,
+    }
 
     private static readonly (string Label, CollisionCampaignKind Kind)[] Campaigns =
     [
@@ -31,6 +39,12 @@ public partial class MainWindow : Window
         InitializeComponent();
         LogList.ItemsSource = _log;
 
+        _suppressAlgorithmEvent = true;
+        AlgorithmCombo.Items.Add("ForgeHash-B3 (forgeh)");
+        AlgorithmCombo.Items.Add("ForgeHash-X (forgehx) — experimental");
+        AlgorithmCombo.SelectedIndex = 0;
+        _suppressAlgorithmEvent = false;
+
         foreach ((string label, _) in Campaigns)
         {
             CampaignCombo.Items.Add(label);
@@ -38,16 +52,49 @@ public partial class MainWindow : Window
 
         CampaignCombo.SelectedIndex = 2; // random pairs — mass-hunt default
 
-        _suppressPresetEvent = true;
-        PresetCombo.Items.Add("Development");
-        PresetCombo.Items.Add("Interactive");
-        PresetCombo.Items.Add("Custom");
-        PresetCombo.SelectedIndex = 0;
-        _suppressPresetEvent = false;
-        ApplyPreset("Development");
-        WorkersBox.Text = Math.Max(1, Environment.ProcessorCount).ToString();
+        RebuildPresetsForAlgorithm(LabAlgorithm.B3);
+        AppendLog("Ready. Pick algorithm + campaign and press Start.");
+    }
 
-        AppendLog("Ready. Pick a campaign and press Start.");
+    private LabAlgorithm SelectedAlgorithm =>
+        AlgorithmCombo.SelectedIndex == 1 ? LabAlgorithm.X : LabAlgorithm.B3;
+
+    private void AlgorithmCombo_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (_suppressAlgorithmEvent || !IsLoaded)
+        {
+            return;
+        }
+
+        RebuildPresetsForAlgorithm(SelectedAlgorithm);
+        AppendLog(SelectedAlgorithm == LabAlgorithm.X
+            ? "Switched to ForgeHash-X (experimental sandbox)."
+            : "Switched to ForgeHash-B3.");
+    }
+
+    private void RebuildPresetsForAlgorithm(LabAlgorithm algorithm)
+    {
+        _suppressPresetEvent = true;
+        PresetCombo.Items.Clear();
+        if (algorithm == LabAlgorithm.X)
+        {
+            PresetCombo.Items.Add("Toy");
+            PresetCombo.Items.Add("Custom");
+            PresetCombo.SelectedIndex = 0;
+            _suppressPresetEvent = false;
+            ApplyPreset("Toy");
+            WorkersBox.Text = CollisionCampaign.SuggestDegreeOfParallelism(ForgeHashXParameters.Toy.MemoryKiB).ToString();
+        }
+        else
+        {
+            PresetCombo.Items.Add("Development");
+            PresetCombo.Items.Add("Interactive");
+            PresetCombo.Items.Add("Custom");
+            PresetCombo.SelectedIndex = 0;
+            _suppressPresetEvent = false;
+            ApplyPreset("Development");
+            WorkersBox.Text = CollisionCampaign.SuggestDegreeOfParallelism(ForgeHashParameters.Development).ToString();
+        }
     }
 
     private void PresetCombo_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -57,30 +104,54 @@ public partial class MainWindow : Window
             return;
         }
 
-        if (name is "Development" or "Interactive")
+        if (name is "Development" or "Interactive" or "Toy")
         {
             ApplyPreset(name);
-            WorkersBox.Text = CollisionCampaign.SuggestDegreeOfParallelism(
-                name == "Interactive" ? ForgeHashParameters.Interactive : ForgeHashParameters.Development).ToString();
+            int memory = name switch
+            {
+                "Interactive" => ForgeHashParameters.Interactive.MemoryKiB,
+                "Toy" => ForgeHashXParameters.Toy.MemoryKiB,
+                _ => ForgeHashParameters.Development.MemoryKiB,
+            };
+            WorkersBox.Text = CollisionCampaign.SuggestDegreeOfParallelism(memory).ToString();
         }
     }
 
     private void ApplyPreset(string name)
     {
-        ForgeHashParameters p = name switch
+        if (name == "Toy")
+        {
+            ForgeHashXParameters p = ForgeHashXParameters.Toy;
+            MemoryBox.Text = p.MemoryKiB.ToString();
+            IterationsBox.Text = p.Iterations.ToString();
+            ParallelismBox.Text = p.Parallelism.ToString();
+            OutputLengthBox.Text = p.OutputLength.ToString();
+            UpdateCostWarning(p.MemoryKiB, LabAlgorithm.X);
+            return;
+        }
+
+        ForgeHashParameters b3 = name switch
         {
             "Interactive" => ForgeHashParameters.Interactive,
             _ => ForgeHashParameters.Development,
         };
-        MemoryBox.Text = p.MemoryKiB.ToString();
-        IterationsBox.Text = p.Iterations.ToString();
-        ParallelismBox.Text = p.Parallelism.ToString();
-        OutputLengthBox.Text = p.OutputLength.ToString();
-        UpdateCostWarning(p.MemoryKiB);
+        MemoryBox.Text = b3.MemoryKiB.ToString();
+        IterationsBox.Text = b3.Iterations.ToString();
+        ParallelismBox.Text = b3.Parallelism.ToString();
+        OutputLengthBox.Text = b3.OutputLength.ToString();
+        UpdateCostWarning(b3.MemoryKiB, LabAlgorithm.B3);
     }
 
-    private void UpdateCostWarning(int memoryKiB)
+    private void UpdateCostWarning(int memoryKiB, LabAlgorithm algorithm)
     {
+        if (algorithm == LabAlgorithm.X)
+        {
+            WarningBanner.Text = memoryKiB > ForgeHashXParameters.Toy.MemoryKiB
+                ? $"Warning: X memory is {memoryKiB} KiB. Prefer Toy (1024 KiB) for mass runs."
+                : "Tip: ForgeHash-X Toy (1 MiB) is for sandbox hunts only — not production, not B3-compatible.";
+            return;
+        }
+
         if (memoryKiB > ForgeHashParameters.MinimumMemoryKiB)
         {
             WarningBanner.Text =
@@ -100,19 +171,28 @@ public partial class MainWindow : Window
             return;
         }
 
-        if (!TryReadInputs(out CollisionCampaignKind kind, out int samples, out ForgeHashParameters parameters, out int? rngSeed, out int workers, out string error))
+        if (!TryReadInputs(
+                out LabAlgorithm algorithm,
+                out CollisionCampaignKind kind,
+                out int samples,
+                out CollisionCostSnapshot cost,
+                out ICollisionHasher hasher,
+                out int? rngSeed,
+                out int workers,
+                out string error))
         {
             MessageBox.Show(this, error, "Invalid settings", MessageBoxButton.OK, MessageBoxImage.Warning);
             return;
         }
 
-        UpdateCostWarning(parameters.MemoryKiB);
-        long approxMiB = (long)parameters.MemoryKiB * workers / 1024;
-        if (parameters.MemoryKiB > 8192 && samples >= 100)
+        UpdateCostWarning(cost.MemoryKiB, algorithm);
+        long approxMiB = (long)cost.MemoryKiB * workers / 1024;
+        int slowThreshold = algorithm == LabAlgorithm.X ? 1024 : 8192;
+        if (cost.MemoryKiB > slowThreshold && samples >= 100)
         {
             MessageBoxResult confirm = MessageBox.Show(
                 this,
-                $"Running {samples} samples at {parameters.MemoryKiB} KiB will take a long time.\n\nContinue?",
+                $"Running {samples} samples at {cost.MemoryKiB} KiB will take a long time.\n\nContinue?",
                 "Slow campaign",
                 MessageBoxButton.YesNo,
                 MessageBoxImage.Warning);
@@ -138,7 +218,8 @@ public partial class MainWindow : Window
         _cts = new CancellationTokenSource();
         _lastResult = null;
         SetRunning(true);
-        AppendLog($"Starting {kind} · N={samples} · workers={workers} · m={parameters.MemoryKiB},t={parameters.Iterations},p={parameters.Parallelism},out={parameters.OutputLength}");
+        AppendLog(
+            $"Starting {algorithm} · {kind} · N={samples} · workers={workers} · {cost.Summary}");
 
         var progress = new Progress<CollisionProgress>(OnProgress);
         CancellationToken token = _cts.Token;
@@ -150,7 +231,8 @@ public partial class MainWindow : Window
                 () => CollisionCampaign.Run(
                     kind,
                     samples,
-                    parameters,
+                    cost,
+                    hasher,
                     stopOnFirstCollision: stopOnFirst,
                     rngSeed: rngSeed,
                     maxDegreeOfParallelism: workers,
@@ -176,7 +258,7 @@ public partial class MainWindow : Window
             }
 
             AppendLog(
-                $"Done · {result.StopReason} · collisions={result.CollisionCount} · unique={result.UniqueDigests} · workers={result.DegreeOfParallelism} · {result.HashesPerSecond:F2} H/s · {result.Elapsed.TotalSeconds:F1}s");
+                $"Done · {result.StopReason} · algo={result.Cost.Algorithm} · collisions={result.CollisionCount} · unique={result.UniqueDigests} · workers={result.DegreeOfParallelism} · {result.HashesPerSecond:F2} H/s · {result.Elapsed.TotalSeconds:F1}s");
             StatusText.Text = result.CollisionCount == 0
                 ? "Finished with no collisions in this sample set."
                 : $"Finished with {result.CollisionCount} collision(s).";
@@ -230,10 +312,11 @@ public partial class MainWindow : Window
             return;
         }
 
+        string algo = _lastResult.Cost.Algorithm;
         var dialog = new SaveFileDialog
         {
             Filter = "JSON (*.json)|*.json",
-            FileName = $"forgeh-collision-{_lastResult.Kind}-{DateTime.Now:yyyyMMdd-HHmmss}.json",
+            FileName = $"{algo}-collision-{_lastResult.Kind}-{DateTime.Now:yyyyMMdd-HHmmss}.json",
         };
         if (dialog.ShowDialog(this) == true)
         {
@@ -249,10 +332,11 @@ public partial class MainWindow : Window
             return;
         }
 
+        string algo = _lastResult.Cost.Algorithm;
         var dialog = new SaveFileDialog
         {
             Filter = "CSV (*.csv)|*.csv",
-            FileName = $"forgeh-collision-{_lastResult.Kind}-{DateTime.Now:yyyyMMdd-HHmmss}.csv",
+            FileName = $"{algo}-collision-{_lastResult.Kind}-{DateTime.Now:yyyyMMdd-HHmmss}.csv",
         };
         if (dialog.ShowDialog(this) == true)
         {
@@ -273,16 +357,20 @@ public partial class MainWindow : Window
     }
 
     private bool TryReadInputs(
+        out LabAlgorithm algorithm,
         out CollisionCampaignKind kind,
         out int samples,
-        out ForgeHashParameters parameters,
+        out CollisionCostSnapshot cost,
+        out ICollisionHasher hasher,
         out int? rngSeed,
         out int workers,
         out string error)
     {
+        algorithm = SelectedAlgorithm;
         kind = default;
         samples = 0;
-        parameters = ForgeHashParameters.Development;
+        cost = CollisionCostSnapshot.FromB3(ForgeHashParameters.Development);
+        hasher = B3CollisionHasher.Instance;
         rngSeed = null;
         workers = 1;
         error = string.Empty;
@@ -321,14 +409,41 @@ public partial class MainWindow : Window
             return false;
         }
 
-        parameters = new ForgeHashParameters
+        if (algorithm == LabAlgorithm.X)
         {
-            MemoryKiB = memory,
-            Iterations = iterations,
-            Parallelism = parallelism,
-            OutputLength = outputLength,
-            SaltLength = 16,
-        };
+            hasher = XCollisionHasher.Instance;
+            var xParams = new ForgeHashXParameters
+            {
+                MemoryKiB = memory,
+                Iterations = iterations,
+                Parallelism = parallelism,
+                OutputLength = outputLength,
+                SaltLength = 16,
+            };
+            try
+            {
+                xParams.Validate();
+            }
+            catch (Exception ex)
+            {
+                error = ex.Message;
+                return false;
+            }
+
+            cost = CollisionCostSnapshot.FromX(xParams);
+        }
+        else
+        {
+            hasher = B3CollisionHasher.Instance;
+            cost = CollisionCostSnapshot.FromB3(new ForgeHashParameters
+            {
+                MemoryKiB = memory,
+                Iterations = iterations,
+                Parallelism = parallelism,
+                OutputLength = outputLength,
+                SaltLength = 16,
+            });
+        }
 
         string seedText = RngSeedBox.Text.Trim();
         if (seedText.Length > 0)
@@ -342,10 +457,9 @@ public partial class MainWindow : Window
             rngSeed = seed;
         }
 
-        // Mark custom if values diverge from presets.
         if (PresetCombo.SelectedItem is string preset &&
             preset != "Custom" &&
-            !MatchesPreset(preset, parameters))
+            !MatchesPreset(preset, cost))
         {
             _suppressPresetEvent = true;
             PresetCombo.SelectedItem = "Custom";
@@ -355,21 +469,25 @@ public partial class MainWindow : Window
         return true;
     }
 
-    private static bool MatchesPreset(string name, ForgeHashParameters p)
+    private static bool MatchesPreset(string name, CollisionCostSnapshot cost)
     {
-        ForgeHashParameters refParams = name == "Interactive"
-            ? ForgeHashParameters.Interactive
-            : ForgeHashParameters.Development;
-        return p.MemoryKiB == refParams.MemoryKiB
-               && p.Iterations == refParams.Iterations
-               && p.Parallelism == refParams.Parallelism
-               && p.OutputLength == refParams.OutputLength;
+        CollisionCostSnapshot expected = name switch
+        {
+            "Toy" => CollisionCostSnapshot.FromX(ForgeHashXParameters.Toy),
+            "Interactive" => CollisionCostSnapshot.FromB3(ForgeHashParameters.Interactive),
+            _ => CollisionCostSnapshot.FromB3(ForgeHashParameters.Development),
+        };
+        return cost.MemoryKiB == expected.MemoryKiB
+               && cost.Iterations == expected.Iterations
+               && cost.Parallelism == expected.Parallelism
+               && cost.OutputLength == expected.OutputLength;
     }
 
     private void SetRunning(bool running)
     {
         StartButton.IsEnabled = !running;
         CancelButton.IsEnabled = running;
+        AlgorithmCombo.IsEnabled = !running;
         CampaignCombo.IsEnabled = !running;
         SampleCountBox.IsEnabled = !running;
         PresetCombo.IsEnabled = !running;

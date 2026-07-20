@@ -1,0 +1,22 @@
+[package]
+name = "forgehx"
+version = "0.1.0-experimental"
+edition = "2021"
+description = "Experimental ForgeHash-X v0 password hashing (custom ForgeX sponge). NOT for production use."
+license = "MIT"
+readme = "README.md"
+keywords = ["password", "hash", "memory-hard", "experimental", "forgehx"]
+categories = ["cryptography"]
+
+[lib]
+name = "forgehx"
+crate-type = ["rlib", "cdylib", "staticlib"]
+
+[dependencies]
+getrandom = "0.3"
+thiserror = "2"
+
+[dev-dependencies]
+hex = "0.4"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"

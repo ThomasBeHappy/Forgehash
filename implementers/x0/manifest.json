@@ -1,0 +1,39 @@
+{
+  "algorithm": "ForgeHash-X",
+  "version": 0,
+  "warning": "Experimental cryptography. Not for production password storage. Not compatible with ForgeHash-B3. Bit-exact vector match does not imply security.",
+  "encoding": "$forgehx$v=0$m=\u003CmemoryKiB\u003E,t=\u003Citerations\u003E,p=\u003Cparallelism\u003E$\u003Csalt-b64\u003E$\u003Chash-b64\u003E",
+  "documentation": [
+    "docs/forgehx/SPECIFICATION_X.md",
+    "docs/forgehx/README.md"
+  ],
+  "vectors": [
+    {
+      "id": "vector1_empty_password_zero_salt",
+      "file": "vectors/vector1_empty_password_zero_salt.json",
+      "memoryKiB": 1024,
+      "iterations": 1,
+      "parallelism": 1,
+      "hashHex": "63def3608445d473b3d1ee9056747a6c481a668d085c96de2286bae4b57aa04a",
+      "encoded": "$forgehx$v=0$m=1024,t=1,p=1$AAAAAAAAAAAAAAAAAAAAAA$Y97zYIRF1HOz0e6QVnR6bEgaZo0IXJbeIoa65LV6oEo"
+    },
+    {
+      "id": "vector2_short_password_incrementing_salt",
+      "file": "vectors/vector2_short_password_incrementing_salt.json",
+      "memoryKiB": 1024,
+      "iterations": 1,
+      "parallelism": 1,
+      "hashHex": "7e1916d2329e65ccb5c8e211c25c31efdd381cec765d721b35c2878e99ce9e08",
+      "encoded": "$forgehx$v=0$m=1024,t=1,p=1$AAECAwQFBgcICQoLDA0ODw$fhkW0jKeZcy1yOIRwlwx7904HOx2XXIbNcKHjpnOngg"
+    },
+    {
+      "id": "vector3_two_lanes_toy",
+      "file": "vectors/vector3_two_lanes_toy.json",
+      "memoryKiB": 1024,
+      "iterations": 1,
+      "parallelism": 2,
+      "hashHex": "3b050e341b18490362a602b8194c1702e7914d3a3f5b42225876cb75d56c0c13",
+      "encoded": "$forgehx$v=0$m=1024,t=1,p=2$QkJCQkJCQkJCQkJCQkJCQg$OwUONBsYSQNipgK4GUwXAueRTTo/W0IiWHbLddVsDBM"
+    }
+  ]
+}

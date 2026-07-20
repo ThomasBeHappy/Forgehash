@@ -22,5 +22,7 @@ langs/**/target/
 langs/**/node_modules/
 langs/**/build/
 langs/rust/forgeh/Cargo.lock
+langs/rust/forgehx/Cargo.lock
 langs/python/forgeh/.venv/
+langs/python/forgehx/.venv/
 website/.DS_Store

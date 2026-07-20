@@ -50,12 +50,14 @@
   </ul></aside>
       <main id="main">
         <h1>Languages</h1>
-        <p class="page-lede">Language packages sit under <code>langs/</code>. Claim ForgeHash-B3 v1 compatible only when all official vectors match bit-exactly.</p>
+        <p class="page-lede">Language packages sit under <code>langs/</code>. B3 and X are separate trees — digests are not compatible.</p>
 
         <div class="callout" role="note">
           <p><strong>Experimental.</strong> Not for production password storage.</p>
         </div>
 
+        <h2>ForgeHash-B3 (<code>forgeh</code> / v=1)</h2>
+        <p>Claim B3 v1 compatible only when all official <code>implementers/v1</code> vectors match bit-exactly.</p>
         <div class="table-wrap">
           <table>
             <thead>
@@ -91,23 +93,56 @@
           </table>
         </div>
 
+        <h2>ForgeHash-X (<code>forgehx</code> / v=0 sandbox)</h2>
+        <p>Custom ForgeX sponge (no BLAKE3). Toy vectors and KATs: <a href="vectors-x.html">X Vectors</a> / <code>implementers/x0</code>. Spec: <a data-repo="docs/forgehx/SPECIFICATION_X.md" href="../docs/forgehx/SPECIFICATION_X.md">SPECIFICATION_X.md</a>.</p>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>Language</th><th>Path</th><th>Notes</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Rust</td>
+                <td><a data-repo="langs/rust/forgehx" href="../langs/rust/forgehx"><code>langs/rust/forgehx</code></a></td>
+                <td>Full native + C ABI; all 3 toy vectors pass</td>
+              </tr>
+              <tr>
+                <td>Node.js</td>
+                <td><a data-repo="langs/nodejs/forgehx" href="../langs/nodejs/forgehx"><code>langs/nodejs/forgehx</code></a></td>
+                <td>Full native; all 3 toy vectors pass</td>
+              </tr>
+              <tr>
+                <td>Python</td>
+                <td><a data-repo="langs/python/forgehx" href="../langs/python/forgehx"><code>langs/python/forgehx</code></a></td>
+                <td>Full native; all 3 toy vectors pass</td>
+              </tr>
+              <tr>
+                <td>C++</td>
+                <td><a data-repo="langs/cpp/forgehx" href="../langs/cpp/forgehx"><code>langs/cpp/forgehx</code></a></td>
+                <td>C++20 / C ABI over Rust</td>
+              </tr>
+              <tr>
+                <td>PHP</td>
+                <td><a data-repo="langs/php/forgehx" href="../langs/php/forgehx"><code>langs/php/forgehx</code></a></td>
+                <td>PHP 8.1 FFI over Rust</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
         <h2>Commands</h2>
-<pre><code># Rust
+<pre><code># B3
 cargo test --manifest-path langs/rust/forgeh/Cargo.toml --release
-
-# Node.js
 cd langs/nodejs/forgeh &amp;&amp; npm install &amp;&amp; npm test
+cd langs/python/forgeh &amp;&amp; python -m pip install -e ".[dev]" &amp;&amp; python -m pytest -q
 
-# Python
-cd langs/python/forgeh &amp;&amp; python -m pip install -e ".[dev]" &amp;&amp; pytest -q
+# X (sandbox)
+cargo test --manifest-path langs/rust/forgehx/Cargo.toml --release
+cd langs/nodejs/forgehx &amp;&amp; npm install &amp;&amp; npm test
+cd langs/python/forgehx &amp;&amp; python -m pip install -e ".[dev]" &amp;&amp; python -m pytest -q
 
-# C++ (build Rust core first)
-cargo build --release --manifest-path langs/rust/forgeh/Cargo.toml
-cmake -S langs/cpp/forgeh -B langs/cpp/forgeh/build
-cmake --build langs/cpp/forgeh/build --config Release
-
-# PHP
-php langs/php/forgeh/tests/vectors.php</code></pre>
+# CLI (.NET) — pick algorithm
+dotnet run --project src/ForgeHash.Cli -- hash --algo x --memory 1024 --password-stdin</code></pre>
 
         <div class="doc-links">
           <a href="implementing.html">Porting guide</a>

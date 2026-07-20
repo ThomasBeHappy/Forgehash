@@ -1,0 +1,25 @@
+{
+  "name": "forgehx",
+  "version": "0.0.0-experimental",
+  "description": "Experimental ForgeHash-X v0 memory-hard password hashing (Node.js reference). Custom ForgeX sponge — no BLAKE3. NOT for production use.",
+  "type": "module",
+  "main": "src/index.js",
+  "exports": {
+    ".": "./src/index.js"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "scripts": {
+    "test": "node --test"
+  },
+  "keywords": [
+    "forgehash",
+    "forgehx",
+    "password-hashing",
+    "memory-hard",
+    "experimental",
+    "cryptography"
+  ],
+  "license": "MIT"
+}

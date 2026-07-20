@@ -1,0 +1,50 @@
+{
+  "algorithm": "ForgeX",
+  "version": 0,
+  "warning": "Experimental ForgeHash-X primitives. Not for production. Not B3-compatible.",
+  "roundConstants": {
+    "r0_i0": "9e3779b97f4a7c15",
+    "r7_i15": "b69a7ad40ae09e15"
+  },
+  "zeroStatePermute": [
+    "370f9f6dc99f22e1",
+    "826248958404e970",
+    "cfe82f51382c3056",
+    "5fb35916cb60a291",
+    "890c6f4cce5a6733",
+    "cec4c311b950fa79",
+    "2e9994a0b7ab54a1",
+    "f501c5ba8091a033",
+    "99e32da07734bf86",
+    "e8a5b512aaccc797",
+    "b9ad10414fa32d80",
+    "f258edb8f748d7d4",
+    "ce64c733c0ffc31b",
+    "9f0a8710b5b7ea3a",
+    "271c6601585b5fdb",
+    "c91c096b35094ef8"
+  ],
+  "hash": [
+    {
+      "id": "empty_seed_tag",
+      "domainTag": "ForgeX/v0/seed",
+      "dataHex": "",
+      "outHex": "fb02771569fa871de4495ceaa1ef0e8c035a287a345fb0b055f7405bdbed3fbb"
+    },
+    {
+      "id": "seed_1234",
+      "domainTag": "ForgeX/v0/seed",
+      "dataHex": "01020304",
+      "outHex": "83924fcfdbfcd71cd65d8d6cfe036192db7056f6ad086ecd65d25972fb0ea90e"
+    }
+  ],
+  "xof": [
+    {
+      "id": "expand_40zero_64",
+      "domainTag": "ForgeX/v0/expand",
+      "dataHex": "00000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "length": 64,
+      "outHex": "e6a7f44114f1127c874ae2731e90fe5e6dc88ea201484b7c7590a5500ebf46a2628e0e5e385f21f70569c7b0e417658fa75d06035aaa706a1997f92f631408aa"
+    }
+  ]
+}

@@ -10,11 +10,12 @@
     <RootNamespace>Forgeh.CollisionLab</RootNamespace>
     <AssemblyName>ForgeHash.CollisionLab</AssemblyName>
     <ApplicationIcon />
-    <Description>ForgeHash-B3 collision lab (experimental research tooling).</Description>
+    <Description>ForgeHash collision lab for B3 and X (experimental research tooling).</Description>
   </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\ForgeHash.Core\ForgeHash.Core.csproj" />
+    <ProjectReference Include="..\ForgeHash.X.Core\ForgeHash.X.Core.csproj" />
     <ProjectReference Include="..\ForgeHash.Analysis\ForgeHash.Analysis.csproj" />
   </ItemGroup>
 

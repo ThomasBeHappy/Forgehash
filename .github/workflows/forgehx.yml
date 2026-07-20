@@ -1,0 +1,80 @@
+name: ForgeHash-X
+
+on:
+  push:
+    branches: [main, master]
+    paths:
+      - "src/ForgeHash.X.Core/**"
+      - "tests/ForgeHash.X.Tests/**"
+      - "tests/ForgeHash.CrossImplementation.Tests/**"
+      - "implementers/x0/**"
+      - "langs/**/forgehx/**"
+      - "tools/crosscheck/**"
+      - "tools/ForgeHash.X.VectorGen/**"
+      - "docs/forgehx/**"
+      - ".github/workflows/forgehx.yml"
+  pull_request:
+    paths:
+      - "src/ForgeHash.X.Core/**"
+      - "tests/ForgeHash.X.Tests/**"
+      - "tests/ForgeHash.CrossImplementation.Tests/**"
+      - "implementers/x0/**"
+      - "langs/**/forgehx/**"
+      - "tools/crosscheck/**"
+      - "tools/ForgeHash.X.VectorGen/**"
+      - "docs/forgehx/**"
+      - ".github/workflows/forgehx.yml"
+  workflow_dispatch:
+
+jobs:
+  dotnet-x:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "9.0.x"
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - uses: dtolnay/rust-toolchain@stable
+      - name: Test ForgeHash-X
+        run: dotnet test tests/ForgeHash.X.Tests -c Release --verbosity minimal
+      - name: Cross-implementation (.NET + lang ports)
+        run: dotnet test tests/ForgeHash.CrossImplementation.Tests -c Release --verbosity minimal --filter FullyQualifiedName~XToyVectorInterop
+
+
+  python-x:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install and test
+        working-directory: langs/python/forgehx
+        run: |
+          python -m pip install -e ".[dev]"
+          python -m pytest -q
+
+  node-x:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Test
+        working-directory: langs/nodejs/forgehx
+        run: npm test
+
+  rust-x:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - name: Test
+        run: cargo test --manifest-path langs/rust/forgehx/Cargo.toml --release

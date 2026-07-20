@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="forgeh-page" content="vectors-x">
+  <meta name="description" content="ForgeHash-X v0 toy vector digests and implementer pack (experimental sandbox).">
+  <title>ForgeHash — X Vectors</title>
+  <link rel="icon" href="assets/mark.png" type="image/png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,650&family=IBM+Plex+Mono:wght@400;500&family=Literata:opsz,wght@7..72,400;7..72,600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+  <div class="site-wrap">
+    <header class="site-header" id="site-header"></header>
+    <div class="layout">
+      <aside class="side-nav" id="side-nav" aria-label="Secondary"></aside>
+      <main id="main">
+        <h1>ForgeHash-X vectors</h1>
+        <p class="page-lede">Frozen digests for the ForgeHash-X sandbox — <code>forgehx</code> / <code>v=0</code>, ForgeX sponge (no BLAKE3). Not compatible with ForgeHash-B3. Bit-exact match does not imply security.</p>
+
+        <div class="callout" role="note">
+          <p><strong>Sandbox only.</strong> Experimental cryptography — not for production password storage. Prefer Argon2id or platform APIs for real passwords. Conformance digests: <a href="vectors.html">B3 Vectors</a>.</p>
+        </div>
+
+        <h2>Final hash digests (hex)</h2>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>ID</th><th>Final hash (hex)</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>vector1</td>
+                <td class="digest">63def3608445d473b3d1ee9056747a6c481a668d085c96de2286bae4b57aa04a</td>
+              </tr>
+              <tr>
+                <td>vector2</td>
+                <td class="digest">7e1916d2329e65ccb5c8e211c25c31efdd381cec765d721b35c2878e99ce9e08</td>
+              </tr>
+              <tr>
+                <td>vector3</td>
+                <td class="digest">3b050e341b18490362a602b8194c1702e7914d3a3f5b42225876cb75d56c0c13</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h2>Machine-readable pack</h2>
+        <p>Porting kit: <a data-repo="implementers/x0/" href="../implementers/x0/"><code>implementers/x0/</code></a></p>
+<pre><code>implementers/x0/manifest.json
+implementers/x0/vectors/*.json
+implementers/x0/kats/forgex_primitive.json
+implementers/x0/CHECKLIST.md
+implementers/x0/OUTLINE.md
+implementers/x0/verify-vectors.md</code></pre>
+
+        <h2>Quick context</h2>
+        <ul>
+          <li><strong>vector1</strong> — empty password, zero salt, toy <code>m=1024</code> single lane</li>
+          <li><strong>vector2</strong> — ASCII <code>password</code>, incrementing salt, single lane</li>
+          <li><strong>vector3</strong> — two lanes at toy memory</li>
+        </ul>
+        <p class="note">Profile: <code>m=1024</code>, <code>t=1</code>, <code>out=32</code>, salt 16 bytes. Custom ForgeX sponge — no BLAKE3.</p>
+
+        <div class="doc-links">
+          <a data-repo="docs/forgehx/SPECIFICATION_X.md" href="../docs/forgehx/SPECIFICATION_X.md">SPECIFICATION_X.md</a>
+          <a data-repo="implementers/x0/" href="../implementers/x0/">implementers/x0/</a>
+          <a href="languages.html">Language ports</a>
+          <a href="vectors.html">B3 vectors</a>
+        </div>
+      </main>
+    </div>
+    <footer class="footer" id="site-footer"></footer>
+  </div>
+  <script src="assets/site.js"></script>
+</body>
+</html>

@@ -23,6 +23,10 @@ Encoded form (unpadded RFC 4648 Base64; parameter order always `m,t,p`):
 $forgeh$v=1$m=<memoryKiB>,t=<iterations>,p=<parallelism>$<salt-b64>$<hash-b64>
 ```
 
+## ForgeHash-X (experimental)
+
+Separate research sandbox with a custom **ForgeX** sponge (no BLAKE3). Encoded as `$forgehx$v=0$…`. **Not production-ready, not reviewed, not compatible with B3.** Spec and .NET reference: [`docs/forgehx/`](docs/forgehx/). Toy vectors + KATs: [`implementers/x0/`](implementers/x0/). Sample: `samples/ForgeHash.X.Sample/`. CI: `.github/workflows/forgehx.yml`. Empirical notes: [`docs/forgehx/RESEARCH_NOTES.md`](docs/forgehx/RESEARCH_NOTES.md). Full research paper (PDF): [`docs/forgehx/paper/ForgeHash_X_Research_Paper.pdf`](docs/forgehx/paper/ForgeHash_X_Research_Paper.pdf). Site: [X Vectors](website/vectors-x.html).
+
 ## Who should read what
 
 | Audience | Start here |
@@ -44,15 +48,19 @@ npx --yes serve website
 ## Repository layout
 
 ```text
-SPECIFICATION.md          Normative algorithm
+SPECIFICATION.md          Normative B3 algorithm
 docs/                     Usage, porting, research
-implementers/v1/          Official vectors + checklist
-src/ForgeHash.Core        .NET reference library
+docs/forgehx/             ForgeHash-X sandbox spec + README
+implementers/v1/          Official B3 vectors + checklist
+implementers/x0/          ForgeHash-X toy vectors + ForgeX KATs
+samples/ForgeHash.X.Sample/  ForgeHash-X usage demo
+src/ForgeHash.Core        .NET B3 reference library
+src/ForgeHash.X.Core      .NET X sandbox (ForgeX sponge)
 src/ForgeHash.Analysis    Traces, TMTO heuristic, collision engine
 src/ForgeHash.CollisionLab  Windows GUI for mass uniqueness hunts
 src/ForgeHash.Visualizer  Export analysis artifacts
 src/ForgeHash.Cli         hash / verify / benchmark / vector
-langs/                    Rust, Node, Python, C++, PHP
+langs/                    B3 (`forgeh`) + X (`forgehx`) ports
 tests/                    xUnit suites + frozen vectors
 website/                  GitHub Pages site
 ```
@@ -118,7 +126,7 @@ Development is for tests and mass campaigns only.
 **Report:** [`docs/RESEARCH_REPORT.md`](docs/RESEARCH_REPORT.md) (includes a logged run of **100 000** random pairs with **0** collisions at Development cost).
 
 ```bash
-# Mass uniqueness / collision lab (Windows)
+# Mass uniqueness / collision lab (Windows) — B3 or X via Algorithm combo
 dotnet run --project src/ForgeHash.CollisionLab -c Release
 
 # Reference graphs / TMTO heuristic export

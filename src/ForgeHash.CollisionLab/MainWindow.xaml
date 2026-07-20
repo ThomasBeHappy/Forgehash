@@ -12,10 +12,10 @@
     <StackPanel DockPanel.Dock="Top">
       <TextBlock Text="ForgeHash Collision Lab" FontSize="26" FontWeight="SemiBold"/>
       <TextBlock TextWrapping="Wrap" Margin="0,4,0,0" Foreground="{StaticResource MutedBrush}"
-                 Text="Empirical uniqueness hunts against ForgeHash-B3. Not a security proof. Experimental cryptography — do not store production passwords with ForgeHash."/>
+                 Text="Empirical uniqueness hunts against ForgeHash-B3 or ForgeHash-X. Not a security proof. Experimental cryptography — do not store production passwords with either algorithm."/>
       <Border Margin="0,12,0,0" Padding="10,8" BorderBrush="{StaticResource WarnBrush}" BorderThickness="3,0,0,0" Background="#22A34D22">
         <TextBlock x:Name="WarningBanner" TextWrapping="Wrap"
-                   Text="Tip: use the Development profile (8 MiB) for mass runs. Larger profiles are extremely slow."/>
+                   Text="Tip: B3 Development (8 MiB) or X Toy (1 MiB) for mass runs. Larger profiles are extremely slow."/>
       </Border>
     </StackPanel>
 
@@ -34,7 +34,10 @@
       <!-- Controls -->
       <ScrollViewer Grid.Column="0" VerticalScrollBarVisibility="Auto">
         <StackPanel>
-          <TextBlock Text="Campaign" FontWeight="SemiBold" Margin="0,0,0,4"/>
+          <TextBlock Text="Algorithm" FontWeight="SemiBold" Margin="0,0,0,4"/>
+          <ComboBox x:Name="AlgorithmCombo" Height="28" SelectionChanged="AlgorithmCombo_OnSelectionChanged"/>
+
+          <TextBlock Text="Campaign" FontWeight="SemiBold" Margin="0,12,0,4"/>
           <ComboBox x:Name="CampaignCombo" Height="28"/>
 
           <TextBlock Text="Samples (N)" FontWeight="SemiBold" Margin="0,12,0,4"/>

@@ -4,8 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="forgeh-page" content="index">
-  <meta name="forgeh-repo" content="https://github.com/OWNER/ForgeHash">
-  <meta name="description" content="ForgeHash-B3 documentation — experimental memory-hard password hashing for research and language ports.">
+  <meta name="description" content="ForgeHash documentation — experimental memory-hard password hashing for research and language ports.">
   <title>ForgeHash — Overview</title>
   <link rel="icon" href="assets/mark.png" type="image/png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -13,98 +12,107 @@
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,650&family=IBM+Plex+Mono:wght@400;500&family=Literata:opsz,wght@7..72,400;7..72,600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/styles.css">
 </head>
-<body>
+<body class="page-home">
   <div class="site-wrap">
-    <header class="site-header" id="site-header">  <a class="skip-link" href="#main">Skip to content</a>
-  <div class="brand-row">
-    <img class="brand-mark" src="assets/mark.png" width="32" height="32" alt="">
-    <div>
-      <a class="brand" href="index.html">ForgeHash</a>
-      <p class="brand-meta">ForgeHash-B3 · docs · experimental</p>
-    </div>
-  </div>
-  <nav class="site-nav" aria-label="Documentation">
-    <ul>
-      <li><a href="index.html">Overview</a></li>
-      <li><a href="usage.html">.NET usage</a></li>
-      <li><a href="languages.html">Languages</a></li>
-      <li><a href="implementing.html">Implementing</a></li>
-      <li><a href="vectors.html">Vectors</a></li>
-      <li><a href="research.html">Research</a></li>
-      <li><a href="research-report.html">Report</a></li>
-      <li><a href="security.html">Security</a></li>
-      <li><a href="spec.html">Specification</a></li>
-    </ul>
-  </nav></header>
+    <header class="site-header" id="site-header"></header>
     <div class="layout">
-      <aside class="side-nav" id="side-nav" aria-label="Secondary">  <h2>On this site</h2>
-  <ul>
-    <li><a href="index.html">Overview</a></li>
-    <li><a href="usage.html">.NET usage</a></li>
-    <li><a href="languages.html">Languages</a></li>
-    <li><a href="implementing.html">Implementing</a></li>
-    <li><a href="vectors.html">Vectors</a></li>
-    <li><a href="research.html">Research</a></li>
-      <li><a href="research-report.html">Report</a></li>
-    <li><a href="security.html">Security</a></li>
-    <li><a href="spec.html">Specification</a></li>
-  </ul></aside>
-      <main id="main" class="home-hero">
-        <h1>ForgeHash</h1>
-        <p class="page-lede">Configurable, memory-hard password hashing for benchmarking and cryptographic experimentation. First variant: ForgeHash-B3 (BLAKE3).</p>
+      <aside class="side-nav" id="side-nav" aria-label="Secondary"></aside>
+      <main id="main">
+        <section class="home-stage" aria-labelledby="home-brand">
+          <div class="home-brand">
+            <img class="home-mark" src="assets/mark.png" width="72" height="72" alt="">
+            <h1 id="home-brand">ForgeHash</h1>
+          </div>
+          <p class="home-lede">Memory-hard experimental hashing for research, benchmarking, and language ports.</p>
+          <nav class="hero-cta" aria-label="Primary destinations">
+            <a class="cta" href="spec.html">Spec</a>
+            <a class="cta" href="vectors.html">Vectors</a>
+            <a class="cta" href="languages.html">Languages</a>
+            <a class="cta cta-quiet" href="research.html">Research</a>
+          </nav>
+          <p class="hero-edge" role="note">Experimental — not for production password storage.</p>
+        </section>
 
-        <div class="callout" role="note">
-          <p><strong>Experimental.</strong> ForgeHash is experimental cryptographic software. Not for production password storage. Prefer Argon2id, scrypt, bcrypt, or platform password APIs.</p>
-        </div>
+        <section class="tracks" aria-labelledby="tracks-heading">
+          <h2 id="tracks-heading" class="section-label">Two tracks</h2>
+          <div class="track-split">
+            <article class="track">
+              <p class="track-kicker">Conformance</p>
+              <h3 class="track-title">ForgeHash-B3</h3>
+              <p class="track-lede">BLAKE3-backed line for ports and vectors. Encoded as <code>forgeh</code> / <code>v=1</code>.</p>
+              <ul class="track-meta" aria-label="B3 identity">
+                <li><span class="k">Id</span><span><code>forgeh</code></span></li>
+                <li><span class="k">Version</span><span><code>v=1</code></span></li>
+                <li><span class="k">Form</span><span><code>$forgeh$v=1$m=…,t=…,p=…$salt$hash</code></span></li>
+              </ul>
+              <p class="track-links">
+                <a href="vectors.html">B3 vectors</a>
+                <a href="spec.html">Specification</a>
+                <a data-repo="implementers/v1/" href="../implementers/v1/">implementers/v1</a>
+              </p>
+            </article>
+            <article class="track track-x">
+              <p class="track-kicker">Sandbox</p>
+              <h3 class="track-title">ForgeHash-X</h3>
+              <p class="track-lede">Research-only ForgeX sponge — no BLAKE3. Encoded as <code>forgehx</code> / <code>v=0</code>. Digests are not compatible with B3.</p>
+              <ul class="track-meta" aria-label="X identity">
+                <li><span class="k">Id</span><span><code>forgehx</code></span></li>
+                <li><span class="k">Version</span><span><code>v=0</code></span></li>
+                <li><span class="k">Primitive</span><span>ForgeX sponge</span></li>
+              </ul>
+              <p class="track-links">
+                <a href="vectors-x.html">X vectors</a>
+                <a data-repo="docs/forgehx/SPECIFICATION_X.md" href="../docs/forgehx/SPECIFICATION_X.md">X spec</a>
+                <a data-repo="implementers/x0/" href="../implementers/x0/">implementers/x0</a>
+              </p>
+            </article>
+          </div>
+          <p class="note track-note">Base64 is RFC 4648 without padding. Parameter order is always <code>m,t,p</code>.</p>
+        </section>
 
-        <ul class="meta-list" aria-label="Identity">
-          <li><span class="k">Algorithm</span><span>ForgeHash-B3</span></li>
-          <li><span class="k">Encoded id</span><span><code>forgeh</code></span></li>
-          <li><span class="k">Version</span><span><code>v=1</code></span></li>
-          <li><span class="k">Encoded form</span><span><code>$forgeh$v=1$m=&lt;memoryKiB&gt;,t=&lt;iterations&gt;,p=&lt;parallelism&gt;$&lt;salt-b64&gt;$&lt;hash-b64&gt;</code></span></li>
-        </ul>
-        <p class="note">Base64 is RFC 4648 without padding. Parameter order is always <code>m,t,p</code>.</p>
+        <section class="profiles" aria-labelledby="profiles-heading">
+          <h2 id="profiles-heading">B3 profiles</h2>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr><th>Profile</th><th>Memory</th><th>Iterations</th><th>Parallelism</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>Development</td><td>8192 KiB</td><td>1</td><td>1</td></tr>
+                <tr><td>Interactive</td><td>65536 KiB</td><td>3</td><td>1</td></tr>
+                <tr><td>Sensitive</td><td>262144 KiB</td><td>4</td><td>2</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="note">Development must never be silently selected in production-shaped builds.</p>
+        </section>
 
-        <h2>Profiles</h2>
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr><th>Profile</th><th>Memory</th><th>Iterations</th><th>Parallelism</th></tr>
-            </thead>
-            <tbody>
-              <tr><td>Development</td><td>8192 KiB</td><td>1</td><td>1</td></tr>
-              <tr><td>Interactive</td><td>65536 KiB</td><td>3</td><td>1</td></tr>
-              <tr><td>Sensitive</td><td>262144 KiB</td><td>4</td><td>2</td></tr>
-            </tbody>
-          </table>
-        </div>
-        <p class="note">Development must never be silently selected in production-shaped builds.</p>
+        <section class="explore" aria-labelledby="explore-heading">
+          <h2 id="explore-heading">Explore</h2>
+          <ul class="home-nav-grid">
+            <li class="hn-sec" aria-hidden="true"><span class="sec">Conformance (B3)</span></li>
+            <li><a href="usage.html"><span class="hn-label">.NET usage</span><span class="hn-desc">Package install, HashPassword / VerifyPassword / NeedsRehash</span></a></li>
+            <li><a href="languages.html"><span class="hn-label">Languages</span><span class="hn-desc">Rust, Node.js, Python, C++, PHP packages under langs/</span></a></li>
+            <li><a href="implementing.html"><span class="hn-label">Implementing</span><span class="hn-desc">Porting guide, checklist, implementer pack</span></a></li>
+            <li><a href="vectors.html"><span class="hn-label">Vectors</span><span class="hn-desc">Official B3 digests and machine-readable pack</span></a></li>
+            <li><a href="spec.html"><span class="hn-label">Specification</span><span class="hn-desc">Readable TOC and excerpts; full text on GitHub</span></a></li>
+            <li><a href="security.html"><span class="hn-label">Security</span><span class="hn-desc">Disclosure policy and experimental warning</span></a></li>
 
-        <h2>Documentation</h2>
-        <ul class="home-nav-grid">
-          <li><a href="usage.html"><span class="hn-label">.NET usage</span><span class="hn-desc">Package install, HashPassword / VerifyPassword / NeedsRehash</span></a></li>
-          <li><a href="languages.html"><span class="hn-label">Languages</span><span class="hn-desc">Rust, Node.js, Python, C++, PHP packages under langs/</span></a></li>
-          <li><a href="implementing.html"><span class="hn-label">Implementing</span><span class="hn-desc">Porting guide, checklist, implementer pack</span></a></li>
-          <li><a href="vectors.html"><span class="hn-label">Vectors</span><span class="hn-desc">Official digests and machine-readable pack</span></a></li>
-          <li><a href="research.html"><span class="hn-label">Research</span><span class="hn-desc">Tooling index — Collision Lab, Visualizer</span></a></li>
-          <li><a href="research-report.html"><span class="hn-label">Report</span><span class="hn-desc">Empirical notes, 100k uniqueness campaign, TMTO snapshot</span></a></li>
-          <li><a href="security.html"><span class="hn-label">Security</span><span class="hn-desc">Disclosure policy and experimental warning</span></a></li>
-          <li><a href="spec.html"><span class="hn-label">Specification</span><span class="hn-desc">Readable TOC and excerpts; full text on GitHub</span></a></li>
-        </ul>
+            <li class="hn-sec" aria-hidden="true"><span class="sec">Research &amp; sandbox</span></li>
+            <li><a href="research.html"><span class="hn-label">Research</span><span class="hn-desc">Tooling index — Collision Lab, Visualizer</span></a></li>
+            <li><a href="research-report.html"><span class="hn-label">Report</span><span class="hn-desc">Empirical notes, uniqueness campaign, TMTO snapshot</span></a></li>
+            <li><a href="vectors-x.html"><span class="hn-label">X Vectors</span><span class="hn-desc">ForgeHash-X toy digests, KATs, implementers/x0</span></a></li>
+          </ul>
 
-        <div class="doc-links">
-          <a data-repo="SPECIFICATION.md" href="../SPECIFICATION.md">Full SPECIFICATION.md</a>
-          <a data-repo="implementers/v1/" href="../implementers/v1/">implementers/v1/</a>
-          <a data-repo="LICENSE" href="../LICENSE">License</a>
-        </div>
+          <div class="doc-links">
+            <a data-repo="SPECIFICATION.md" href="../SPECIFICATION.md">Full SPECIFICATION.md</a>
+            <a data-repo="implementers/v1/" href="../implementers/v1/">implementers/v1/</a>
+            <a data-repo="LICENSE" href="../LICENSE">License</a>
+          </div>
+        </section>
       </main>
     </div>
-    <footer class="footer" id="site-footer">  <span>ForgeHash-B3 · experimental cryptography</span>
-  <span>
-    <a data-repo="SPECIFICATION.md" href="../SPECIFICATION.md">Specification</a> ·
-    <a data-repo="LICENSE" href="../LICENSE">License</a> ·
-    <a data-repo="SECURITY.md" href="../SECURITY.md">Security</a>
-  </span></footer>
+    <footer class="footer" id="site-footer"></footer>
   </div>
   <script src="assets/site.js"></script>
 </body>

@@ -1,0 +1,13 @@
+{
+  "name": "vector3_two_lanes_toy",
+  "warning": "Experimental ForgeHash-X v0. Not for production. Not B3-compatible.",
+  "passwordHex": "78",
+  "saltHex": "42424242424242424242424242424242",
+  "memoryKiB": 1024,
+  "iterations": 1,
+  "parallelism": 2,
+  "outputLength": 32,
+  "seedHex": "ae90ad206d3ade0e01c4f4501e28a7558102d2ebb1e5b4d28ced4b3259dc0a14",
+  "hashHex": "3b050e341b18490362a602b8194c1702e7914d3a3f5b42225876cb75d56c0c13",
+  "encoded": "$forgehx$v=0$m=1024,t=1,p=2$QkJCQkJCQkJCQkJCQkJCQg$OwUONBsYSQNipgK4GUwXAueRTTo/W0IiWHbLddVsDBM"
+}

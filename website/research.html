@@ -70,7 +70,17 @@
         <h2>Collision Lab</h2>
         <p>Windows WPF app for mass uniqueness hunts (multi-worker).</p>
 <pre><code>dotnet run --project src/ForgeHash.CollisionLab -c Release</code></pre>
-        <p>Kinds: distinct passwords/salts, random pairs, bit-flips, parameter sets, truncated outputs. Export JSON/CSV. Prefer Development (8 MiB) for large <code>N</code>.</p>
+        <p>Kinds: distinct passwords/salts, random pairs, bit-flips, parameter sets, truncated outputs. Export JSON/CSV. Prefer Development (8 MiB) for large <code>N</code> on B3. For ForgeHash-X, choose Algorithm <strong>ForgeHash-X</strong> and the Toy preset (<code>m=1024</code>) — throughput is not comparable to B3 Development.</p>
+
+        <h2>ForgeHash-X research</h2>
+        <p>Separate sandbox with a custom ForgeX sponge. Notes, paper PDF, and toy-vector campaigns live under <code>docs/forgehx/</code>.</p>
+        <div class="doc-links">
+          <a data-repo="docs/forgehx/RESEARCH_NOTES.md" href="../docs/forgehx/RESEARCH_NOTES.md">RESEARCH_NOTES.md</a>
+          <a data-repo="docs/forgehx/paper/ForgeHash_X_Research_Paper.pdf" href="../docs/forgehx/paper/ForgeHash_X_Research_Paper.pdf">X research paper (PDF)</a>
+          <a href="vectors-x.html">X Vectors</a>
+          <a data-repo="docs/forgehx/SPECIFICATION_X.md" href="../docs/forgehx/SPECIFICATION_X.md">SPECIFICATION_X.md</a>
+        </div>
+
 
         <h2>Visualizer</h2>
 <pre><code>dotnet run --project src/ForgeHash.Visualizer -c Release -- all --out artifacts/analysis --memory 8192 --iterations 1 --parallelism 2</code></pre>

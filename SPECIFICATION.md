@@ -27,13 +27,9 @@ The initial algorithm variant is named:
 ForgeHash-B3
 ```
 
-A future fully custom primitive may be developed separately as:
-
-```text
-ForgeHash-X
-```
-
-ForgeHash-X is outside the scope of the first implementation.
+A fully custom primitive is developed separately as **ForgeHash-X** (experimental
+sandbox, `$forgehx$v=0$…`). It does not alter this B3 document. See
+[`docs/forgehx/SPECIFICATION_X.md`](docs/forgehx/SPECIFICATION_X.md).
 
 ---
 

@@ -5,11 +5,15 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <RootNamespace>ForgeHash.Analysis</RootNamespace>
-    <Description>Research analysis helpers for ForgeHash-B3. Not for production use.</Description>
+    <Description>
+      Research analysis helpers for ForgeHash-B3 and ForgeHash-X.
+      Not for production use.
+    </Description>
   </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\ForgeHash.Core\ForgeHash.Core.csproj" />
+    <ProjectReference Include="..\ForgeHash.X.Core\ForgeHash.X.Core.csproj" />
   </ItemGroup>
 
 </Project>

@@ -9,6 +9,10 @@
 > passwords. Prefer Argon2id, scrypt, bcrypt, or platform password APIs until
 > the construction has received substantial independent review.
 
+ForgeHash-X (`forgehx` / `v=0`) is a separate experimental sandbox. Its campaign
+log lives in [`forgehx/RESEARCH_NOTES.md`](forgehx/RESEARCH_NOTES.md) — do not
+mix digests or cost profiles with this B3 document.
+
 ---
 
 ## 1. Purpose

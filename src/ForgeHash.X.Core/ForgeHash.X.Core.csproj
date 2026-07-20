@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <RootNamespace>ForgeHashX</RootNamespace>
+    <AssemblyName>ForgeHashX</AssemblyName>
+    <Description>
+      Experimental ForgeHash-X v0 sandbox (custom ForgeX sponge). NOT for production.
+      Not compatible with ForgeHash-B3.
+    </Description>
+    <IsPackable>false</IsPackable>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+  </PropertyGroup>
+
+</Project>

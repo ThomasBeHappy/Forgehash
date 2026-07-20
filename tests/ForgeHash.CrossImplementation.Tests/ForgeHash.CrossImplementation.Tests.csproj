@@ -19,6 +19,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\ForgeHash.Core\ForgeHash.Core.csproj" />
+    <ProjectReference Include="..\..\src\ForgeHash.X.Core\ForgeHash.X.Core.csproj" />
   </ItemGroup>
+
 
 </Project>

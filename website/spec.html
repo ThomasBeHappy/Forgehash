@@ -60,7 +60,10 @@
           <a data-repo="SPECIFICATION.md" href="../SPECIFICATION.md">Open full SPECIFICATION.md</a>
           <a href="vectors.html">Official vectors</a>
           <a href="implementing.html">Implementing</a>
+          <a data-repo="docs/forgehx/SPECIFICATION_X.md" href="../docs/forgehx/SPECIFICATION_X.md">ForgeHash-X SPECIFICATION_X.md</a>
+          <a href="vectors-x.html">X Vectors</a>
         </div>
+
 
         <h2>Identity</h2>
         <ul class="meta-list">
@@ -73,7 +76,8 @@
 
         <h2>What the construction does</h2>
         <p>ForgeHash-B3 is a configurable, memory-hard password hashing construction. Design goals (§2) include unique salting, independently configurable memory / iterations / lanes, salt-dependent addressing, complete-state finalization, versioned encoding, defensive parsing, and constant-time verification.</p>
-        <p>Non-goals (§3) include formal security claims, Argon2 compatibility, automatic Unicode normalization, and replacing BLAKE3 itself. A future custom primitive (ForgeHash-X) is out of scope for v1.</p>
+        <p>Non-goals (§3) include formal security claims, Argon2 compatibility, automatic Unicode normalization, and replacing BLAKE3 itself. The experimental ForgeHash-X sandbox (custom ForgeX sponge, <code>$forgehx$v=0$</code>) is specified separately in <a data-repo="docs/forgehx/SPECIFICATION_X.md" href="../docs/forgehx/SPECIFICATION_X.md"><code>SPECIFICATION_X.md</code></a> and is not part of B3 v1 conformance.</p>
+
 
         <h2>Algorithm spine (high level)</h2>
         <ol>
