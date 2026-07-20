@@ -5,6 +5,12 @@
 Pure-Python reference of ForgeHash-X v0 (`forgehx`) with a custom ForgeX sponge — no BLAKE3 dependency.
 
 ```bash
+pip install forgehx --pre   # https://pypi.org/project/forgehx/
+```
+
+From this repo:
+
+```bash
 cd langs/python/forgehx
 python -m pip install -e ".[dev]"
 pytest -q

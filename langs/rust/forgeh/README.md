@@ -8,6 +8,12 @@ Verified against the official vectors in `implementers/v1/vectors/`. Spec:
 [`SPECIFICATION.md`](../../../SPECIFICATION.md). Research notes:
 [`docs/RESEARCH_REPORT.md`](../../../docs/RESEARCH_REPORT.md).
 
+## Install
+
+```bash
+cargo add forgeh --precise 1.0.0-experimental   # https://crates.io/crates/forgeh
+```
+
 ## Build / test
 
 ```bash

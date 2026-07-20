@@ -6,6 +6,12 @@ ForgeHash-X v0 (`$forgehx$v=0$…`) with a custom ForgeX sponge — no BLAKE3 de
 
 Vectors: `implementers/x0/vectors/`. Spec: [`docs/forgehx/SPECIFICATION_X.md`](../../../docs/forgehx/SPECIFICATION_X.md).
 
+## Install
+
+```bash
+cargo add forgehx --precise 0.1.0-experimental   # https://crates.io/crates/forgehx
+```
+
 ## Build / test
 
 ```bash

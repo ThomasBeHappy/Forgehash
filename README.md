@@ -13,8 +13,8 @@ Prefer Argon2id, scrypt, bcrypt, or your platform’s password APIs until ForgeH
 | Algorithm | ForgeHash-B3 |
 | Encoded id | `forgeh` |
 | Version | `v=1` |
-| .NET packages | `ForgeHash` `1.0.0-experimental` · `ForgeHashX` `0.1.0-experimental` · tool `ForgeHash.Cli` |
-
+| .NET | [`ForgeHash`](https://www.nuget.org/packages/ForgeHash/) · [`ForgeHashX`](https://www.nuget.org/packages/ForgeHashX/) · tool [`ForgeHash.Cli`](https://www.nuget.org/packages/ForgeHash.Cli/) |
+| PyPI / npm / crates | [`forgeh`](https://pypi.org/project/forgeh/) · [`forgehx`](https://pypi.org/project/forgehx/) (same names on [npm](https://www.npmjs.com/package/forgeh) / [crates.io](https://crates.io/crates/forgeh)) |
 | Spec | [`SPECIFICATION.md`](SPECIFICATION.md) |
 | Docs site | https://thomasbehappy.github.io/Forgehash/ |
 
@@ -66,17 +66,21 @@ tests/                    xUnit suites + frozen vectors
 website/                  GitHub Pages site
 ```
 
-## .NET
+## Install (experimental prereleases)
 
 ```bash
+# .NET — https://www.nuget.org/packages/ForgeHash/
 dotnet add package ForgeHash --prerelease
-dotnet add package ForgeHashX --prerelease   # optional X sandbox
+dotnet add package ForgeHashX --prerelease
 dotnet tool install -g ForgeHash.Cli --prerelease
 
-# Or pack from source → artifacts/nuget
-dotnet pack src/ForgeHash.Core/ForgeHash.Core.csproj -c Release -o artifacts/nuget
-dotnet pack src/ForgeHash.X.Core/ForgeHash.X.Core.csproj -c Release -o artifacts/nuget
-dotnet pack src/ForgeHash.Cli/ForgeHash.Cli.csproj -c Release -o artifacts/nuget
+# Python / Node / Rust
+pip install forgeh --pre          # https://pypi.org/project/forgeh/
+pip install forgehx --pre         # https://pypi.org/project/forgehx/
+npm install forgeh@experimental   # https://www.npmjs.com/package/forgeh
+npm install forgehx@experimental  # https://www.npmjs.com/package/forgehx
+cargo add forgeh --precise 1.0.0-experimental   # https://crates.io/crates/forgeh
+cargo add forgehx --precise 0.1.0-experimental  # https://crates.io/crates/forgehx
 ```
 
 ```csharp
@@ -92,23 +96,19 @@ forgeh hash --algo b3 --password-stdin
 dotnet run --project samples/ForgeHash.Sample -- "demo-password"
 ```
 
-Publish notes: [`docs/PUBLISHING.md`](docs/PUBLISHING.md).
+Publisher ops: [`docs/PUBLISHING.md`](docs/PUBLISHING.md).
 
 ## Other languages
 
-| Language | Path | Notes |
-|----------|------|-------|
-| Rust | [`langs/rust/forgeh`](langs/rust/forgeh) | Native + C ABI; all 4 vectors pass |
-| Node.js | [`langs/nodejs/forgeh`](langs/nodejs/forgeh) | Native JS; all 4 vectors pass |
-| Python | [`langs/python/forgeh`](langs/python/forgeh) | Native Python; all 4 vectors pass |
-| C++ | [`langs/cpp/forgeh`](langs/cpp/forgeh) | C++20 over Rust C ABI |
-| PHP | [`langs/php/forgeh`](langs/php/forgeh) | FFI over Rust (`ext-ffi`) |
+| Language | Path | Registry | Notes |
+|----------|------|----------|-------|
+| Rust | [`langs/rust/forgeh`](langs/rust/forgeh) | [crates.io/forgeh](https://crates.io/crates/forgeh) | Native + C ABI |
+| Node.js | [`langs/nodejs/forgeh`](langs/nodejs/forgeh) | [npm/forgeh](https://www.npmjs.com/package/forgeh) | Native JS |
+| Python | [`langs/python/forgeh`](langs/python/forgeh) | [PyPI/forgeh](https://pypi.org/project/forgeh/) | Native Python |
+| C++ | [`langs/cpp/forgeh`](langs/cpp/forgeh) | — | C++20 over Rust C ABI |
+| PHP | [`langs/php/forgeh`](langs/php/forgeh) | — | FFI over Rust (`ext-ffi`) |
 
-```bash
-cargo test --manifest-path langs/rust/forgeh/Cargo.toml --release
-cd langs/nodejs/forgeh && npm install && npm test
-cd langs/python/forgeh && python -m pip install -e ".[dev]" && pytest -q
-```
+X ports use the same registries under `forgehx` / `ForgeHashX`. See [`langs/README.md`](langs/README.md).
 
 Claim **ForgeHash-B3 v1 compatible** only when every official vector matches bit-exactly.
 

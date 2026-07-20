@@ -58,6 +58,38 @@
           <p><strong>Experimental.</strong> Not for production password storage.</p>
         </div>
 
+        <h2>Install from registries</h2>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>Language</th><th>B3</th><th>X</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Python</td>
+                <td><a href="https://pypi.org/project/forgeh/"><code>pip install forgeh --pre</code></a></td>
+                <td><a href="https://pypi.org/project/forgehx/"><code>pip install forgehx --pre</code></a></td>
+              </tr>
+              <tr>
+                <td>Node.js</td>
+                <td><a href="https://www.npmjs.com/package/forgeh"><code>npm install forgeh@experimental</code></a></td>
+                <td><a href="https://www.npmjs.com/package/forgehx"><code>npm install forgehx@experimental</code></a></td>
+              </tr>
+              <tr>
+                <td>Rust</td>
+                <td><a href="https://crates.io/crates/forgeh"><code>cargo add forgeh --precise 1.0.0-experimental</code></a></td>
+                <td><a href="https://crates.io/crates/forgehx"><code>cargo add forgehx --precise 0.1.0-experimental</code></a></td>
+              </tr>
+              <tr>
+                <td>.NET</td>
+                <td><a href="https://www.nuget.org/packages/ForgeHash/"><code>dotnet add package ForgeHash --prerelease</code></a></td>
+                <td><a href="https://www.nuget.org/packages/ForgeHashX/"><code>dotnet add package ForgeHashX --prerelease</code></a></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="note">C++ and PHP wrap the Rust C ABI and are not on a separate language registry. Full package list: <a href="developers.html">Developers</a>.</p>
+
         <h2>ForgeHash-B3 (<code>forgeh</code> / v=1)</h2>
         <p>Claim B3 v1 compatible only when all official <code>implementers/v1</code> vectors match bit-exactly.</p>
         <div class="table-wrap">
@@ -132,7 +164,7 @@
           </table>
         </div>
 
-        <h2>Commands</h2>
+        <h2>Develop from this repo</h2>
 <pre><code># B3
 cargo test --manifest-path langs/rust/forgeh/Cargo.toml --release
 cd langs/nodejs/forgeh &amp;&amp; npm install &amp;&amp; npm test

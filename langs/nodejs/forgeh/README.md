@@ -4,7 +4,13 @@ Experimental ForgeHash-B3 v1 reference in plain JavaScript (ESM).
 
 **Not for production password storage.**
 
-## Install / test
+## Install
+
+```bash
+npm install forgeh@experimental   # https://www.npmjs.com/package/forgeh
+```
+
+From this repo:
 
 ```bash
 cd langs/nodejs/forgeh

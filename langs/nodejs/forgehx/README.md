@@ -5,6 +5,12 @@
 Pure JavaScript (ESM) reference of ForgeHash-X v0 (`forgehx`) with a custom ForgeX sponge — no BLAKE3 dependency.
 
 ```bash
+npm install forgehx@experimental   # https://www.npmjs.com/package/forgehx
+```
+
+From this repo:
+
+```bash
 cd langs/nodejs/forgehx
 npm install
 npm test

@@ -6,10 +6,10 @@ All registry publishes prefer **Trusted Publishing** (GitHub OIDC → short-live
 
 | Registry | Packages | Workflow | Trigger |
 |----------|----------|----------|---------|
-| [nuget.org](https://www.nuget.org/) | `ForgeHash`, `ForgeHashX`, `ForgeHash.Cli` | [`nuget.yml`](../.github/workflows/nuget.yml) | `workflow_dispatch` (push=true) or GitHub Release |
-| [PyPI](https://pypi.org/) | `forgeh`, `forgehx` | [`pypi-forgeh.yml`](../.github/workflows/pypi-forgeh.yml) / [`pypi-forgehx.yml`](../.github/workflows/pypi-forgehx.yml) | same |
-| [npm](https://www.npmjs.com/) | `forgeh`, `forgehx` | [`npm.yml`](../.github/workflows/npm.yml) | same |
-| [crates.io](https://crates.io/) | `forgeh`, `forgehx` | [`crates.yml`](../.github/workflows/crates.yml) | same |
+| [nuget.org](https://www.nuget.org/) | [`ForgeHash`](https://www.nuget.org/packages/ForgeHash/), [`ForgeHashX`](https://www.nuget.org/packages/ForgeHashX/), [`ForgeHash.Cli`](https://www.nuget.org/packages/ForgeHash.Cli/) | [`nuget.yml`](../.github/workflows/nuget.yml) | `workflow_dispatch` (push=true) or GitHub Release |
+| [PyPI](https://pypi.org/) | [`forgeh`](https://pypi.org/project/forgeh/), [`forgehx`](https://pypi.org/project/forgehx/) | [`pypi-forgeh.yml`](../.github/workflows/pypi-forgeh.yml) / [`pypi-forgehx.yml`](../.github/workflows/pypi-forgehx.yml) | same |
+| [npm](https://www.npmjs.com/) | [`forgeh`](https://www.npmjs.com/package/forgeh), [`forgehx`](https://www.npmjs.com/package/forgehx) | [`npm.yml`](../.github/workflows/npm.yml) | same |
+| [crates.io](https://crates.io/) | [`forgeh`](https://crates.io/crates/forgeh), [`forgehx`](https://crates.io/crates/forgehx) | [`crates.yml`](../.github/workflows/crates.yml) | same |
 
 C++ / PHP ports are not published to a language registry (they wrap the Rust C ABI).
 
@@ -208,6 +208,16 @@ Keep experimental / alpha markers until something is intentionally stable.
 
 ---
 
-## Name collisions
+## Live package pages
 
-`forgeh` / `forgehx` may already be taken on a registry. If publish fails with “name already exists” / “owned by another user”, pick a new name (e.g. scoped npm `@thomasbehappy/forgeh`) and update the manifest + docs before retrying.
+| Package | URL |
+|---------|-----|
+| ForgeHash | https://www.nuget.org/packages/ForgeHash/ |
+| ForgeHashX | https://www.nuget.org/packages/ForgeHashX/ |
+| ForgeHash.Cli | https://www.nuget.org/packages/ForgeHash.Cli/ |
+| forgeh (PyPI) | https://pypi.org/project/forgeh/ |
+| forgehx (PyPI) | https://pypi.org/project/forgehx/ |
+| forgeh (npm) | https://www.npmjs.com/package/forgeh |
+| forgehx (npm) | https://www.npmjs.com/package/forgehx |
+| forgeh (crates.io) | https://crates.io/crates/forgeh |
+| forgehx (crates.io) | https://crates.io/crates/forgehx |

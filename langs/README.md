@@ -2,6 +2,29 @@
 
 Experimental cryptography. Not for production password storage.
 
+## Install from registries
+
+| Registry | B3 | X |
+|----------|----|---|
+| NuGet | [`ForgeHash`](https://www.nuget.org/packages/ForgeHash/) · [`ForgeHash.Cli`](https://www.nuget.org/packages/ForgeHash.Cli/) | [`ForgeHashX`](https://www.nuget.org/packages/ForgeHashX/) |
+| PyPI | [`forgeh`](https://pypi.org/project/forgeh/) | [`forgehx`](https://pypi.org/project/forgehx/) |
+| npm | [`forgeh`](https://www.npmjs.com/package/forgeh) | [`forgehx`](https://www.npmjs.com/package/forgehx) |
+| crates.io | [`forgeh`](https://crates.io/crates/forgeh) | [`forgehx`](https://crates.io/crates/forgehx) |
+
+```bash
+pip install forgeh --pre
+pip install forgehx --pre
+npm install forgeh@experimental
+npm install forgehx@experimental
+cargo add forgeh --precise 1.0.0-experimental
+cargo add forgehx --precise 0.1.0-experimental
+dotnet add package ForgeHash --prerelease
+dotnet add package ForgeHashX --prerelease
+dotnet tool install -g ForgeHash.Cli --prerelease
+```
+
+C++ / PHP wrap the Rust C ABI and are not published separately. Publisher ops: [docs/PUBLISHING.md](../docs/PUBLISHING.md).
+
 ## ForgeHash-B3 (`forgeh` / `v=1`)
 
 Bit-exact ports against [implementers/v1](../implementers/v1).
@@ -26,7 +49,7 @@ Custom ForgeX sponge — **no BLAKE3**. Not compatible with B3. Toy vectors: [im
 | C++ | [cpp/forgehx](cpp/forgehx) | C++20 API over Rust C ABI | after Rust release build |
 | PHP | [php/forgehx](php/forgehx) | PHP 8.1 FFI over Rust | needs `ext-ffi` + built lib |
 
-## Commands
+## Develop from this repo
 
 ```bash
 # B3
@@ -42,24 +65,6 @@ cd langs/python/forgehx && python -m pip install -e ".[dev]" && python -m pytest
 # CLI (.NET) — B3 or X
 dotnet run --project src/ForgeHash.Cli -- hash --algo x --memory 1024 --iterations 1 --parallelism 1 --password-stdin
 dotnet run --project src/ForgeHash.Cli -- verify "$forgehx$..." --password-stdin
-```
-
-## Registry packages (experimental)
-
-Publishing is wired for Trusted Publishing (OIDC). See [docs/PUBLISHING.md](../docs/PUBLISHING.md).
-
-| Registry | B3 | X |
-|----------|----|---|
-| NuGet | `ForgeHash` | `ForgeHashX` (+ `ForgeHash.Cli`) |
-| PyPI | `forgeh` | `forgehx` |
-| npm | `forgeh` | `forgehx` |
-| crates.io | `forgeh` | `forgehx` |
-
-```bash
-pip install forgeh --pre
-npm install forgeh@experimental
-cargo add forgeh --precise 1.0.0-experimental
-dotnet add package ForgeHash --prerelease
 ```
 
 ## Compatibility

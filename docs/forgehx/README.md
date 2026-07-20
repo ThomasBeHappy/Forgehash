@@ -18,7 +18,18 @@ ForgeHash-X is a clean-sheet research track: custom **ForgeX** sponge + memory-h
 | Language ports | `langs/{python,nodejs,rust,cpp,php}/forgehx/` |
 | CI | `.github/workflows/forgehx.yml` |
 
-## Language ports
+## Install
+
+```bash
+dotnet add package ForgeHashX --prerelease   # https://www.nuget.org/packages/ForgeHashX/
+pip install forgehx --pre                    # https://pypi.org/project/forgehx/
+npm install forgehx@experimental             # https://www.npmjs.com/package/forgehx
+cargo add forgehx --precise 0.1.0-experimental  # https://crates.io/crates/forgehx
+dotnet tool install -g ForgeHash.Cli --prerelease
+forgeh hash --algo x --password-stdin
+```
+
+## Language ports (from source)
 
 ```bash
 # Python / Node / Rust (native ForgeX — no BLAKE3)
@@ -33,21 +44,12 @@ cargo build --release --manifest-path langs/rust/forgehx/Cargo.toml
 ## CLI
 
 ```bash
-dotnet run --project src/ForgeHash.Cli -- hash --algo x --memory 1024 --iterations 1 --password-stdin
-dotnet run --project src/ForgeHash.Cli -- verify "$forgehx$v=0$..." --password-stdin
+forgeh hash --algo x --memory 1024 --iterations 1 --password-stdin
+forgeh verify "$forgehx$v=0$..." --password-stdin
 dotnet run --project src/ForgeHash.Cli -- vector --algo x --password-hex "" --salt-hex 00000000000000000000000000000000 --memory 1024
 ```
 
-## NuGet
-
-```bash
-dotnet pack src/ForgeHash.X.Core/ForgeHash.X.Core.csproj -c Release -o artifacts/nuget
-dotnet add package ForgeHashX --source ./artifacts/nuget --prerelease
-# after nuget.org publish:
-dotnet add package ForgeHashX --prerelease
-```
-
-Package id: `ForgeHashX` `0.1.0-experimental`. See [`../PUBLISHING.md`](../PUBLISHING.md).
+Publisher ops: [`../PUBLISHING.md`](../PUBLISHING.md).
 
 ## Build / test
 

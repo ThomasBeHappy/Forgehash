@@ -4,7 +4,13 @@ Experimental ForgeHash-B3 v1 reference in Python 3.10+.
 
 **Not for production password storage.**
 
-## Install / test
+## Install
+
+```bash
+pip install forgeh --pre   # https://pypi.org/project/forgeh/
+```
+
+From this repo (dev / vectors):
 
 ```bash
 cd langs/python/forgeh

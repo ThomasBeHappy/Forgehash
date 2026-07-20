@@ -5,7 +5,7 @@ Experimental software. Do not store production passwords with ForgeHash.
 ## Install
 
 ```bash
-# nuget.org (after publish) — experimental prerelease tags
+# nuget.org — experimental prerelease tags
 dotnet add package ForgeHash --prerelease
 dotnet add package ForgeHashX --prerelease          # optional sandbox
 dotnet tool install -g ForgeHash.Cli --prerelease  # `forgeh` command
@@ -17,7 +17,12 @@ dotnet pack src/ForgeHash.Cli/ForgeHash.Cli.csproj -c Release -o artifacts/nuget
 dotnet add package ForgeHash --source artifacts/nuget --prerelease
 ```
 
-Publishing: [`PUBLISHING.md`](PUBLISHING.md). Developers hub (site): `website/developers.html`.
+- [`ForgeHash`](https://www.nuget.org/packages/ForgeHash/)
+- [`ForgeHashX`](https://www.nuget.org/packages/ForgeHashX/)
+- [`ForgeHash.Cli`](https://www.nuget.org/packages/ForgeHash.Cli/)
+
+Other languages (PyPI / npm / crates.io): [`../langs/README.md`](../langs/README.md).  
+Publisher ops: [`PUBLISHING.md`](PUBLISHING.md). Site hub: `website/developers.html`.
 
 Or reference the project directly while developing:
 

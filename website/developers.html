@@ -26,31 +26,50 @@
           <p><strong>Start with B3</strong> (<code>$forgeh$v=1$</code>) unless you are intentionally working on the ForgeHash-X sandbox.</p>
         </div>
 
-        <h2>NuGet packages</h2>
+        <h2>Install from registries</h2>
+        <p>Experimental prereleases on NuGet, PyPI, npm, and crates.io. C++ / PHP ports stay source-only (Rust C ABI).</p>
         <div class="table-wrap">
           <table>
             <thead>
-              <tr><th>Package</th><th>Track</th><th>Version</th></tr>
+              <tr><th>Registry</th><th>B3</th><th>X</th></tr>
             </thead>
             <tbody>
-              <tr><td><code>ForgeHash</code></td><td>B3</td><td><code>1.0.0-experimental</code></td></tr>
-              <tr><td><code>ForgeHashX</code></td><td>X sandbox</td><td><code>0.1.0-experimental</code></td></tr>
-              <tr><td><code>ForgeHash.Cli</code></td><td>CLI tool <code>forgeh</code></td><td><code>0.1.0-experimental</code></td></tr>
+              <tr>
+                <td>NuGet</td>
+                <td><a href="https://www.nuget.org/packages/ForgeHash/"><code>ForgeHash</code></a> · <a href="https://www.nuget.org/packages/ForgeHash.Cli/"><code>ForgeHash.Cli</code></a></td>
+                <td><a href="https://www.nuget.org/packages/ForgeHashX/"><code>ForgeHashX</code></a></td>
+              </tr>
+              <tr>
+                <td>PyPI</td>
+                <td><a href="https://pypi.org/project/forgeh/"><code>forgeh</code></a></td>
+                <td><a href="https://pypi.org/project/forgehx/"><code>forgehx</code></a></td>
+              </tr>
+              <tr>
+                <td>npm</td>
+                <td><a href="https://www.npmjs.com/package/forgeh"><code>forgeh</code></a></td>
+                <td><a href="https://www.npmjs.com/package/forgehx"><code>forgehx</code></a></td>
+              </tr>
+              <tr>
+                <td>crates.io</td>
+                <td><a href="https://crates.io/crates/forgeh"><code>forgeh</code></a></td>
+                <td><a href="https://crates.io/crates/forgehx"><code>forgehx</code></a></td>
+              </tr>
             </tbody>
           </table>
         </div>
-<pre><code># From nuget.org (after publish) — always --prerelease for experimental tags
+<pre><code># .NET
 dotnet add package ForgeHash --prerelease
 dotnet add package ForgeHashX --prerelease
 dotnet tool install -g ForgeHash.Cli --prerelease
 
-# Or pack from this repo
-dotnet pack src/ForgeHash.Core/ForgeHash.Core.csproj -c Release -o artifacts/nuget
-dotnet pack src/ForgeHash.X.Core/ForgeHash.X.Core.csproj -c Release -o artifacts/nuget
-dotnet pack src/ForgeHash.Cli/ForgeHash.Cli.csproj -c Release -o artifacts/nuget
-dotnet add package ForgeHash --source ./artifacts/nuget --prerelease
-dotnet tool install -g ForgeHash.Cli --add-source ./artifacts/nuget --prerelease</code></pre>
-        <p class="note">Publishing uses nuget.org <a href="https://learn.microsoft.com/en-us/nuget/nuget-org/trusted-publishing">Trusted Publishing</a> (OIDC) — see <a data-repo="docs/PUBLISHING.md" href="../docs/PUBLISHING.md"><code>docs/PUBLISHING.md</code></a>. API walkthrough: <a href="usage.html">.NET usage</a>.</p>
+# Python / Node / Rust
+pip install forgeh --pre
+pip install forgehx --pre
+npm install forgeh@experimental
+npm install forgehx@experimental
+cargo add forgeh --precise 1.0.0-experimental
+cargo add forgehx --precise 0.1.0-experimental</code></pre>
+        <p class="note">Publisher ops (Trusted Publishing): <a data-repo="docs/PUBLISHING.md" href="../docs/PUBLISHING.md"><code>docs/PUBLISHING.md</code></a>. Language trees: <a href="languages.html">Languages</a>. API walkthrough: <a href="usage.html">.NET usage</a>.</p>
 
         <h2>CLI (<code>forgeh</code>)</h2>
 <pre><code># Help
@@ -122,7 +141,7 @@ bool ok = ForgeHashXApi.VerifyPassword(password, encoded);</code></pre>
 
         <h2>Reference</h2>
         <ul class="link-list">
-          <li><a data-repo="docs/PUBLISHING.md" href="../docs/PUBLISHING.md">Publishing NuGet</a></li>
+          <li><a data-repo="docs/PUBLISHING.md" href="../docs/PUBLISHING.md">Publishing packages</a></li>
           <li><a href="spec.html">Specification</a></li>
           <li><a href="security.html">Security</a></li>
           <li><a href="researchers.html">Researchers / auditors</a></li>
