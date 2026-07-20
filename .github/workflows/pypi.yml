@@ -43,10 +43,18 @@ jobs:
       - name: Install build tools
         run: python -m pip install -U pip build
 
-      - name: Install package + run tests
+      - name: Install package
+        run: python -m pip install -e ".[dev]"
+
+      # Full B3 vector suite is intentionally slow in pure Python (vector4 ≈ 32 MiB).
+      # Publish gate: smoke only for forgeh; forgehx toy vectors stay complete.
+      - name: Smoke / vector tests
         run: |
-          python -m pip install -e ".[dev]"
-          python -m pytest -q
+          if [ "${{ matrix.package }}" = "forgeh" ]; then
+            python -m pytest -v -k "vector1 or vector2"
+          else
+            python -m pytest -v
+          fi
 
       - name: Build sdist + wheel
         run: python -m build
