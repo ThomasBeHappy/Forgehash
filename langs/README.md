@@ -44,6 +44,24 @@ dotnet run --project src/ForgeHash.Cli -- hash --algo x --memory 1024 --iteratio
 dotnet run --project src/ForgeHash.Cli -- verify "$forgehx$..." --password-stdin
 ```
 
+## Registry packages (experimental)
+
+Publishing is wired for Trusted Publishing (OIDC). See [docs/PUBLISHING.md](../docs/PUBLISHING.md).
+
+| Registry | B3 | X |
+|----------|----|---|
+| NuGet | `ForgeHash` | `ForgeHashX` (+ `ForgeHash.Cli`) |
+| PyPI | `forgeh` | `forgehx` |
+| npm | `forgeh` | `forgehx` |
+| crates.io | `forgeh` | `forgehx` |
+
+```bash
+pip install forgeh --pre
+npm install forgeh@experimental
+cargo add forgeh --precise 1.0.0-experimental
+dotnet add package ForgeHash --prerelease
+```
+
 ## Compatibility
 
 - **B3 v1 compatible** only when all official `implementers/v1` vectors match.

@@ -10,6 +10,7 @@ readme = "README.md"
 requires-python = ">=3.10"
 license = "MIT"
 keywords = ["forgehash", "password-hashing", "blake3", "memory-hard", "experimental", "cryptography"]
+authors = [{ name = "ForgeHash contributors" }]
 dependencies = [
   "blake3>=0.3.3",
 ]
@@ -18,8 +19,11 @@ dependencies = [
 dev = ["pytest>=7.0"]
 
 [project.urls]
-Homepage = "https://github.com/forgeh/ForgeHash"
-Documentation = "https://github.com/forgeh/ForgeHash/blob/main/SPECIFICATION.md"
+Homepage = "https://github.com/ThomasBeHappy/Forgehash"
+Documentation = "https://github.com/ThomasBeHappy/Forgehash/blob/main/SPECIFICATION.md"
+Repository = "https://github.com/ThomasBeHappy/Forgehash"
+Issues = "https://github.com/ThomasBeHappy/Forgehash/issues"
+Changelog = "https://github.com/ThomasBeHappy/Forgehash/blob/main/README.md"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/forgeh"]

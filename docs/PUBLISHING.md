@@ -1,6 +1,26 @@
-# Publishing NuGet packages
+# Publishing packages
 
 **Experimental packages only.** Do not present these as production-ready cryptography.
+
+All registry publishes prefer **Trusted Publishing** (GitHub OIDC → short-lived credentials). No long-lived API keys in the repo after bootstrap.
+
+| Registry | Packages | Workflow | Trigger |
+|----------|----------|----------|---------|
+| [nuget.org](https://www.nuget.org/) | `ForgeHash`, `ForgeHashX`, `ForgeHash.Cli` | [`nuget.yml`](../.github/workflows/nuget.yml) | `workflow_dispatch` (push=true) or GitHub Release |
+| [PyPI](https://pypi.org/) | `forgeh`, `forgehx` | [`pypi.yml`](../.github/workflows/pypi.yml) | same |
+| [npm](https://www.npmjs.com/) | `forgeh`, `forgehx` | [`npm.yml`](../.github/workflows/npm.yml) | same |
+| [crates.io](https://crates.io/) | `forgeh`, `forgehx` | [`crates.yml`](../.github/workflows/crates.yml) | same |
+
+C++ / PHP ports are not published to a language registry (they wrap the Rust C ABI).
+
+Shared GitHub identity for every trusted-publisher policy:
+
+- **Owner / org / user:** `ThomasBeHappy`
+- **Repository:** `Forgehash` *(note the lowercase `h`)*
+
+---
+
+## NuGet
 
 | Package | Project | Version | Notes |
 |---------|---------|---------|-------|
@@ -8,53 +28,21 @@
 | `ForgeHashX` | `src/ForgeHash.X.Core` | `0.1.0-experimental` | X sandbox / `$forgehx$v=0$` |
 | `ForgeHash.Cli` | `src/ForgeHash.Cli` | `0.1.0-experimental` | `dotnet tool` → `forgeh` |
 
-Publishing to nuget.org uses **[Trusted Publishing](https://learn.microsoft.com/en-us/nuget/nuget-org/trusted-publishing)** (GitHub OIDC → short-lived API key). No long-lived NuGet API key is stored in the repo.
+### One-time: Trusted Publishing on nuget.org
 
-## Pack locally
-
-```bash
-dotnet pack src/ForgeHash.Core/ForgeHash.Core.csproj -c Release -o artifacts/nuget
-dotnet pack src/ForgeHash.X.Core/ForgeHash.X.Core.csproj -c Release -o artifacts/nuget
-dotnet pack src/ForgeHash.Cli/ForgeHash.Cli.csproj -c Release -o artifacts/nuget
-```
-
-Install from the folder:
-
-```bash
-dotnet add package ForgeHash --source ./artifacts/nuget --prerelease
-dotnet add package ForgeHashX --source ./artifacts/nuget --prerelease
-
-dotnet tool uninstall -g ForgeHash.Cli 2>/dev/null
-dotnet tool install -g ForgeHash.Cli --add-source ./artifacts/nuget --version 0.1.0-experimental
-forgeh --help
-```
-
-## One-time: Trusted Publishing on nuget.org
-
-1. Log into [nuget.org](https://www.nuget.org/) (if you don’t see **Trusted Publishing** yet, the feature may still be rolling out).
-2. Username → **Trusted Publishing** → add a policy:
+1. [nuget.org](https://www.nuget.org/) → username → **Trusted Publishing** → add a policy:
    - **Repository Owner:** `ThomasBeHappy`
    - **Repository:** `Forgehash`
-   - **Workflow File:** `nuget.yml` *(filename only — not `.github/workflows/…`)*
-   - **Environment:** leave empty (unless you later add `environment:` to the workflow)
-   - **Owner:** your nuget.org user (or org that will own the packages)
-3. In the GitHub repo **Settings → Secrets and variables → Actions**, add:
-   - `NUGET_USER` = your **nuget.org profile name** (not email, not an API key)
+   - **Workflow File:** `nuget.yml`
+   - **Environment:** leave empty
+2. GitHub → **Settings → Secrets → Actions** → `NUGET_USER` = your **nuget.org profile name** (not email, not an API key)
 
-## Publish via GitHub Actions
+### Publish
 
-1. Actions → **Publish NuGet** → **Run workflow**
-2. Enable **push** = true
-3. The job will:
-   - pack the three packages
-   - exchange a GitHub OIDC token via [`NuGet/login@v1`](https://github.com/NuGet/login)
-   - `dotnet nuget push` with the temporary key
+Actions → **Publish NuGet** → Run workflow → **push** = true  
+(or publish a GitHub Release)
 
-Also runs automatically when you publish a GitHub **Release**.
-
-If the policy shows a temporary / 7-day pending state (common for first publish), complete one successful push to fully activate it.
-
-## After nuget.org
+### Install
 
 ```bash
 dotnet add package ForgeHash --prerelease
@@ -62,12 +50,153 @@ dotnet add package ForgeHashX --prerelease
 dotnet tool install -g ForgeHash.Cli --prerelease
 ```
 
-## Manual push (not preferred)
+---
 
-Only if Trusted Publishing is unavailable for your account. Prefer OIDC.
+## PyPI
+
+| Package | Path | Version |
+|---------|------|---------|
+| `forgeh` | `langs/python/forgeh` | `1.0.0a0` |
+| `forgehx` | `langs/python/forgehx` | `0.1.0a0` |
+
+### One-time: Trusted Publishing on PyPI
+
+For **each** project (`forgeh`, `forgehx`):
+
+1. [pypi.org](https://pypi.org/) → your account → **Publishing** → **Trusted Publishers**
+2. **Add a new pending publisher** (works before the project exists):
+   - **PyPI Project Name:** `forgeh` or `forgehx`
+   - **Owner:** `ThomasBeHappy`
+   - **Repository name:** `Forgehash`
+   - **Workflow name:** `pypi.yml`
+   - **Environment name:** leave empty
+3. No GitHub secrets required
+
+Docs: https://docs.pypi.org/trusted-publishers/
+
+### Publish
+
+Actions → **Publish PyPI** → Run workflow → **push** = true
+
+### Install
 
 ```bash
-dotnet nuget push artifacts/nuget/ForgeHash.1.0.0-experimental.nupkg --api-key $NUGET_API_KEY --source https://api.nuget.org/v3/index.json --skip-duplicate
-dotnet nuget push artifacts/nuget/ForgeHashX.0.1.0-experimental.nupkg --api-key $NUGET_API_KEY --source https://api.nuget.org/v3/index.json --skip-duplicate
-dotnet nuget push artifacts/nuget/ForgeHash.Cli.0.1.0-experimental.nupkg --api-key $NUGET_API_KEY --source https://api.nuget.org/v3/index.json --skip-duplicate
+pip install forgeh --pre
+pip install forgehx --pre
 ```
+
+### Pack locally
+
+```bash
+cd langs/python/forgeh && python -m pip install -U build && python -m build
+cd langs/python/forgehx && python -m pip install -U build && python -m build
+```
+
+---
+
+## npm
+
+| Package | Path | Version |
+|---------|------|---------|
+| `forgeh` | `langs/nodejs/forgeh` | `1.0.0-experimental` |
+| `forgehx` | `langs/nodejs/forgehx` | `0.1.0-experimental` |
+
+### One-time: Trusted Publishing on npm
+
+Trusted Publisher is configured on an **existing** package. Bootstrap once:
+
+**Option A — temporary token**
+
+1. Create an npm automation / granular token with publish rights
+2. GitHub secret `NPM_TOKEN` = that token
+3. Actions → **Publish npm** → push = true
+4. For each package → **Settings → Trusted Publisher** → GitHub Actions:
+   - **Organization or user:** `ThomasBeHappy`
+   - **Repository:** `Forgehash`
+   - **Workflow filename:** `npm.yml`
+   - **Environment:** leave empty
+5. Delete `NPM_TOKEN`
+
+**Option B — claim locally**
+
+```bash
+cd langs/nodejs/forgeh && npm publish --access public
+cd langs/nodejs/forgehx && npm publish --access public
+```
+
+Then add Trusted Publisher as above (no `NPM_TOKEN` needed afterward).
+
+Docs: https://docs.npmjs.com/trusted-publishers/
+
+Workflow uses Node 24 + latest npm (≥ 11.5.1 required for OIDC).
+
+### Publish
+
+Actions → **Publish npm** → Run workflow → **push** = true
+
+### Install
+
+```bash
+npm install forgeh@experimental
+npm install forgehx@experimental
+```
+
+---
+
+## crates.io
+
+| Crate | Path | Version |
+|-------|------|---------|
+| `forgeh` | `langs/rust/forgeh` | `1.0.0-experimental` |
+| `forgehx` | `langs/rust/forgehx` | `0.1.0-experimental` |
+
+### One-time: first publish + Trusted Publishing
+
+crates.io **cannot** create a new crate via OIDC. First version must use an API token.
+
+1. [crates.io](https://crates.io/) → Account → API Tokens → create a token with publish scope
+2. Either:
+   - Local: `cargo login` then  
+     `cargo publish --manifest-path langs/rust/forgeh/Cargo.toml`  
+     `cargo publish --manifest-path langs/rust/forgehx/Cargo.toml`
+   - Or GitHub secret `CARGO_REGISTRY_TOKEN` + Actions → **Publish crates.io** → push = true
+3. For **each** crate → Settings → **Trusted Publishing**:
+   - **Owner:** `ThomasBeHappy`
+   - **Repository:** `Forgehash`
+   - **Workflow:** `crates.yml`
+   - **Environment:** leave empty
+4. Delete `CARGO_REGISTRY_TOKEN` (and revoke the API token if you no longer need it)
+
+Docs: https://crates.io/docs/trusted-publishing
+
+### Publish (after bootstrap)
+
+Actions → **Publish crates.io** → Run workflow → **push** = true
+
+### Install
+
+```bash
+cargo add forgeh --precise 1.0.0-experimental
+cargo add forgehx --precise 0.1.0-experimental
+```
+
+---
+
+## Version bumps
+
+Bump the version in the package manifest before re-publishing (registries reject duplicate versions):
+
+| Registry | Files |
+|----------|-------|
+| NuGet | `*.csproj` `<Version>` / `<PackageVersion>` |
+| PyPI | `langs/python/*/pyproject.toml` → `version` |
+| npm | `langs/nodejs/*/package.json` → `version` |
+| crates.io | `langs/rust/*/Cargo.toml` → `version` |
+
+Keep experimental / alpha markers until something is intentionally stable.
+
+---
+
+## Name collisions
+
+`forgeh` / `forgehx` may already be taken on a registry. If publish fails with “name already exists” / “owned by another user”, pick a new name (e.g. scoped npm `@thomasbehappy/forgeh`) and update the manifest + docs before retrying.

@@ -1,0 +1,91 @@
+name: Publish npm
+
+# Uses npm Trusted Publishing (OIDC) — no long-lived NPM_TOKEN once packages exist.
+# Docs: https://docs.npmjs.com/trusted-publishers/
+#
+# One-time setup on npmjs.com for EACH package (forgeh, forgehx):
+#   Package → Settings → Trusted Publisher → GitHub Actions:
+#     Organization or user: ThomasBeHappy
+#     Repository:           Forgehash
+#     Workflow filename:    npm.yml
+#     Environment:          (leave empty unless you add environment: below)
+#
+# Bootstrap: Trusted Publisher is configured on an existing package. For brand-new
+# names, either publish once with a temporary NPM_TOKEN secret (workflow prefers it)
+# or create/claim the package name, then add the trusted publisher and delete the secret.
+# Requires npm CLI >= 11.5.1 (workflow upgrades npm).
+
+on:
+  workflow_dispatch:
+    inputs:
+      push:
+        description: "Push to npm via Trusted Publishing (OIDC) or NPM_TOKEN"
+        type: boolean
+        default: false
+  release:
+    types: [published]
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        package: [forgeh, forgehx]
+    defaults:
+      run:
+        working-directory: langs/nodejs/${{ matrix.package }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          registry-url: "https://registry.npmjs.org"
+
+      - name: Install + test
+        run: |
+          npm install
+          npm test
+
+  publish:
+    needs: test
+    if: ${{ (github.event_name == 'release') || (github.event_name == 'workflow_dispatch' && inputs.push) }}
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        package: [forgeh, forgehx]
+    permissions:
+      contents: read
+      id-token: write # required for GitHub OIDC → npm
+    defaults:
+      run:
+        working-directory: langs/nodejs/${{ matrix.package }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          registry-url: "https://registry.npmjs.org"
+
+      - name: Upgrade npm (OIDC publish needs >= 11.5.1)
+        run: npm install -g npm@latest
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Publish ${{ matrix.package }}
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          set -euo pipefail
+          # If NPM_TOKEN is set (bootstrap), use it; otherwise rely on OIDC trusted publishing.
+          if [ -n "${NODE_AUTH_TOKEN:-}" ]; then
+            echo "Publishing with NPM_TOKEN (bootstrap)"
+            npm publish --access public
+          else
+            echo "Publishing with Trusted Publishing (OIDC)"
+            unset NODE_AUTH_TOKEN
+            npm publish --access public
+          fi

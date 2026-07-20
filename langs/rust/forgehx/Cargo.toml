@@ -7,6 +7,9 @@ license = "MIT"
 readme = "README.md"
 keywords = ["password", "hash", "memory-hard", "experimental", "forgehx"]
 categories = ["cryptography"]
+repository = "https://github.com/ThomasBeHappy/Forgehash"
+homepage = "https://github.com/ThomasBeHappy/Forgehash"
+documentation = "https://github.com/ThomasBeHappy/Forgehash/blob/main/docs/forgehx/SPECIFICATION_X.md"
 
 [lib]
 name = "forgehx"

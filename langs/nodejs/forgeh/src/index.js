@@ -1,4 +1,4 @@
-// @forgeh/forgeh — experimental ForgeHash-B3 v1 reference implementation.
+// forgeh — experimental ForgeHash-B3 v1 reference implementation.
 //
 // *** WARNING ***
 // ForgeHash is experimental cryptographic software. It has not received

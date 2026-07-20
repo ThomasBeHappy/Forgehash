@@ -17,7 +17,7 @@ Depends on `blake3@^2.1.7` (v3 on npm currently fails to install).
 ## Usage
 
 ```js
-import { hashPassword, verifyPassword, Params } from "@forgeh/forgeh";
+import { hashPassword, verifyPassword, Params } from "forgeh";
 
 const encoded = hashPassword("secret", Params.interactive());
 const ok = verifyPassword("secret", encoded);
@@ -26,7 +26,7 @@ const ok = verifyPassword("secret", encoded);
 Low-level:
 
 ```js
-import { deriveHash, deriveSeed, encode, Params } from "@forgeh/forgeh";
+import { deriveHash, deriveSeed, encode, Params } from "forgeh";
 
 const params = Params.development(); // 8 MiB — tests only
 const salt = Buffer.from("000102030405060708090a0b0c0d0e0f", "hex");

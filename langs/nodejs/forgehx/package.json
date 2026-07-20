@@ -1,12 +1,16 @@
 {
   "name": "forgehx",
-  "version": "0.0.0-experimental",
+  "version": "0.1.0-experimental",
   "description": "Experimental ForgeHash-X v0 memory-hard password hashing (Node.js reference). Custom ForgeX sponge — no BLAKE3. NOT for production use.",
   "type": "module",
   "main": "src/index.js",
   "exports": {
     ".": "./src/index.js"
   },
+  "files": [
+    "src",
+    "README.md"
+  ],
   "engines": {
     "node": ">=18.0.0"
   },
@@ -21,5 +25,18 @@
     "experimental",
     "cryptography"
   ],
-  "license": "MIT"
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ThomasBeHappy/Forgehash.git",
+    "directory": "langs/nodejs/forgehx"
+  },
+  "homepage": "https://github.com/ThomasBeHappy/Forgehash",
+  "bugs": {
+    "url": "https://github.com/ThomasBeHappy/Forgehash/issues"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  }
 }

@@ -1,12 +1,16 @@
 {
-  "name": "@forgeh/forgeh",
+  "name": "forgeh",
   "version": "1.0.0-experimental",
-  "description": "Experimental ForgeHash-B3 v1 memory-hard password hashing algorithm (Node.js reference implementation). NOT for production use.",
+  "description": "Experimental ForgeHash-B3 v1 memory-hard password hashing (Node.js reference). NOT for production use.",
   "type": "module",
   "main": "src/index.js",
   "exports": {
     ".": "./src/index.js"
   },
+  "files": [
+    "src",
+    "README.md"
+  ],
   "engines": {
     "node": ">=18.0.0"
   },
@@ -22,6 +26,19 @@
     "cryptography"
   ],
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ThomasBeHappy/Forgehash.git",
+    "directory": "langs/nodejs/forgeh"
+  },
+  "homepage": "https://github.com/ThomasBeHappy/Forgehash",
+  "bugs": {
+    "url": "https://github.com/ThomasBeHappy/Forgehash/issues"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
   "dependencies": {
     "blake3": "^2.1.7"
   }
