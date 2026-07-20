@@ -1241,9 +1241,12 @@ question for future cryptanalysis, not for this paper's empirical smokes.
 This paper documents work in the ForgeHash repository
 (#link("https://github.com/ThomasBeHappy/Forgehash")). Empirical campaigns used
 the shared Collision Lab / `CollisionCampaign` tooling developed for the
-ForgeHash-B3 research track. The author thanks, in advance, any reviewers and
-implementers who file precise vector mismatches or cryptanalytic observations;
-such feedback is the intended purpose of publishing a `v=0` sandbox.
+ForgeHash-B3 research track. AI coding assistants were used for limited drafting
+and tooling help; the design and the bulk of the manuscript were written by
+hand (see `AI.md` in the repository). The author thanks, in advance, any
+reviewers and implementers who file precise vector mismatches or cryptanalytic
+observations; such feedback is the intended purpose of publishing a `v=0`
+sandbox.
 
 // ── Appendices ──────────────────────────────────────────────────────────────
 
