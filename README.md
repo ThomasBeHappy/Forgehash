@@ -1,5 +1,16 @@
 # ForgeHash
 
+[![NuGet ForgeHash](https://img.shields.io/nuget/vpre/ForgeHash?label=NuGet%20ForgeHash)](https://www.nuget.org/packages/ForgeHash/)
+[![NuGet ForgeHashX](https://img.shields.io/nuget/vpre/ForgeHashX?label=NuGet%20ForgeHashX)](https://www.nuget.org/packages/ForgeHashX/)
+[![PyPI forgeh](https://img.shields.io/pypi/v/forgeh.svg?label=PyPI%20forgeh)](https://pypi.org/project/forgeh/)
+[![PyPI forgehx](https://img.shields.io/pypi/v/forgehx.svg?label=PyPI%20forgehx)](https://pypi.org/project/forgehx/)
+[![npm forgeh](https://img.shields.io/npm/v/forgeh.svg?label=npm%20forgeh)](https://www.npmjs.com/package/forgeh)
+[![npm forgehx](https://img.shields.io/npm/v/forgehx.svg?label=npm%20forgehx)](https://www.npmjs.com/package/forgehx)
+[![crates.io forgeh](https://img.shields.io/crates/v/forgeh.svg?label=crates.io%20forgeh)](https://crates.io/crates/forgeh)
+[![crates.io forgehx](https://img.shields.io/crates/v/forgehx.svg?label=crates.io%20forgehx)](https://crates.io/crates/forgehx)
+[![Docs](https://img.shields.io/badge/docs-site-2f6f4e)](https://thomasbehappy.github.io/Forgehash/)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+
 Experimental cryptographic software. Do **not** use it to store production passwords.
 
 Prefer Argon2id, scrypt, bcrypt, or your platform’s password APIs until ForgeHash has had serious independent review.
