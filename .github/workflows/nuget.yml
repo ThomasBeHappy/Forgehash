@@ -1,14 +1,29 @@
 name: Publish NuGet
 
+# Uses nuget.org Trusted Publishing (OIDC) — no long-lived API key secret.
+# Docs: https://learn.microsoft.com/en-us/nuget/nuget-org/trusted-publishing
+#
+# One-time setup on nuget.org → Trusted Publishing:
+#   Repository Owner: ThomasBeHappy
+#   Repository:       Forgehash
+#   Workflow File:    nuget.yml
+#   Environment:      (leave empty unless you add environment: nuget below)
+#
+# GitHub secret (username only, not an API key):
+#   NUGET_USER = your nuget.org profile name (not email)
+
 on:
   workflow_dispatch:
     inputs:
       push:
-        description: "Push to nuget.org (requires NUGET_API_KEY secret)"
+        description: "Push to nuget.org via Trusted Publishing (OIDC)"
         type: boolean
         default: false
   release:
     types: [published]
+
+permissions:
+  contents: read
 
 jobs:
   pack:
@@ -32,19 +47,45 @@ jobs:
           name: nuget-packages
           path: artifacts/nuget/*
 
+  publish:
+    needs: pack
+    if: ${{ (github.event_name == 'release') || (github.event_name == 'workflow_dispatch' && inputs.push) }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write # required for GitHub OIDC → nuget.org
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "9.0.x"
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: nuget-packages
+          path: artifacts/nuget
+
+      - name: NuGet login (OIDC → temporary API key)
+        uses: NuGet/login@v1
+        id: login
+        with:
+          user: ${{ secrets.NUGET_USER }}
+
       - name: Push to nuget.org
-        if: ${{ (github.event_name == 'release') || (github.event_name == 'workflow_dispatch' && inputs.push) }}
-        env:
-          NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
         run: |
-          if [ -z "$NUGET_API_KEY" ]; then
-            echo "NUGET_API_KEY secret is not set."
-            exit 1
-          fi
+          set -euo pipefail
           for pkg in artifacts/nuget/*.nupkg; do
-            dotnet nuget push "$pkg" --api-key "$NUGET_API_KEY" --source https://api.nuget.org/v3/index.json --skip-duplicate
+            echo "Pushing $pkg"
+            dotnet nuget push "$pkg" \
+              --api-key "${{ steps.login.outputs.NUGET_API_KEY }}" \
+              --source https://api.nuget.org/v3/index.json \
+              --skip-duplicate
           done
           for pkg in artifacts/nuget/*.snupkg; do
             [ -f "$pkg" ] || continue
-            dotnet nuget push "$pkg" --api-key "$NUGET_API_KEY" --source https://api.nuget.org/v3/index.json --skip-duplicate
+            echo "Pushing $pkg"
+            dotnet nuget push "$pkg" \
+              --api-key "${{ steps.login.outputs.NUGET_API_KEY }}" \
+              --source https://api.nuget.org/v3/index.json \
+              --skip-duplicate
           done

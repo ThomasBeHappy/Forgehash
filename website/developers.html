@@ -50,7 +50,7 @@ dotnet pack src/ForgeHash.X.Core/ForgeHash.X.Core.csproj -c Release -o artifacts
 dotnet pack src/ForgeHash.Cli/ForgeHash.Cli.csproj -c Release -o artifacts/nuget
 dotnet add package ForgeHash --source ./artifacts/nuget --prerelease
 dotnet tool install -g ForgeHash.Cli --add-source ./artifacts/nuget --prerelease</code></pre>
-        <p class="note">Publishing details: <a data-repo="docs/PUBLISHING.md" href="../docs/PUBLISHING.md"><code>docs/PUBLISHING.md</code></a>. Full API walkthrough: <a href="usage.html">.NET usage</a>.</p>
+        <p class="note">Publishing uses nuget.org <a href="https://learn.microsoft.com/en-us/nuget/nuget-org/trusted-publishing">Trusted Publishing</a> (OIDC) — see <a data-repo="docs/PUBLISHING.md" href="../docs/PUBLISHING.md"><code>docs/PUBLISHING.md</code></a>. API walkthrough: <a href="usage.html">.NET usage</a>.</p>
 
         <h2>CLI (<code>forgeh</code>)</h2>
 <pre><code># Help
