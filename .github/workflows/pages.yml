@@ -3,9 +3,6 @@ name: Deploy docs
 on:
   push:
     branches: [main, master]
-    paths:
-      - "website/**"
-      - ".github/workflows/pages.yml"
   workflow_dispatch:
 
 permissions:

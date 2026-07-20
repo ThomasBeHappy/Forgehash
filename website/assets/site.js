@@ -1,29 +1,32 @@
 /**
  * ForgeHash docs site config + shared chrome.
  *
- * Replace OWNER in `repo` before publishing, or set window.FORGEH before this
- * script loads. On github.io project pages, OWNER is inferred from the host path.
+ * On github.io project pages, owner/repo and the pages base path are inferred
+ * from the URL (works for /Forgehash/ and /ForgeHash/).
  */
 (function () {
   "use strict";
 
   var defaults = {
-    repo: "https://github.com/OWNER/ForgeHash",
+    repo: "https://github.com/ThomasBeHappy/Forgehash",
     pagesBase: ""
   };
 
   var cfg = Object.assign({}, defaults, window.FORGEH || {});
 
-  // Infer GitHub owner from project-pages URL: https://USER.github.io/ForgeHash/
   try {
     var host = location.hostname || "";
     var m = host.match(/^([a-z0-9-]+)\.github\.io$/i);
-    if (m && cfg.repo.indexOf("OWNER") !== -1) {
-      cfg.repo = "https://github.com/" + m[1] + "/ForgeHash";
-    }
-    // Project pages often live under /ForgeHash/
-    if (m && location.pathname.indexOf("/ForgeHash") === 0) {
-      cfg.pagesBase = "/ForgeHash";
+    if (m) {
+      var parts = location.pathname.split("/").filter(Boolean);
+      var repoName = parts.length > 0 ? parts[0] : "Forgehash";
+      if (!window.FORGEH || !window.FORGEH.repo) {
+        cfg.repo = "https://github.com/" + m[1] + "/" + repoName;
+      }
+      // Project pages live under /RepoName/
+      if (parts.length > 0) {
+        cfg.pagesBase = "/" + parts[0];
+      }
     }
   } catch (e) {
     /* ignore */
@@ -53,10 +56,6 @@
   function repoUrl(path) {
     var base = cfg.repo.replace(/\/$/, "");
     var p = String(path || "").replace(/^\//, "");
-    if (base.indexOf("OWNER") !== -1) {
-      // Local browsing from website/ — prefer relative monorepo paths
-      return "../" + p;
-    }
     return base + "/blob/main/" + p;
   }
 
