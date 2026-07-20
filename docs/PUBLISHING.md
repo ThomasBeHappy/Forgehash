@@ -7,7 +7,7 @@ All registry publishes prefer **Trusted Publishing** (GitHub OIDC → short-live
 | Registry | Packages | Workflow | Trigger |
 |----------|----------|----------|---------|
 | [nuget.org](https://www.nuget.org/) | `ForgeHash`, `ForgeHashX`, `ForgeHash.Cli` | [`nuget.yml`](../.github/workflows/nuget.yml) | `workflow_dispatch` (push=true) or GitHub Release |
-| [PyPI](https://pypi.org/) | `forgeh`, `forgehx` | [`pypi.yml`](../.github/workflows/pypi.yml) | same |
+| [PyPI](https://pypi.org/) | `forgeh`, `forgehx` | [`pypi-forgeh.yml`](../.github/workflows/pypi-forgeh.yml) / [`pypi-forgehx.yml`](../.github/workflows/pypi-forgehx.yml) | same |
 | [npm](https://www.npmjs.com/) | `forgeh`, `forgehx` | [`npm.yml`](../.github/workflows/npm.yml) | same |
 | [crates.io](https://crates.io/) | `forgeh`, `forgehx` | [`crates.yml`](../.github/workflows/crates.yml) | same |
 
@@ -61,22 +61,33 @@ dotnet tool install -g ForgeHash.Cli --prerelease
 
 ### One-time: Trusted Publishing on PyPI
 
-For **each** project (`forgeh`, `forgehx`):
+PyPI allows **only one pending publisher per workflow filename**. That is why
+`forgeh` and `forgehx` use **separate** workflows.
 
-1. [pypi.org](https://pypi.org/) → your account → **Publishing** → **Trusted Publishers**
-2. **Add a new pending publisher** (works before the project exists):
-   - **PyPI Project Name:** `forgeh` or `forgehx`
-   - **Owner:** `ThomasBeHappy`
-   - **Repository name:** `Forgehash`
-   - **Workflow name:** `pypi.yml`
-   - **Environment name:** leave empty
+1. [pypi.org/manage/account/publishing/](https://pypi.org/manage/account/publishing/)  
+   Remove any old pending publisher that still points at `pypi.yml` (or a wrong project name).  
+   Also delete any wrongly created empty project under [Your projects](https://pypi.org/manage/projects/).
+2. **Add a pending publisher** for each package:
+
+| PyPI project name | Workflow name |
+|-------------------|---------------|
+| `forgeh` | `pypi-forgeh.yml` |
+| `forgehx` | `pypi-forgehx.yml` |
+
+Shared fields for both:
+
+- **Owner:** `ThomasBeHappy`
+- **Repository name:** `Forgehash`
+- **Environment name:** leave empty
+
 3. No GitHub secrets required
 
 Docs: https://docs.pypi.org/trusted-publishers/
 
 ### Publish
 
-Actions → **Publish PyPI** → Run workflow → **push** = true
+Actions → **Publish PyPI (forgeh)** → push = true  
+Actions → **Publish PyPI (forgehx)** → push = true
 
 ### Install
 

@@ -1,0 +1,75 @@
+name: Publish PyPI (forgeh)
+
+# Uses PyPI Trusted Publishing (OIDC) — no long-lived API token.
+# Docs: https://docs.pypi.org/trusted-publishers/
+#
+# One-time pending publisher on pypi.org:
+#   Project name:  forgeh
+#   Owner:         ThomasBeHappy
+#   Repository:    Forgehash
+#   Workflow name: pypi-forgeh.yml
+#   Environment:   (leave empty)
+#
+# Note: PyPI allows only one pending publisher per (repo, workflow) pair.
+# forgehx uses a separate workflow file (pypi-forgehx.yml).
+
+on:
+  workflow_dispatch:
+    inputs:
+      push:
+        description: "Push forgeh to PyPI via Trusted Publishing (OIDC)"
+        type: boolean
+        default: false
+  release:
+    types: [published]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: langs/python/forgeh
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install build tools
+        run: python -m pip install -U pip build
+
+      - name: Install package
+        run: python -m pip install -e ".[dev]"
+
+      # Full B3 suite is slow in pure Python; smoke gate for publish.
+      - name: Smoke tests
+        run: python -m pytest -v -k "vector1 or vector2"
+
+      - name: Build sdist + wheel
+        run: python -m build
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: pypi-forgeh
+          path: langs/python/forgeh/dist/*
+
+  publish:
+    needs: build
+    if: ${{ (github.event_name == 'release') || (github.event_name == 'workflow_dispatch' && inputs.push) }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: pypi-forgeh
+          path: dist
+
+      - name: Publish forgeh to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          packages-dir: dist/
