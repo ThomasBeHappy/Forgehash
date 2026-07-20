@@ -9,6 +9,27 @@
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <AssemblyName>forgeh</AssemblyName>
     <RootNamespace>ForgeHash.Cli</RootNamespace>
+
+    <!-- dotnet tool -->
+    <PackAsTool>true</PackAsTool>
+    <ToolCommandName>forgeh</ToolCommandName>
+    <PackageId>ForgeHash.Cli</PackageId>
+    <Version>0.1.0-experimental</Version>
+    <Authors>ForgeHash contributors</Authors>
+    <Company>ForgeHash</Company>
+    <Product>ForgeHash CLI</Product>
+    <Description>
+      Experimental ForgeHash CLI (B3 + X). Commands: hash, verify, benchmark, vector.
+      NOT for production password storage.
+    </Description>
+    <PackageTags>password;hashing;forgeh;forgehx;cli;experimental</PackageTags>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageProjectUrl>https://github.com/ThomasBeHappy/Forgehash</PackageProjectUrl>
+
+    <RepositoryUrl>https://github.com/ThomasBeHappy/Forgehash</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <IsPackable>true</IsPackable>
   </PropertyGroup>
 
   <ItemGroup>
@@ -20,4 +41,9 @@
     <PackageReference Include="System.CommandLine" Version="2.0.0-beta4.22272.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="README.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
+
 </Project>
+

@@ -2,14 +2,39 @@
 
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
+    <LangVersion>13</LangVersion>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
     <RootNamespace>ForgeHashX</RootNamespace>
     <AssemblyName>ForgeHashX</AssemblyName>
-    <Description>
-      Experimental ForgeHash-X v0 sandbox (custom ForgeX sponge). NOT for production.
-      Not compatible with ForgeHash-B3.
-    </Description>
-    <IsPackable>false</IsPackable>
     <GenerateDocumentationFile>false</GenerateDocumentationFile>
+
+    <!-- NuGet -->
+    <PackageId>ForgeHashX</PackageId>
+    <Version>0.1.0-experimental</Version>
+    <Authors>ForgeHash contributors</Authors>
+    <Company>ForgeHash</Company>
+    <Product>ForgeHash-X</Product>
+    <Description>
+      Experimental ForgeHash-X v0 sandbox (custom ForgeX sponge). NOT for production password storage.
+      Not compatible with ForgeHash-B3 ($forgeh$). Prefer Argon2id, scrypt, bcrypt, or platform APIs.
+    </Description>
+    <PackageTags>password;hashing;memory-hard;forgehx;forgex;experimental;cryptography</PackageTags>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageProjectUrl>https://github.com/ThomasBeHappy/Forgehash</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/ThomasBeHappy/Forgehash</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <IsPackable>true</IsPackable>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="README.md" Pack="true" PackagePath="\" />
+    <None Include="..\..\LICENSE" Pack="true" PackagePath="\" />
+  </ItemGroup>
 
 </Project>

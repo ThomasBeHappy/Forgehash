@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="forgeh-page" content="developers">
-  <meta name="description" content="ForgeHash for developers — install, language ports, vectors, and implementer checklists.">
+  <meta name="description" content="ForgeHash for developers — NuGet packages, CLI, language ports, and vectors.">
   <title>ForgeHash — Developers</title>
   <link rel="icon" href="assets/mark.png" type="image/png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -20,11 +20,59 @@
       <main id="main">
         <p class="audience-kicker">Audience</p>
         <h1>Developers</h1>
-        <p class="page-lede">Port, integrate, and verify bit-exact digests. Prefer Argon2id or platform APIs for real password storage — ForgeHash is experimental.</p>
+        <p class="page-lede">Install packages, use the CLI, port languages, and verify bit-exact digests. Prefer Argon2id or platform APIs for real password storage — ForgeHash is experimental.</p>
 
         <div class="callout" role="note">
           <p><strong>Start with B3</strong> (<code>$forgeh$v=1$</code>) unless you are intentionally working on the ForgeHash-X sandbox.</p>
         </div>
+
+        <h2>NuGet packages</h2>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>Package</th><th>Track</th><th>Version</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><code>ForgeHash</code></td><td>B3</td><td><code>1.0.0-experimental</code></td></tr>
+              <tr><td><code>ForgeHashX</code></td><td>X sandbox</td><td><code>0.1.0-experimental</code></td></tr>
+              <tr><td><code>ForgeHash.Cli</code></td><td>CLI tool <code>forgeh</code></td><td><code>0.1.0-experimental</code></td></tr>
+            </tbody>
+          </table>
+        </div>
+<pre><code># From nuget.org (after publish) — always --prerelease for experimental tags
+dotnet add package ForgeHash --prerelease
+dotnet add package ForgeHashX --prerelease
+dotnet tool install -g ForgeHash.Cli --prerelease
+
+# Or pack from this repo
+dotnet pack src/ForgeHash.Core/ForgeHash.Core.csproj -c Release -o artifacts/nuget
+dotnet pack src/ForgeHash.X.Core/ForgeHash.X.Core.csproj -c Release -o artifacts/nuget
+dotnet pack src/ForgeHash.Cli/ForgeHash.Cli.csproj -c Release -o artifacts/nuget
+dotnet add package ForgeHash --source ./artifacts/nuget --prerelease
+dotnet tool install -g ForgeHash.Cli --add-source ./artifacts/nuget --prerelease</code></pre>
+        <p class="note">Publishing details: <a data-repo="docs/PUBLISHING.md" href="../docs/PUBLISHING.md"><code>docs/PUBLISHING.md</code></a>. Full API walkthrough: <a href="usage.html">.NET usage</a>.</p>
+
+        <h2>CLI (<code>forgeh</code>)</h2>
+<pre><code># Help
+forgeh --help
+
+# Hash / verify — B3
+echo -n 'correct horse battery staple' | forgeh hash --algo b3 --password-stdin
+echo -n 'correct horse battery staple' | forgeh verify '$forgeh$v=1$...' --password-stdin
+
+# Hash / verify — X sandbox (Toy defaults: m=1024)
+echo -n 'correct horse battery staple' | forgeh hash --algo x --password-stdin
+echo -n 'correct horse battery staple' | forgeh verify '$forgehx$v=0$...' --password-stdin
+
+# Matched-cost timing (same m/t/p)
+forgeh benchmark --algo b3 --memory 8192 --iterations 1 --samples 5
+forgeh benchmark --algo x --memory 8192 --iterations 1 --samples 5
+
+# Frozen-style vector dump
+forgeh vector --algo x --password-hex "" --salt-hex 00000000000000000000000000000000 --memory 1024
+
+# From repo without installing the tool
+dotnet run --project src/ForgeHash.Cli -c Release -- hash --algo b3 --password-stdin</code></pre>
 
         <h2 class="section-label">Suggested path</h2>
         <ol class="path-steps">
@@ -32,7 +80,7 @@
             <span class="path-n">1</span>
             <div>
               <a href="usage.html"><strong>.NET usage</strong></a>
-              <p>Install the package, hash / verify / NeedsRehash, Development vs Interactive profiles.</p>
+              <p>HashPassword / VerifyPassword / NeedsRehash, Development vs Interactive profiles.</p>
             </div>
           </li>
           <li>
@@ -58,33 +106,26 @@
           </li>
         </ol>
 
-        <h2>Quick commands</h2>
-<pre><code># .NET sample
-dotnet run --project samples/ForgeHash.Sample -c Release
-
-# CLI hash / verify (B3)
-dotnet run --project src/ForgeHash.Cli -c Release -- hash --algo b3 --password-stdin
-dotnet run --project src/ForgeHash.Cli -c Release -- verify "$forgeh$v=1$..." --password-stdin
-
-# Language smoke tests
-cd langs/python/forgeh &amp;&amp; python -m pytest -q
-cd langs/nodejs/forgeh &amp;&amp; npm test
-cargo test --manifest-path langs/rust/forgeh/Cargo.toml --release</code></pre>
-
         <h2>Sandbox (optional)</h2>
         <p>ForgeHash-X is a separate experimental track. Digests and encoding are not interchangeable with B3.</p>
+<pre><code>using ForgeHashX;
+using ForgeHashXApi = ForgeHashX.ForgeHashX;
+
+string encoded = ForgeHashXApi.HashPassword(password, ForgeHashXParameters.Toy);
+bool ok = ForgeHashXApi.VerifyPassword(password, encoded);</code></pre>
         <div class="doc-links">
           <a href="vectors-x.html">X vectors</a>
           <a data-repo="docs/forgehx/SPECIFICATION_X.md" href="../docs/forgehx/SPECIFICATION_X.md">SPECIFICATION_X.md</a>
           <a data-repo="implementers/x0/" href="../implementers/x0/">implementers/x0</a>
-          <a data-repo="langs/python/forgehx/" href="../langs/python/forgehx/">langs/*/forgehx</a>
+          <a data-repo="samples/ForgeHash.X.Sample/" href="../samples/ForgeHash.X.Sample/">X sample</a>
         </div>
 
         <h2>Reference</h2>
         <ul class="link-list">
-          <li><a href="spec.html">Specification (readable TOC)</a> — full text on GitHub</li>
-          <li><a href="security.html">Security</a> — disclosure and experimental warning</li>
-          <li><a href="researchers.html">Researchers / auditors</a> — campaigns, benches, paper</li>
+          <li><a data-repo="docs/PUBLISHING.md" href="../docs/PUBLISHING.md">Publishing NuGet</a></li>
+          <li><a href="spec.html">Specification</a></li>
+          <li><a href="security.html">Security</a></li>
+          <li><a href="researchers.html">Researchers / auditors</a></li>
         </ul>
       </main>
     </div>

@@ -59,11 +59,21 @@
 
 
         <h2>Install</h2>
-        <p>From a local pack:</p>
-<pre><code>dotnet pack src/ForgeHash.Core/ForgeHash.Core.csproj -c Release -o artifacts/nuget
-dotnet add package ForgeHash --source ./artifacts/nuget --prerelease</code></pre>
+        <p>From nuget.org (experimental prerelease) or a local pack:</p>
+<pre><code>dotnet add package ForgeHash --prerelease
+
+# Local pack from this repo
+dotnet pack src/ForgeHash.Core/ForgeHash.Core.csproj -c Release -o artifacts/nuget
+dotnet add package ForgeHash --source ./artifacts/nuget --prerelease
+
+# Optional: X sandbox package + global CLI
+dotnet add package ForgeHashX --prerelease
+dotnet tool install -g ForgeHash.Cli --prerelease
+forgeh --help</code></pre>
         <p>Or reference the project while developing:</p>
 <pre><code>dotnet add reference ../path/to/ForgeHash/src/ForgeHash.Core/ForgeHash.Core.csproj</code></pre>
+        <p class="note">See <a href="developers.html">Developers</a> for full CLI examples and <a data-repo="docs/PUBLISHING.md" href="../docs/PUBLISHING.md">docs/PUBLISHING.md</a> for nuget.org push.</p>
+
 
         <h2>Minimal login flow</h2>
 <pre><code>using ForgeHash;

@@ -24,8 +24,9 @@
     <PackageTags>password;hashing;blake3;memory-hard;forgeh;experimental;cryptography</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageReadmeFile>README.md</PackageReadmeFile>
-    <PackageProjectUrl>https://github.com/forgeh/ForgeHash</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/forgeh/ForgeHash</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/ThomasBeHappy/Forgehash</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/ThomasBeHappy/Forgehash</RepositoryUrl>
+
     <RepositoryType>git</RepositoryType>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>

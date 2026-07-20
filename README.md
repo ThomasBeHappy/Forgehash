@@ -13,7 +13,8 @@ Prefer Argon2id, scrypt, bcrypt, or your platform’s password APIs until ForgeH
 | Algorithm | ForgeHash-B3 |
 | Encoded id | `forgeh` |
 | Version | `v=1` |
-| .NET package | `ForgeHash` `1.0.0-experimental` |
+| .NET packages | `ForgeHash` `1.0.0-experimental` · `ForgeHashX` `0.1.0-experimental` · tool `ForgeHash.Cli` |
+
 | Spec | [`SPECIFICATION.md`](SPECIFICATION.md) |
 | Docs site | https://thomasbehappy.github.io/Forgehash/ |
 
@@ -68,8 +69,14 @@ website/                  GitHub Pages site
 ## .NET
 
 ```bash
+dotnet add package ForgeHash --prerelease
+dotnet add package ForgeHashX --prerelease   # optional X sandbox
+dotnet tool install -g ForgeHash.Cli --prerelease
+
+# Or pack from source → artifacts/nuget
 dotnet pack src/ForgeHash.Core/ForgeHash.Core.csproj -c Release -o artifacts/nuget
-dotnet add package ForgeHash --source ./artifacts/nuget --prerelease
+dotnet pack src/ForgeHash.X.Core/ForgeHash.X.Core.csproj -c Release -o artifacts/nuget
+dotnet pack src/ForgeHash.Cli/ForgeHash.Cli.csproj -c Release -o artifacts/nuget
 ```
 
 ```csharp
@@ -80,11 +87,12 @@ string encoded = ForgeHashApi.HashPassword(password, ForgeHashParameters.Interac
 bool ok = ForgeHashApi.VerifyPassword(password, encoded);
 ```
 
-Sample:
-
 ```bash
+forgeh hash --algo b3 --password-stdin
 dotnet run --project samples/ForgeHash.Sample -- "demo-password"
 ```
+
+Publish notes: [`docs/PUBLISHING.md`](docs/PUBLISHING.md).
 
 ## Other languages
 

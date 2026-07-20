@@ -38,6 +38,17 @@ dotnet run --project src/ForgeHash.Cli -- verify "$forgehx$v=0$..." --password-s
 dotnet run --project src/ForgeHash.Cli -- vector --algo x --password-hex "" --salt-hex 00000000000000000000000000000000 --memory 1024
 ```
 
+## NuGet
+
+```bash
+dotnet pack src/ForgeHash.X.Core/ForgeHash.X.Core.csproj -c Release -o artifacts/nuget
+dotnet add package ForgeHashX --source ./artifacts/nuget --prerelease
+# after nuget.org publish:
+dotnet add package ForgeHashX --prerelease
+```
+
+Package id: `ForgeHashX` `0.1.0-experimental`. See [`../PUBLISHING.md`](../PUBLISHING.md).
+
 ## Build / test
 
 ```bash

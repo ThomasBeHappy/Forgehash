@@ -1,0 +1,50 @@
+name: Publish NuGet
+
+on:
+  workflow_dispatch:
+    inputs:
+      push:
+        description: "Push to nuget.org (requires NUGET_API_KEY secret)"
+        type: boolean
+        default: false
+  release:
+    types: [published]
+
+jobs:
+  pack:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "9.0.x"
+
+      - name: Pack packages
+        run: |
+          mkdir -p artifacts/nuget
+          dotnet pack src/ForgeHash.Core/ForgeHash.Core.csproj -c Release -o artifacts/nuget
+          dotnet pack src/ForgeHash.X.Core/ForgeHash.X.Core.csproj -c Release -o artifacts/nuget
+          dotnet pack src/ForgeHash.Cli/ForgeHash.Cli.csproj -c Release -o artifacts/nuget
+          ls -la artifacts/nuget
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: nuget-packages
+          path: artifacts/nuget/*
+
+      - name: Push to nuget.org
+        if: ${{ (github.event_name == 'release') || (github.event_name == 'workflow_dispatch' && inputs.push) }}
+        env:
+          NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+        run: |
+          if [ -z "$NUGET_API_KEY" ]; then
+            echo "NUGET_API_KEY secret is not set."
+            exit 1
+          fi
+          for pkg in artifacts/nuget/*.nupkg; do
+            dotnet nuget push "$pkg" --api-key "$NUGET_API_KEY" --source https://api.nuget.org/v3/index.json --skip-duplicate
+          done
+          for pkg in artifacts/nuget/*.snupkg; do
+            [ -f "$pkg" ] || continue
+            dotnet nuget push "$pkg" --api-key "$NUGET_API_KEY" --source https://api.nuget.org/v3/index.json --skip-duplicate
+          done
