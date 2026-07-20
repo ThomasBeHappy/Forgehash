@@ -67,6 +67,10 @@
             <TextBox x:Name="OutputLengthBox" Grid.Row="3" Grid.Column="2" Text="32" Height="28" Padding="6,4"/>
           </Grid>
 
+          <TextBlock Text="Workers" FontWeight="SemiBold" Margin="0,12,0,4"/>
+          <TextBox x:Name="WorkersBox" Height="28" Padding="6,4"
+                   ToolTip="Concurrent sample hashes. Each worker holds a full memory matrix (~Memory KiB)."/>
+
           <TextBlock Text="RNG seed (optional)" FontWeight="SemiBold" Margin="0,12,0,4"/>
           <TextBox x:Name="RngSeedBox" Text="" Height="28" Padding="6,4"
                    ToolTip="Leave blank for non-deterministic Random.Shared. Used by salt/random campaigns."/>

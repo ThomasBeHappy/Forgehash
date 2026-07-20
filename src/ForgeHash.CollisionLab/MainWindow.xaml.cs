@@ -45,6 +45,7 @@ public partial class MainWindow : Window
         PresetCombo.SelectedIndex = 0;
         _suppressPresetEvent = false;
         ApplyPreset("Development");
+        WorkersBox.Text = Math.Max(1, Environment.ProcessorCount).ToString();
 
         AppendLog("Ready. Pick a campaign and press Start.");
     }
@@ -59,6 +60,8 @@ public partial class MainWindow : Window
         if (name is "Development" or "Interactive")
         {
             ApplyPreset(name);
+            WorkersBox.Text = CollisionCampaign.SuggestDegreeOfParallelism(
+                name == "Interactive" ? ForgeHashParameters.Interactive : ForgeHashParameters.Development).ToString();
         }
     }
 
@@ -97,13 +100,14 @@ public partial class MainWindow : Window
             return;
         }
 
-        if (!TryReadInputs(out CollisionCampaignKind kind, out int samples, out ForgeHashParameters parameters, out int? rngSeed, out string error))
+        if (!TryReadInputs(out CollisionCampaignKind kind, out int samples, out ForgeHashParameters parameters, out int? rngSeed, out int workers, out string error))
         {
             MessageBox.Show(this, error, "Invalid settings", MessageBoxButton.OK, MessageBoxImage.Warning);
             return;
         }
 
         UpdateCostWarning(parameters.MemoryKiB);
+        long approxMiB = (long)parameters.MemoryKiB * workers / 1024;
         if (parameters.MemoryKiB > 8192 && samples >= 100)
         {
             MessageBoxResult confirm = MessageBox.Show(
@@ -117,11 +121,24 @@ public partial class MainWindow : Window
                 return;
             }
         }
+        else if (approxMiB >= 1024)
+        {
+            MessageBoxResult confirm = MessageBox.Show(
+                this,
+                $"Workers × memory ≈ {approxMiB} MiB in-flight.\n\nContinue?",
+                "High memory campaign",
+                MessageBoxButton.YesNo,
+                MessageBoxImage.Warning);
+            if (confirm != MessageBoxResult.Yes)
+            {
+                return;
+            }
+        }
 
         _cts = new CancellationTokenSource();
         _lastResult = null;
         SetRunning(true);
-        AppendLog($"Starting {kind} · N={samples} · m={parameters.MemoryKiB},t={parameters.Iterations},p={parameters.Parallelism},out={parameters.OutputLength}");
+        AppendLog($"Starting {kind} · N={samples} · workers={workers} · m={parameters.MemoryKiB},t={parameters.Iterations},p={parameters.Parallelism},out={parameters.OutputLength}");
 
         var progress = new Progress<CollisionProgress>(OnProgress);
         CancellationToken token = _cts.Token;
@@ -136,6 +153,7 @@ public partial class MainWindow : Window
                     parameters,
                     stopOnFirstCollision: stopOnFirst,
                     rngSeed: rngSeed,
+                    maxDegreeOfParallelism: workers,
                     progress: progress,
                     cancellationToken: token),
                 token);
@@ -158,7 +176,7 @@ public partial class MainWindow : Window
             }
 
             AppendLog(
-                $"Done · {result.StopReason} · collisions={result.CollisionCount} · unique={result.UniqueDigests} · {result.HashesPerSecond:F2} H/s · {result.Elapsed.TotalSeconds:F1}s");
+                $"Done · {result.StopReason} · collisions={result.CollisionCount} · unique={result.UniqueDigests} · workers={result.DegreeOfParallelism} · {result.HashesPerSecond:F2} H/s · {result.Elapsed.TotalSeconds:F1}s");
             StatusText.Text = result.CollisionCount == 0
                 ? "Finished with no collisions in this sample set."
                 : $"Finished with {result.CollisionCount} collision(s).";
@@ -259,12 +277,14 @@ public partial class MainWindow : Window
         out int samples,
         out ForgeHashParameters parameters,
         out int? rngSeed,
+        out int workers,
         out string error)
     {
         kind = default;
         samples = 0;
         parameters = ForgeHashParameters.Development;
         rngSeed = null;
+        workers = 1;
         error = string.Empty;
 
         int idx = CampaignCombo.SelectedIndex;
@@ -292,6 +312,12 @@ public partial class MainWindow : Window
             !int.TryParse(OutputLengthBox.Text.Trim(), out int outputLength))
         {
             error = "Memory, iterations, parallelism, and output length must be integers.";
+            return false;
+        }
+
+        if (!int.TryParse(WorkersBox.Text.Trim(), out workers) || workers < 1 || workers > 64)
+        {
+            error = "Workers must be an integer from 1 to 64.";
             return false;
         }
 
@@ -352,6 +378,7 @@ public partial class MainWindow : Window
         ParallelismBox.IsEnabled = !running;
         OutputLengthBox.IsEnabled = !running;
         RngSeedBox.IsEnabled = !running;
+        WorkersBox.IsEnabled = !running;
         StopOnFirstCheck.IsEnabled = !running;
     }
 

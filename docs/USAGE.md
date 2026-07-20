@@ -98,8 +98,25 @@ This does **not** generate a salt. You must supply one.
 dotnet run --project samples/ForgeHash.Sample -- "demo-password"
 ```
 
+## Research hooks
+
+```csharp
+byte[] seed = ForgeHash.ComputeSeed(password, salt, parameters);
+byte[] digest = ForgeHash.DeriveHash(password, salt, parameters);
+byte[] parallel = ForgeHash.DeriveHashParallel(password, salt, parameters); // same digest when p>1
+```
+
+Mass uniqueness campaigns (Windows GUI):
+
+```bash
+dotnet run --project src/ForgeHash.CollisionLab -c Release
+```
+
+Notes: [RESEARCH_REPORT.md](RESEARCH_REPORT.md).
+
 ## Next
 
-- Porting to another language? See [IMPLEMENTING.md](IMPLEMENTING.md)
-- Algorithm details? See [../SPECIFICATION.md](../SPECIFICATION.md)
-- Official vectors? See [../implementers/v1/](../implementers/v1/)
+- Porting? [IMPLEMENTING.md](IMPLEMENTING.md)
+- Spec? [../SPECIFICATION.md](../SPECIFICATION.md)
+- Vectors? [../implementers/v1/](../implementers/v1/)
+- Docs site: https://thomasbehappy.github.io/Forgehash/

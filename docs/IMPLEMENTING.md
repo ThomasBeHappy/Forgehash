@@ -106,6 +106,7 @@ An implementation may claim **ForgeHash-B3 v1 compatible** only if:
 
 - Spec: [`../SPECIFICATION.md`](../SPECIFICATION.md)
 - .NET usage: [`USAGE.md`](USAGE.md)
+- Research report: [`RESEARCH_REPORT.md`](RESEARCH_REPORT.md)
 - .NET reference: `src/ForgeHash.Core/`
 - Languages: [`../langs/README.md`](../langs/README.md)
-- Docs site: [`../website/`](../website/)
+- Docs site: [`../website/`](../website/) · https://thomasbehappy.github.io/Forgehash/

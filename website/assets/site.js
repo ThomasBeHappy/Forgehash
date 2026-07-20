@@ -41,6 +41,7 @@
     { href: "implementing.html", label: "Implementing", id: "implementing" },
     { href: "vectors.html", label: "Vectors", id: "vectors" },
     { href: "research.html", label: "Research", id: "research" },
+    { href: "research-report.html", label: "Report", id: "research-report" },
     { href: "security.html", label: "Security", id: "security" },
     { href: "spec.html", label: "Specification", id: "spec" }
   ];

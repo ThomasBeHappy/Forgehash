@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="forgeh-page" content="research-report">
+  <meta name="description" content="ForgeHash-B3 v1 empirical research notes — collisions, TMTO heuristics, conformance.">
+  <title>ForgeHash — Research report</title>
+  <link rel="icon" href="assets/mark.png" type="image/png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,650&family=IBM+Plex+Mono:wght@400;500&family=Literata:opsz,wght@7..72,400;7..72,600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+  <div class="site-wrap">
+    <header class="site-header" id="site-header">
+      <a class="skip-link" href="#main">Skip to content</a>
+      <div class="brand-row">
+        <img class="brand-mark" src="assets/mark.png" width="32" height="32" alt="">
+        <div>
+          <a class="brand" href="index.html">ForgeHash</a>
+          <p class="brand-meta">ForgeHash-B3 · docs · experimental</p>
+        </div>
+      </div>
+      <nav class="site-nav" aria-label="Documentation">
+        <ul>
+          <li><a href="index.html">Overview</a></li>
+          <li><a href="usage.html">.NET usage</a></li>
+          <li><a href="languages.html">Languages</a></li>
+          <li><a href="implementing.html">Implementing</a></li>
+          <li><a href="vectors.html">Vectors</a></li>
+          <li><a href="research.html">Research</a></li>
+          <li><a href="research-report.html">Report</a></li>
+          <li><a href="security.html">Security</a></li>
+          <li><a href="spec.html">Specification</a></li>
+        </ul>
+      </nav>
+    </header>
+    <div class="layout">
+      <aside class="side-nav" id="side-nav" aria-label="Secondary">
+        <h2>On this site</h2>
+        <ul>
+          <li><a href="index.html">Overview</a></li>
+          <li><a href="usage.html">.NET usage</a></li>
+          <li><a href="languages.html">Languages</a></li>
+          <li><a href="implementing.html">Implementing</a></li>
+          <li><a href="vectors.html">Vectors</a></li>
+          <li><a href="research.html">Research</a></li>
+          <li><a href="research-report.html">Report</a></li>
+          <li><a href="security.html">Security</a></li>
+          <li><a href="spec.html">Specification</a></li>
+        </ul>
+      </aside>
+      <main id="main">
+        <h1>Empirical research notes</h1>
+        <p class="page-lede">ForgeHash-B3 v1 — living notes for researchers and implementers (2026-07-20). Full markdown: <a data-repo="docs/RESEARCH_REPORT.md" href="../docs/RESEARCH_REPORT.md"><code>docs/RESEARCH_REPORT.md</code></a>.</p>
+
+        <div class="callout" role="note">
+          <p><strong>Not a security proof.</strong> Prefer Argon2id, scrypt, bcrypt, or platform password APIs for production credentials.</p>
+        </div>
+
+        <h2>1. Purpose</h2>
+        <p>ForgeHash-B3 is a configurable, memory-hard password hashing construction on BLAKE3. The project publishes a versioned specification, frozen vectors, multi-language ports, and tooling for empirical study.</p>
+
+        <h2>2. Construction (short)</h2>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Piece</th><th>Role</th></tr></thead>
+            <tbody>
+              <tr><td>Seed</td><td>BLAKE3 derive-key, context <code>ForgeHash/v1/seed</code></td></tr>
+              <tr><td>Expand</td><td>BLAKE3 XOF, prefix <code>ForgeHash/v1/expand</code></td></tr>
+              <tr><td>Memory</td><td>1024-byte blocks / 128×u64 LE words</td></tr>
+              <tr><td>ForgeMix</td><td>8 rounds + perm + feed-forward</td></tr>
+              <tr><td>Addressing</td><td>Password-dependent FastRange</td></tr>
+              <tr><td>Encoding</td><td><code>$forgeh$v=1$m,t,p$salt$hash</code></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="note">Normative text: <a data-repo="SPECIFICATION.md" href="../SPECIFICATION.md">SPECIFICATION.md</a>.</p>
+
+        <h2>3. Conformance</h2>
+        <p>Claim <strong>ForgeHash-B3 v1 compatible</strong> only when all official vectors match bit-exactly.</p>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Vector</th><th>hashHex (prefix…)</th></tr></thead>
+            <tbody>
+              <tr><td>1</td><td><code>50aa2141…be4e</code></td></tr>
+              <tr><td>2</td><td><code>02acdfa7…6a98</code></td></tr>
+              <tr><td>3</td><td><code>fc2f2e6b…61ba</code></td></tr>
+              <tr><td>4</td><td><code>158230bd…0b3d</code></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>.NET, Rust, Node.js, and Python references pass all four. C++/PHP wrap the Rust C ABI.</p>
+
+        <h2>4. Collision campaigns</h2>
+        <p>Engine: <code>ForgeHash.Analysis.CollisionCampaign</code> (xUnit + Collision Lab). Empirical uniqueness smoke hunts — not birthday-bound proofs.</p>
+
+        <h3>100 000 random pairs (2026-07-20)</h3>
+        <div class="table-wrap">
+          <table>
+            <tbody>
+              <tr><td>Kind</td><td><code>RandomPairs</code></td></tr>
+              <tr><td>Samples</td><td>100 000</td></tr>
+              <tr><td>Collisions</td><td><strong>0</strong></td></tr>
+              <tr><td>Parameters</td><td>Development (8192 KiB, t=1, p=1, out=32)</td></tr>
+              <tr><td>Tool</td><td>Collision Lab (multi-worker)</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>No accidental final-hash collision among 10⁵ random password/salt pairs at Development cost. Encouraging consistency data — not a collision-resistance proof.</p>
+<pre><code>dotnet run --project src/ForgeHash.CollisionLab -c Release</code></pre>
+
+        <h2>5. Reference / TMTO snapshot</h2>
+        <p>From <code>ForgeHash.Visualizer</code> at 8192 KiB, t=1, p=2:</p>
+        <ul>
+          <li>8188 total references; 97 cross-lane (~1.18%)</li>
+          <li>Stride retention heuristic: keepEvery 2 → ~1.50× est. extra ForgeMix; keepEvery 8 → ~4.50×</li>
+        </ul>
+        <p class="note">TMTO ladder is a diagnostic model, not an adversarial lower bound.</p>
+<pre><code>dotnet run --project src/ForgeHash.Visualizer -c Release -- all --out artifacts/analysis --memory 8192 --iterations 1 --parallelism 2</code></pre>
+
+        <h2>6. Other automated checks</h2>
+        <ul>
+          <li>Avalanche smoke: single-bit flips change ~35–65% of output bits</li>
+          <li>Memory influence / reference distribution / parallel≡sequential</li>
+          <li>Strict parser + allocation limits</li>
+        </ul>
+
+        <h2>7. Intentional risks</h2>
+        <p>Password-dependent addressing can frustrate some cracking schedules and increases local side-channel exposure. No side-channel lab measurements ship yet.</p>
+
+        <h2>8. Open questions</h2>
+        <ol>
+          <li>Irregular TMTO checkpoints cheaper than the stride model?</li>
+          <li>ForgeMix efficiency on GPU shared memory / registers?</li>
+          <li>Short cycles or pathological salts in the reference graph?</li>
+          <li>Practical timing leakage on shared cloud hosts?</li>
+          <li>Same 10⁵ uniqueness campaigns at Interactive / Sensitive cost?</li>
+          <li>Independent re-implementation review outside this repo?</li>
+        </ol>
+
+        <h2>9. Closing</h2>
+        <p>ForgeHash-B3 v1 is ready for experimentation, porting, and measurement. It is not ready for protecting production credentials.</p>
+
+        <div class="doc-links">
+          <a data-repo="docs/RESEARCH_REPORT.md" href="../docs/RESEARCH_REPORT.md">Full report (markdown)</a>
+          <a href="research.html">Research tooling index</a>
+          <a data-repo="SPECIFICATION.md" href="../SPECIFICATION.md">Specification</a>
+          <a data-repo="implementers/v1/" href="../implementers/v1/">Implementer pack</a>
+        </div>
+      </main>
+    </div>
+    <footer class="footer" id="site-footer">
+      <span>ForgeHash-B3 · experimental cryptography</span>
+      <span>
+        <a data-repo="SPECIFICATION.md" href="../SPECIFICATION.md">Specification</a> ·
+        <a data-repo="LICENSE" href="../LICENSE">License</a> ·
+        <a data-repo="SECURITY.md" href="../SECURITY.md">Security</a>
+      </span>
+    </footer>
+  </div>
+  <script src="assets/site.js"></script>
+</body>
+</html>

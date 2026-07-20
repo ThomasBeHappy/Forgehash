@@ -4,6 +4,10 @@ Bit-exact compatibility kit for ports.
 
 ForgeHash is experimental. Passing these vectors does not make an implementation safe for production password storage.
 
+**Porting guide:** [`../../docs/IMPLEMENTING.md`](../../docs/IMPLEMENTING.md)  
+**Research notes:** [`../../docs/RESEARCH_REPORT.md`](../../docs/RESEARCH_REPORT.md)  
+**Docs site:** https://thomasbehappy.github.io/Forgehash/
+
 ## Contents
 
 | Path | Purpose |
