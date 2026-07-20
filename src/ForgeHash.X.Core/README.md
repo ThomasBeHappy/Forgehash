@@ -4,10 +4,14 @@
 
 | | |
 |---|---|
-| Package | `ForgeHashX` |
+| Package | [`ForgeHashX`](https://www.nuget.org/packages/ForgeHashX/) `0.1.0-experimental` |
 | Encoded id | `forgehx` |
 | Version | `v=0` (sandbox) |
 | Primitive | Custom ForgeX sponge (no BLAKE3) |
+
+```bash
+dotnet add package ForgeHashX --prerelease
+```
 
 ```csharp
 using ForgeHashX;
